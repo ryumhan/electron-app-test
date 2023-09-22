@@ -53,20 +53,23 @@ function TopPannel(): React.ReactElement {
             <InspectionView>
                 {!loaded && (
                     <LoadingPannel
-                        loaded={!loaded}
+                        loaded={loaded}
                         message="Connecting SVM..."
                         timeOutCallback={timeOutCallback}
                     />
                 )}
-                <iframe
-                    ref={svmElement}
-                    title="svm"
-                    src={pageSrc}
-                    onLoad={onLoadCallback}
-                    style={{
-                        visibility: pageSrc && loaded ? 'visible' : 'hidden',
-                    }}
-                />
+                {svmElement.current && !!svmElement.current.src && (
+                    <iframe
+                        ref={svmElement}
+                        title="svm"
+                        src={pageSrc}
+                        onLoad={onLoadCallback}
+                        style={{
+                            visibility:
+                                pageSrc && loaded ? 'visible' : 'hidden',
+                        }}
+                    />
+                )}
             </InspectionView>
 
             <Horizontal gap={10} justifyContent="flex-end">
