@@ -10,6 +10,7 @@ type ReturnType = [
     boolean,
     React.RefObject<HTMLIFrameElement>,
     string,
+    string[],
     () => void,
     () => void,
     () => void,
@@ -17,41 +18,57 @@ type ReturnType = [
 
 const useSVMState = (): ReturnType => {
     const { oruIp } = useTargetOru();
-    const [step, setStep] = useState(-1);
-    const [inspectionStep, setInspectionStep] = useState(0);
+    const [inspectionStep, setInspectionStep] = useState(-1);
+    const [checkStep, setCheckStep] = useState(0);
+    const [checkList, setCheckList] = useState<string[]>(
+        INSPECTION_STEP[0].checkList,
+    );
 
     const [inspectTitle, setInspectTitle] = useState(INSPECTION_STEP[0].name);
     const svmElement = useRef<HTMLIFrameElement>(null);
 
     const timeOutCallback = () => {
-        setStep(-1);
         if (svmElement.current) svmElement.current.src = '';
+
+        setInspectionStep(-1);
     };
 
     const onLoadCallback = () => {
-        setStep(0);
+        setInspectionStep(0);
     };
 
     const onSuccessCallback = () => {
-        if (!svmElement.current) return;
+        if (!svmElement.current || inspectionStep < 0) return;
 
-        const message = SVM_STATE_INSPECTION_LIST[step];
-        svmElement.current.contentWindow?.postMessage(
-            message,
-            utils.getHttpPage(oruIp, ''),
-        );
+        if (INSPECTION_STEP[inspectionStep].name === 'CallSVM') {
+            const message = SVM_STATE_INSPECTION_LIST[checkStep];
+            svmElement.current.contentWindow?.postMessage(
+                message,
+                utils.getHttpPage(oruIp, ''),
+            );
 
-        setStep(step + 1);
+            checkStep === SVM_STATE_INSPECTION_LIST.length
+                ? setInspectionStep(inspectionStep + 1)
+                : setCheckStep(checkStep + 1);
+        } else if (inspectionStep + 1 === INSPECTION_STEP.length) {
+            alert('success message');
+        } else {
+            setInspectionStep(inspectionStep + 1);
+        }
     };
 
     useEffect(() => {
-        if (step > -1) setInspectTitle(INSPECTION_STEP[step].name);
-    }, [step]);
+        if (inspectionStep < 0) return;
+
+        setInspectTitle(INSPECTION_STEP[inspectionStep].name);
+        setCheckList(INSPECTION_STEP[inspectionStep].checkList);
+    }, [inspectionStep]);
 
     return [
-        step > -1,
+        inspectionStep > -1,
         svmElement,
         inspectTitle,
+        checkList,
         onLoadCallback,
         onSuccessCallback,
         timeOutCallback,

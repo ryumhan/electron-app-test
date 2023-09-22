@@ -30,6 +30,7 @@ function TopPannel(): React.ReactElement {
         loaded,
         svmElement,
         inspectTitle,
+        checkList,
         onLoadCallback,
         onSuccessCallback,
         timeOutCallback,
@@ -44,12 +45,15 @@ function TopPannel(): React.ReactElement {
     };
 
     useEffect(() => {
-        handlePageSrc();
-    }, [data]);
+        if (inspectTitle === 'Calibration') handlePageSrc();
+    }, [data, inspectTitle]);
 
     return (
         <WebViewPannel>
-            <InspectionTitle>{inspectTitle}</InspectionTitle>
+            <InspectionTitle>
+                {inspectTitle}
+                {checkList}
+            </InspectionTitle>
             <InspectionView>
                 {!loaded && (
                     <LoadingPannel
@@ -58,18 +62,15 @@ function TopPannel(): React.ReactElement {
                         timeOutCallback={timeOutCallback}
                     />
                 )}
-                {svmElement.current && !!svmElement.current.src && (
-                    <iframe
-                        ref={svmElement}
-                        title="svm"
-                        src={pageSrc}
-                        onLoad={onLoadCallback}
-                        style={{
-                            visibility:
-                                pageSrc && loaded ? 'visible' : 'hidden',
-                        }}
-                    />
-                )}
+                <iframe
+                    ref={svmElement}
+                    title="svm"
+                    src="http://127.0.0.1:5500/neuboat-svm/frontend/index.htm"
+                    onLoad={onLoadCallback}
+                    style={{
+                        visibility: pageSrc && loaded ? 'visible' : 'hidden',
+                    }}
+                />
             </InspectionView>
 
             <Horizontal gap={10} justifyContent="flex-end">
