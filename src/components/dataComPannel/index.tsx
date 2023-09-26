@@ -23,7 +23,15 @@ function DataComPannel({ data, status, timeOver }: Props) {
     const ResultDataList = useMemo(() => {
         return data?.map(current => {
             return (
-                <Horizontal gap={20} key={current.key}>
+                <Horizontal
+                    gap={20}
+                    key={current.key}
+                    style={{
+                        width: '100%',
+                        padding: '0 20px',
+                    }}
+                    alignItems="center"
+                >
                     <DataKey>{current.key}</DataKey>
                     <ValueContainer>
                         {current.value ? (
@@ -36,7 +44,9 @@ function DataComPannel({ data, status, timeOver }: Props) {
                                 )}
                             </>
                         ) : (
-                            <LoadingPannelMessage>....</LoadingPannelMessage>
+                            <LoadingPannelMessage>
+                                .........
+                            </LoadingPannelMessage>
                         )}
                     </ValueContainer>
                 </Horizontal>

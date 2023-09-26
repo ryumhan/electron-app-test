@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import LoadingPannel from '@/components/loadingPannel';
 import useORUIP from '@/hooks/useORUIP';
 import { TargetContext } from '@/hooks/useTargetOruContext';
@@ -6,12 +6,21 @@ import { Vertical } from '@/styled';
 import BottomLeftPannel from './bottom-left-pannel';
 
 import BottomRightPannel from './bottom-right-pannel';
-import { BottomPannel, PageContainer } from './inspection.styled';
+import {
+    BottomPannel,
+    HeaderBack,
+    HeaderFront,
+    PageContainer,
+    PageHeader,
+} from './inspection.styled';
 import TopPannel from './top-pannel';
+import Button from '@/components/button';
 
 function Inspection(): React.ReactElement {
     const { oruIp, found, timeOutCallback } = useORUIP();
-    const value = useMemo(() => ({ oruIp }), [oruIp]);
+    const value = useMemo(() => ({ oruIp, fail: false }), [oruIp]);
+
+    const [complete, setComplete] = useState(false);
 
     if (!found) {
         return (
@@ -26,9 +35,21 @@ function Inspection(): React.ReactElement {
     return (
         <PageContainer>
             <TargetContext.Provider value={value}>
-                <Vertical style={{ height: '100%' }} gap={20}>
+                <PageHeader justifyContent="space-between" alignItems="center">
+                    <HeaderFront>Found: {oruIp}</HeaderFront>
+                    <HeaderBack gap={20}>
+                        Test Result: {value.fail ? value.fail : 'Progressing'}{' '}
+                        <Button
+                            type={complete ? 'primary' : 'normal'}
+                            label="Complete"
+                            disable={!complete}
+                            onClick={() => window.location.reload()}
+                        />
+                    </HeaderBack>
+                </PageHeader>
+                <Vertical style={{ height: '100%' }} gap={10}>
                     {/* Top */}
-                    <TopPannel />
+                    <TopPannel completeStepCallback={setComplete} />
                     {/* Bottom */}
                     <BottomPannel>
                         {/* Left */}

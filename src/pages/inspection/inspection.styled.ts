@@ -6,6 +6,27 @@ const PANNEL_SIZE = 700;
 export const PageContainer = styled(Vertical)`
     height: 100%;
     margin: auto;
+    padding: 0 40px;
+`;
+
+export const PageHeader = styled(Horizontal)`
+    width: 100%;
+    height: 80px;
+    margin-top: 20px;
+`;
+
+export const HeaderFront = styled.div`
+    font-weight: 500;
+    width: 250px;
+`;
+
+export const HeaderBack = styled(Horizontal)`
+    font-weight: 500;
+`;
+
+export const ReloadButton = styled.div`
+    width: 50px;
+    height: 50px;
 `;
 
 export const WebViewPannel = styled(Vertical)`
@@ -14,11 +35,26 @@ export const WebViewPannel = styled(Vertical)`
     gap: 20px;
     margin: auto;
     display: inline-flex;
+    position: relative;
+`;
+
+export const PannelDetailContainer = styled(Vertical)`
+    width: ${PANNEL_SIZE}px;
+    height: 500px;
+    position: absolute;
+    justify-content: center;
+    transform: translateX(-50%);
+`;
+
+export const DetailTitle = styled.div`
+    width: 300px;
+    font-size: 20px;
+    font-weight: bold;
 `;
 
 export const BottomPannel = styled(Horizontal)`
     width: ${PANNEL_SIZE}px;
-    height: 250px;
+    height: 300px;
     gap: 20px;
     margin: auto;
 `;
@@ -27,6 +63,7 @@ export const InspectionTitle = styled.div`
     display: flex;
     align-items: center;
     justify-content: center;
+    font-weight: bold;
 `;
 
 export const InspectionView = styled.div`
@@ -35,5 +72,6 @@ export const InspectionView = styled.div`
     border: 2px solid gray;
     border-radius: 10px;
     background-color: transparent;
+    /* opacity: 0.2; */
     overflow: hidden;
 `;

@@ -4,10 +4,11 @@ import { ButtonType } from './button.type';
 interface Props {
     type: ButtonType;
     label: string;
+    disable: boolean;
     onClick: () => void;
 }
 
-function Button({ type, label, onClick }: Props) {
+function Button({ disable, type, label, onClick }: Props) {
     return (
         <ButtonBox
             type={
@@ -17,7 +18,8 @@ function Button({ type, label, onClick }: Props) {
                     ? 'red'
                     : 'gray'
             }
-            onClick={onClick}
+            onClick={disable ? () => {} : onClick}
+            disable={disable}
         >
             <ButtonLabel>{label}</ButtonLabel>
         </ButtonBox>

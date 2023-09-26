@@ -1,11 +1,24 @@
-import { spawn } from 'child_process';
+import { ChildProcessWithoutNullStreams, spawn } from 'child_process';
 import * as dgram from 'dgram';
 import { BrowserWindow, ipcMain } from 'electron';
 
-const pythonProcess = spawn('python', ['./public/oru_ip_find.py']);
-
+let pythonProcess: ChildProcessWithoutNullStreams;
 let server: dgram.Socket;
 const PORT = 64001; // Change to your desired port number
+
+const createPythonProcess = () => {
+    if (pythonProcess) pythonProcess.kill();
+
+    pythonProcess = spawn('python', ['./public/oru_ip_find.py']);
+
+    pythonProcess.on('spawn', () =>
+        console.log('[PYTHON-PROCESS] process start'),
+    );
+
+    pythonProcess.on('exit', exitCode => {
+        console.log(`[PYTHON-PROCESS] Process ended with code (${exitCode})`);
+    });
+};
 
 const createUdpServer = (mainWindow: BrowserWindow) => {
     interface MessageType {
@@ -15,6 +28,8 @@ const createUdpServer = (mainWindow: BrowserWindow) => {
 
     let gotAck = false;
     let recentIp = '';
+
+    if (server) server.close();
 
     server = dgram.createSocket('udp4');
     server.on('error', err => {
@@ -28,7 +43,6 @@ const createUdpServer = (mainWindow: BrowserWindow) => {
 
         if (got.new_oru === 1 && !gotAck) {
             mainWindow.webContents.send('oruDiscover-module', {
-                type: 'data',
                 data: got.oru_ip,
             });
         }
@@ -48,20 +62,6 @@ const createUdpServer = (mainWindow: BrowserWindow) => {
     });
 
     server.bind(PORT);
-};
-
-const createPythonProcess = () => {
-    pythonProcess.stdout.on('data', data => {
-        console.log('[PYTHON-PROCESS] data got from python', data);
-    });
-
-    pythonProcess.stderr.on('data', stacktrace => {
-        console.error('[PYTHON-PROCESS] data', stacktrace.toString('utf8'));
-    });
-
-    pythonProcess.on('exit', exitCode => {
-        console.log(`[PYTHON-PROCESS] Process ended with code (${exitCode})`);
-    });
 };
 
 export default { createUdpServer, createPythonProcess };

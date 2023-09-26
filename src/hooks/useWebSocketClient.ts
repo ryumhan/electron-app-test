@@ -38,11 +38,6 @@ const useWebSocketClient = ({ oruIp }: Props) => {
         });
 
         ipcRenderer.on('websocket-module', (_, got) => {
-            if (got.type === 'close') {
-                setOpen(false);
-                return;
-            }
-
             setData(JSON.parse(got.data));
             setOpen(true);
         });

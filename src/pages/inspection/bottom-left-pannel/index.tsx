@@ -1,13 +1,13 @@
 import React, { useMemo } from 'react';
-import { CameraStatus } from '@/model/webSocketMessage/cameraStatus';
-import { HearBeat } from '@/model/webSocketMessage/heartbeat';
 import Button from '@/components/button';
 import DataComPannel from '@/components/dataComPannel';
 import LoadingPannel from '@/components/loadingPannel';
 import { useTargetOru } from '@/hooks/useTargetOruContext';
 import useWebSocketClient from '@/hooks/useWebSocketClient';
 import { Vertical, Horizontal } from '@/styled';
-import { InspectionView } from '../inspection.styled';
+import { InspectionTitle, InspectionView } from '../inspection.styled';
+import { CameraStatus } from '@/model/webSocketMessage/cameraStatus';
+import { HearBeat } from '@/model/webSocketMessage/heartbeat';
 
 function BottomLeftPannel() {
     const { oruIp } = useTargetOru();
@@ -39,6 +39,7 @@ function BottomLeftPannel() {
 
     return (
         <Vertical gap={20} style={{ width: '100%', height: '100%' }}>
+            <InspectionTitle>WebSocket Test</InspectionTitle>
             <InspectionView>
                 {open || !!data ? (
                     <Vertical style={{ height: '100%' }}>
@@ -83,12 +84,14 @@ function BottomLeftPannel() {
                 <Button
                     type="primary"
                     label="Success"
-                    onClick={() => alert('hi')}
+                    onClick={() => {}}
+                    disable={!open}
                 />
                 <Button
                     type="warning"
                     label="Fail"
                     onClick={() => alert('hi')}
+                    disable={false}
                 />
             </Horizontal>
         </Vertical>

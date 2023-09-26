@@ -12,14 +12,17 @@ import {
     InspectionView,
     InspectionTitle,
 } from '../inspection.styled';
+import PannelDetail from './pannel-detail';
 
-function TopPannel(): React.ReactElement {
+interface Props {
+    completeStepCallback: (value: boolean) => void;
+}
+
+function TopPannel({ completeStepCallback }: Props): React.ReactElement {
     const { oruIp } = useTargetOru();
+    const [pageSrc, setPageSrc] = useState('');
 
-    const [pageSrc, setPageSrc] = useState(utils.getHttpPage(oruIp, ''));
-    const [token, setToken] = useState<string>('');
-
-    const { data } = useHttpMessage<{ token: string }>({
+    const { data } = useHttpMessage<{ result: { authtoken: string } }>({
         method: 'POST',
         oruIp,
         category: 'auth',
@@ -34,14 +37,22 @@ function TopPannel(): React.ReactElement {
         onLoadCallback,
         onSuccessCallback,
         timeOutCallback,
-    ] = useSVMState();
+    ] = useSVMState({ completeStepCallback });
 
     const handlePageSrc = async () => {
-        if (data) setToken(data.token);
+        if (!data?.result?.authtoken) return;
 
         const target = utils.getHttpPage(oruIp, 'calibration');
-        const src = await utils.getWebSrcUsingHeader(target, token);
-        if (src) setPageSrc(src);
+        const html = await utils.getWebSrcUsingHeader(
+            target,
+            data.result.authtoken,
+        );
+
+        if (html && svmElement.current) {
+            completeStepCallback(true);
+            setPageSrc('');
+            svmElement.current.srcdoc = html;
+        }
     };
 
     useEffect(() => {
@@ -50,25 +61,28 @@ function TopPannel(): React.ReactElement {
 
     return (
         <WebViewPannel>
-            <InspectionTitle>
-                {inspectTitle}
-                {checkList}
-            </InspectionTitle>
+            <PannelDetail checkList={[inspectTitle, ...checkList]} />
+            <InspectionTitle>SVM Inspection</InspectionTitle>
             <InspectionView>
                 {!loaded && (
                     <LoadingPannel
                         loaded={loaded}
                         message="Connecting SVM..."
-                        timeOutCallback={timeOutCallback}
+                        timeOutCallback={() => {
+                            timeOutCallback();
+                            setPageSrc('');
+                        }}
                     />
                 )}
+
                 <iframe
                     ref={svmElement}
-                    title="svm"
-                    src="http://127.0.0.1:5500/neuboat-svm/frontend/index.htm"
+                    title="svm-page"
+                    src={pageSrc}
                     onLoad={onLoadCallback}
+                    sandbox="allow-scripts allow-popups allow-same-origin"
                     style={{
-                        visibility: pageSrc && loaded ? 'visible' : 'hidden',
+                        visibility: loaded ? 'visible' : 'hidden',
                     }}
                 />
             </InspectionView>
@@ -78,11 +92,13 @@ function TopPannel(): React.ReactElement {
                     type="primary"
                     label="Success"
                     onClick={onSuccessCallback}
+                    disable={false}
                 />
                 <Button
                     type="warning"
                     label="Fail"
                     onClick={() => window.location.reload()}
+                    disable={false}
                 />
             </Horizontal>
         </WebViewPannel>

@@ -16,9 +16,15 @@ type ReturnType = [
     () => void,
 ];
 
-const useSVMState = (): ReturnType => {
+interface Props {
+    completeStepCallback: (value: boolean) => void;
+}
+
+const useSVMState = ({ completeStepCallback }: Props): ReturnType => {
     const { oruIp } = useTargetOru();
+
     const [inspectionStep, setInspectionStep] = useState(-1);
+
     const [checkStep, setCheckStep] = useState(0);
     const [checkList, setCheckList] = useState<string[]>(
         INSPECTION_STEP[0].checkList,
@@ -28,8 +34,6 @@ const useSVMState = (): ReturnType => {
     const svmElement = useRef<HTMLIFrameElement>(null);
 
     const timeOutCallback = () => {
-        if (svmElement.current) svmElement.current.src = '';
-
         setInspectionStep(-1);
     };
 
@@ -51,7 +55,7 @@ const useSVMState = (): ReturnType => {
                 ? setInspectionStep(inspectionStep + 1)
                 : setCheckStep(checkStep + 1);
         } else if (inspectionStep + 1 === INSPECTION_STEP.length) {
-            alert('success message');
+            completeStepCallback(true);
         } else {
             setInspectionStep(inspectionStep + 1);
         }

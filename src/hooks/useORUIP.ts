@@ -22,8 +22,8 @@ const useORUIP = (): {
             return;
         }
 
-        ipcRenderer.on('oruDiscover-module', (_, got) => {
-            setOruIp(got);
+        ipcRenderer.on('oruDiscover-module', (_, { data }) => {
+            setOruIp(data);
         });
     };
 

@@ -39,6 +39,7 @@ function Login() {
                             type="primary"
                             label="Verify"
                             onClick={() => alert('hi')}
+                            disable={false}
                         />
                     </Horizontal>
                 </Vertical>

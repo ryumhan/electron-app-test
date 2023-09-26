@@ -1,6 +1,8 @@
 import { createContext, useContext } from 'react';
 
-export const TargetContext = createContext<{ oruIp: string }>({
+export const TargetContext = createContext<{
+    oruIp: string;
+}>({
     oruIp: '',
 });
 

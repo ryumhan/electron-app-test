@@ -3,12 +3,25 @@ exports.__esModule = true;
 var child_process_1 = require("child_process");
 var dgram = require("dgram");
 var electron_1 = require("electron");
-var pythonProcess = (0, child_process_1.spawn)('python', ['./public/oru_ip_find.py']);
+var pythonProcess;
 var server;
 var PORT = 64001; // Change to your desired port number
+var createPythonProcess = function () {
+    if (pythonProcess)
+        pythonProcess.kill();
+    pythonProcess = (0, child_process_1.spawn)('python', ['./public/oru_ip_find.py']);
+    pythonProcess.on('spawn', function () {
+        return console.log('[PYTHON-PROCESS] process start');
+    });
+    pythonProcess.on('exit', function (exitCode) {
+        console.log("[PYTHON-PROCESS] Process ended with code (".concat(exitCode, ")"));
+    });
+};
 var createUdpServer = function (mainWindow) {
     var gotAck = false;
     var recentIp = '';
+    if (server)
+        server.close();
     server = dgram.createSocket('udp4');
     server.on('error', function (err) {
         server.close();
@@ -19,7 +32,6 @@ var createUdpServer = function (mainWindow) {
         recentIp = got.oru_ip;
         if (got.new_oru === 1 && !gotAck) {
             mainWindow.webContents.send('oruDiscover-module', {
-                type: 'data',
                 data: got.oru_ip
             });
         }
@@ -35,16 +47,5 @@ var createUdpServer = function (mainWindow) {
             gotAck = true;
     });
     server.bind(PORT);
-};
-var createPythonProcess = function () {
-    pythonProcess.stdout.on('data', function (data) {
-        console.log('[PYTHON-PROCESS] data got from python', data);
-    });
-    pythonProcess.stderr.on('data', function (stacktrace) {
-        console.error('[PYTHON-PROCESS] data', stacktrace.toString('utf8'));
-    });
-    pythonProcess.on('exit', function (exitCode) {
-        console.log("[PYTHON-PROCESS] Process ended with code (".concat(exitCode, ")"));
-    });
 };
 exports["default"] = { createUdpServer: createUdpServer, createPythonProcess: createPythonProcess };

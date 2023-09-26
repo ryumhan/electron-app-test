@@ -8,7 +8,7 @@ import LoadingPannel from '@/components/loadingPannel';
 import useHttpMessage from '@/hooks/useHttpMessage';
 import { useTargetOru } from '@/hooks/useTargetOruContext';
 import { Vertical, Horizontal } from '@/styled';
-import { InspectionView } from '../inspection.styled';
+import { InspectionTitle, InspectionView } from '../inspection.styled';
 
 function BottomRightPannel() {
     const { oruIp } = useTargetOru();
@@ -45,6 +45,7 @@ function BottomRightPannel() {
 
     return (
         <Vertical gap={20} style={{ width: '100%', height: '100%' }}>
+            <InspectionTitle>HTTP Request Test</InspectionTitle>
             <InspectionView>
                 {loading || !oruData || !ccuData ? (
                     <LoadingPannel
@@ -64,11 +65,13 @@ function BottomRightPannel() {
                     type="primary"
                     label="Success"
                     onClick={() => alert('hi')}
+                    disable={loading}
                 />
                 <Button
                     type="warning"
                     label="Fail"
                     onClick={() => alert('hi')}
+                    disable={loading}
                 />
             </Horizontal>
         </Vertical>

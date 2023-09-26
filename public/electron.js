@@ -41,7 +41,6 @@ var electron_1 = require("electron");
 var isDev = require("electron-is-dev");
 var ipc_module_1 = require("./ipc.module");
 var oruDiscover_module_1 = require("./oruDiscover.module");
-var storage_module_1 = require("./storage.module");
 var mainWindow;
 var createWindow = function () {
     mainWindow = new electron_1.BrowserWindow({
@@ -81,31 +80,15 @@ var createWindow = function () {
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 electron_1.app.on('ready', function () { return __awaiter(void 0, void 0, void 0, function () {
-    var ses, cookie, d;
     return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0:
-                createWindow();
-                storage_module_1["default"].createCookie(mainWindow);
-                ses = mainWindow.webContents.session;
-                cookie = {
-                    url: 'http://localhost:3000',
-                    name: 'dummy_name',
-                    value: 'dummy'
-                };
-                return [4 /*yield*/, ses.cookies.set(cookie)];
-            case 1:
-                _a.sent();
-                return [4 /*yield*/, ses.cookies.get({ name: 'dummy_name' })];
-            case 2:
-                d = _a.sent();
-                console.log('@@@@@@@@@@@', d);
-                // create Ipc Module
-                oruDiscover_module_1["default"].createUdpServer(mainWindow);
-                oruDiscover_module_1["default"].createPythonProcess();
-                ipc_module_1["default"].createWebsocket(mainWindow);
-                return [2 /*return*/];
-        }
+        createWindow();
+        // create Ipc Module
+        electron_1.ipcMain.on('create-module', function () {
+            oruDiscover_module_1["default"].createUdpServer(mainWindow);
+            oruDiscover_module_1["default"].createPythonProcess();
+            ipc_module_1["default"].createWebsocket(mainWindow);
+        });
+        return [2 /*return*/];
     });
 }); });
 // Quit when all windows are closed.

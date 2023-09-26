@@ -1,9 +1,8 @@
 import * as path from 'path';
-import { app, BrowserWindow } from 'electron';
+import { app, BrowserWindow, ipcMain } from 'electron';
 import * as isDev from 'electron-is-dev';
 import ipcModule from './ipc.module';
 import oruDiscoverModule from './oruDiscover.module';
-import storageModule from './storage.module';
 
 let mainWindow: BrowserWindow;
 
@@ -54,13 +53,13 @@ const createWindow = () => {
 // Some APIs can only be used after this event occurs.
 app.on('ready', async () => {
     createWindow();
-    // storage ready
-    storageModule.createCookie(mainWindow);
     // create Ipc Module
-    oruDiscoverModule.createUdpServer(mainWindow);
-    oruDiscoverModule.createPythonProcess();
+    ipcMain.on('create-module', () => {
+        oruDiscoverModule.createUdpServer(mainWindow);
+        oruDiscoverModule.createPythonProcess();
 
-    ipcModule.createWebsocket(mainWindow);
+        ipcModule.createWebsocket(mainWindow);
+    });
 });
 
 // Quit when all windows are closed.

@@ -280,8 +280,8 @@ const INSPECTION_STEP = [
         ],
     },
     {
-        name: 'Caliberation',
-        step: SVM_STATE_INSPECTION_LIST.length,
+        name: 'Calibration',
+        step: 1,
         checkList: [
             'Check Each Mode available in Stage Menu(Not Saved)',
             'Click and Check Boat ON/OFF',
