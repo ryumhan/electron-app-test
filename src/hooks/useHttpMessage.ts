@@ -1,20 +1,23 @@
-import axios, { AxiosResponse, AxiosError } from 'axios';
+import axios, {
+    AxiosResponse,
+    AxiosError,
+    RawAxiosRequestHeaders,
+} from 'axios';
 import { useState, useEffect } from 'react';
-import utils from '@/utils';
 
 interface UseAxiosProps<T> {
+    headers?: RawAxiosRequestHeaders;
     method?: 'GET' | 'POST' | 'PUT' | 'DELETE';
-    oruIp: string;
-    category: string;
+    url: string;
     initialData?: T | null;
     body?: { password: string };
 }
 
 const useHttpMessage = <T>({
-    oruIp,
-    category,
+    url,
     method = 'GET',
     initialData = null,
+    headers,
     body,
 }: UseAxiosProps<T>) => {
     const [data, setData] = useState<T | null>(initialData);
@@ -26,14 +29,14 @@ const useHttpMessage = <T>({
     };
 
     useEffect(() => {
-        if (!oruIp) return;
+        if (!url) return;
 
         const fetchData = async () => {
             try {
                 const response: AxiosResponse<T> = await axios({
                     method,
-                    url: utils.getAPIUrl(oruIp, category),
-                    headers: {
+                    url,
+                    headers: headers || {
                         'Content-Type': 'application/json',
                     },
                     data: body,
@@ -49,7 +52,7 @@ const useHttpMessage = <T>({
         };
 
         fetchData();
-    }, [oruIp, category, method]);
+    }, [url, method, headers, body]);
 
     return { data, loading, error, timeOutCallback };
 };

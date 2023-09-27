@@ -1,47 +1,24 @@
-import React, { useMemo } from 'react';
 import Button from '@/components/button';
 import DataComPannel from '@/components/dataComPannel';
 import LoadingPannel from '@/components/loadingPannel';
-import { useTargetOru } from '@/hooks/useTargetOruContext';
-import useWebSocketClient from '@/hooks/useWebSocketClient';
 import { Vertical, Horizontal } from '@/styled';
 import { InspectionTitle, InspectionView } from '../inspection.styled';
-import { CameraStatus } from '@/model/webSocketMessage/cameraStatus';
-import { HearBeat } from '@/model/webSocketMessage/heartbeat';
+import useBottomLeftData from './hook';
 
 function BottomLeftPannel() {
-    const { oruIp } = useTargetOru();
-    const { open, data, timeOver, timeOutCallback } = useWebSocketClient({
-        oruIp,
-    });
-
-    const heartPresentData = useMemo(() => {
-        if (data?.method.includes('NotifyHeartBeat')) {
-            const heartData = data as HearBeat;
-            return {
-                key: 'NotifyHeartBeat',
-                value: `ccu-${heartData?.params?.CCU} oru-${heartData?.params?.ORU}`,
-            };
-        }
-    }, [data]);
-
-    const cameraPresentData = useMemo(() => {
-        if (data?.method.includes('NotifyCameraStatus')) {
-            const cameraData = data as CameraStatus;
-            return {
-                key: 'NotifyCameraStatus',
-                value: `${cameraData?.params?.inputStatus.camList
-                    .map((cam, idx) => `cam${idx + 1}: ${cam.status}`)
-                    .join('')}`,
-            };
-        }
-    }, [data]);
+    const [
+        open,
+        heartPresentData,
+        cameraPresentData,
+        timeOver,
+        timeOutCallback,
+    ] = useBottomLeftData();
 
     return (
         <Vertical gap={20} style={{ width: '100%', height: '100%' }}>
             <InspectionTitle>WebSocket Test</InspectionTitle>
             <InspectionView>
-                {open || !!data ? (
+                {open ? (
                     <Vertical style={{ height: '100%' }}>
                         <DataComPannel
                             timeOver={timeOver}

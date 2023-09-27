@@ -1,53 +1,19 @@
-import React, { useMemo } from 'react';
-
-import { Diagnostics } from '@/model';
-
 import Button from '@/components/button';
 import DataComPannel from '@/components/dataComPannel';
 import LoadingPannel from '@/components/loadingPannel';
-import useHttpMessage from '@/hooks/useHttpMessage';
-import { useTargetOru } from '@/hooks/useTargetOruContext';
 import { Vertical, Horizontal } from '@/styled';
 import { InspectionTitle, InspectionView } from '../inspection.styled';
+import useBottomRightPannelData from './hook';
 
 function BottomRightPannel() {
-    const { oruIp } = useTargetOru();
-
-    const { data, loading, timeOutCallback } = useHttpMessage<Diagnostics>({
-        oruIp,
-        category: 'diagnostics',
-    });
-
-    const oruData = useMemo(
-        () => [
-            { key: `ORU-Serial`, value: data?.oruInfo.serialNumber || '' },
-            {
-                key: `ORU-AvikusSerial`,
-                value: data?.oruInfo.AvksSerial || '',
-            },
-        ],
-        [data],
-    );
-
-    const ccuData = useMemo(
-        () =>
-            data?.ccuInfo
-                .map((ccu, idx) => [
-                    { key: `CCU${idx + 1}-Serial`, value: ccu.serialNumber },
-                    {
-                        key: `CCU${idx + 1}-AvikusSerial`,
-                        value: ccu.AvksSerial,
-                    },
-                ])
-                .reduce((prev, next) => prev.concat(prev, next)),
-        [data],
-    );
+    const [loading, oruData, ccuData, timeOutCallback] =
+        useBottomRightPannelData();
 
     return (
         <Vertical gap={20} style={{ width: '100%', height: '100%' }}>
             <InspectionTitle>HTTP Request Test</InspectionTitle>
             <InspectionView>
-                {loading || !oruData || !ccuData ? (
+                {loading ? (
                     <LoadingPannel
                         loaded={!!(ccuData && oruData)}
                         message="Connecting HttpServer..."
@@ -56,7 +22,7 @@ function BottomRightPannel() {
                 ) : (
                     <DataComPannel
                         status="Normal"
-                        data={oruData.concat(ccuData)}
+                        data={oruData.concat(ccuData || [])}
                     />
                 )}
             </InspectionView>

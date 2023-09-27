@@ -1,77 +1,41 @@
-import React, { useEffect, useState } from 'react';
-import utils from '@/utils';
 import Button from '@/components/button';
 import LoadingPannel from '@/components/loadingPannel';
-import useHttpMessage from '@/hooks/useHttpMessage';
-import useSVMState from '@/hooks/useSVMState';
-import { useTargetOru } from '@/hooks/useTargetOruContext';
 import { Horizontal } from '@/styled';
-import constants from '@/utils/constants';
 import {
     WebViewPannel,
     InspectionView,
     InspectionTitle,
 } from '../inspection.styled';
+
 import PannelDetail from './pannel-detail';
+import useTopPannelData from './hook';
 
 interface Props {
     completeStepCallback: (value: boolean) => void;
 }
 
 function TopPannel({ completeStepCallback }: Props): React.ReactElement {
-    const { oruIp } = useTargetOru();
-    const [pageSrc, setPageSrc] = useState('');
-
-    const { data } = useHttpMessage<{ result: { authtoken: string } }>({
-        method: 'POST',
-        oruIp,
-        category: 'auth',
-        body: { password: constants.PASSWORD },
-    });
-
     const [
         loaded,
-        svmElement,
-        inspectTitle,
+        pageSrc,
         checkList,
+        svmElement,
         onLoadCallback,
         onSuccessCallback,
         timeOutCallback,
-    ] = useSVMState({ completeStepCallback });
-
-    const handlePageSrc = async () => {
-        if (!data?.result?.authtoken) return;
-
-        const target = utils.getHttpPage(oruIp, 'calibration');
-        const html = await utils.getWebSrcUsingHeader(
-            target,
-            data.result.authtoken,
-        );
-
-        if (html && svmElement.current) {
-            completeStepCallback(true);
-            setPageSrc('');
-            svmElement.current.srcdoc = html;
-        }
-    };
-
-    useEffect(() => {
-        if (inspectTitle === 'Calibration') handlePageSrc();
-    }, [data, inspectTitle]);
-
+    ] = useTopPannelData({
+        completeStepCallback,
+    });
     return (
         <WebViewPannel>
-            <PannelDetail checkList={[inspectTitle, ...checkList]} />
+            <PannelDetail checkList={checkList} />
             <InspectionTitle>SVM Inspection</InspectionTitle>
             <InspectionView>
                 {!loaded && (
                     <LoadingPannel
                         loaded={loaded}
                         message="Connecting SVM..."
-                        timeOutCallback={() => {
-                            timeOutCallback();
-                            setPageSrc('');
-                        }}
+                        timeOutCallback={timeOutCallback}
                     />
                 )}
 
