@@ -9,6 +9,7 @@ import {
 
 import PannelDetail from './pannel-detail';
 import useTopPannelData from './hook';
+// import { useEffect, useState } from 'react';
 
 interface Props {
     completeStepCallback: (value: boolean) => void;
@@ -26,6 +27,9 @@ function TopPannel({ completeStepCallback }: Props): React.ReactElement {
     ] = useTopPannelData({
         completeStepCallback,
     });
+
+    // const [goToReady, setReady] = useState(false);
+
     return (
         <WebViewPannel>
             <PannelDetail checkList={checkList} />
@@ -61,7 +65,7 @@ function TopPannel({ completeStepCallback }: Props): React.ReactElement {
                 <Button
                     type="warning"
                     label="Fail"
-                    onClick={() => window.location.reload()}
+                    onClick={() => {}}
                     disable={false}
                 />
             </Horizontal>

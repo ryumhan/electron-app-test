@@ -57,6 +57,10 @@ const createUdpServer = (mainWindow: BrowserWindow) => {
         );
     });
 
+    server.on('close', () => {
+        console.log(`[UDP-MODULE] Server is closed`);
+    });
+
     ipcMain.on('oruDiscover-module', (_, { data }) => {
         if (data === recentIp) gotAck = true;
     });

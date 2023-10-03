@@ -5,15 +5,16 @@ export const PannelContainer = styled(Vertical)`
     height: 100%;
     align-items: center;
     justify-content: center;
-    gap: 10px;
+    gap: 15px;
 `;
 
 export const PannelMessage = styled.span`
-    height: 24px;
+    height: 44px;
     overflow: hidden;
     white-space: nowrap;
     font-weight: 500;
     color: gray;
     text-align: center;
-    font-size: 14px;
+    font-size: 17px;
+    line-height: normal;
 `;

@@ -1,18 +1,14 @@
-import Inspection from './pages/inspection';
 import utils from './utils';
-import { useEffect, useState } from 'react';
-import { ipcRenderer } from 'electron';
+import { useState } from 'react';
+
 import Login from './pages/login';
+import ReadyPannel from './components/readyPannel';
 
 function App() {
     const [login, setLogin] = useState(false);
-    // Only Test mode, skip Login page for development
-    useEffect(() => {
-        ipcRenderer.send('create-module', {});
-    }, []);
 
     if (login || utils.isTestMode()) {
-        return <Inspection />;
+        return <ReadyPannel />;
     }
 
     return <Login loginCallback={() => setLogin(true)} />;
