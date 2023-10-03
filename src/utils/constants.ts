@@ -1,4 +1,4 @@
-const TEST_MODE = true;
+const TEST_MODE = false;
 const BASE_URI = '/api';
 const API_PORT = 8000;
 const PAGE_PORT = 9005;
@@ -291,6 +291,25 @@ const INSPECTION_STEP = [
     },
 ];
 
+const COM_INSPECTION_STEP = [
+    {
+        name: '웹소켓 통신 체크',
+        checkList: [
+            'Camera Stream Check',
+            'Zoom IN/OUT Available using Mouse/Touch',
+            'Move Check using Mouse/Touch',
+        ],
+    },
+    {
+        name: 'Http통신 체크',
+        checkList: [
+            'SVM View Check',
+            'Camera Full Screen Available on Mutiple Camera Section',
+            'SVM State change when Click Success ',
+        ],
+    },
+];
+
 export default {
     TEST_MODE,
     BASE_URI,
@@ -298,5 +317,6 @@ export default {
     PAGE_PORT,
     PASSWORD,
     SVM_STATE_INSPECTION_LIST,
+    COM_INSPECTION_STEP,
     INSPECTION_STEP,
 };

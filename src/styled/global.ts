@@ -36,7 +36,7 @@ const GlobalStyle = css`
     * {
         font-family: SpoqaHanSansNeo !important;
         box-sizing: border-box;
-        /* background-color: #dcdcdc; */
+        /* background-color: #f0f0f0; */
     }
 
     html,

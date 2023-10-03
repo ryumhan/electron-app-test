@@ -13,6 +13,7 @@ export const PageHeader = styled(Horizontal)`
     width: 100%;
     height: 80px;
     margin-top: 20px;
+    padding: 0 20px;
 `;
 
 export const HeaderFront = styled.div`
@@ -38,25 +39,12 @@ export const WebViewPannel = styled(Vertical)`
     position: relative;
 `;
 
-export const PannelDetailContainer = styled(Vertical)`
-    width: ${PANNEL_SIZE}px;
-    height: 500px;
-    position: absolute;
-    justify-content: center;
-    transform: translateX(-50%);
-`;
-
-export const DetailTitle = styled.div`
-    width: 300px;
-    font-size: 20px;
-    font-weight: bold;
-`;
-
 export const BottomPannel = styled(Horizontal)`
     width: ${PANNEL_SIZE}px;
     height: 300px;
     gap: 20px;
     margin: auto;
+    position: relative;
 `;
 
 export const InspectionTitle = styled.div`

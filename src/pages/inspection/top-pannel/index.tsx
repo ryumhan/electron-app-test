@@ -7,7 +7,7 @@ import {
     InspectionTitle,
 } from '../inspection.styled';
 
-import PannelDetail from './pannel-detail';
+import VerticalStepProgress from '../../../components/vertical-step-progress';
 import useTopPannelData from './hook';
 // import { useEffect, useState } from 'react';
 
@@ -32,7 +32,7 @@ function TopPannel({ completeStepCallback }: Props): React.ReactElement {
 
     return (
         <WebViewPannel>
-            <PannelDetail checkList={checkList} />
+            <VerticalStepProgress steps={checkList} currentStep={1} />
             <InspectionTitle>SVM Inspection</InspectionTitle>
             <InspectionView>
                 {!loaded && (

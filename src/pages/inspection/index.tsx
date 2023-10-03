@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import LoadingPannel from '@/components/loadingPannel';
 import useORUIP from '@/hooks/useORUIP';
 import { TargetContext } from '@/hooks/useTargetOruContext';
-import { Vertical } from '@/styled';
+import { Horizontal, TypoGraphy, Vertical } from '@/styled';
 import BottomLeftPannel from './bottom-left-pannel';
 
 import BottomRightPannel from './bottom-right-pannel';
@@ -32,7 +32,7 @@ function Inspection(): React.ReactElement {
 
     if (goToReady) return <ReadyPannel />;
 
-    if (!found) {
+    if (found) {
         return (
             <LoadingPannel
                 loaded={found}
@@ -49,9 +49,21 @@ function Inspection(): React.ReactElement {
         <PageContainer>
             <TargetContext.Provider value={value}>
                 <PageHeader justifyContent="space-between" alignItems="center">
-                    <HeaderFront>Found: {oruIp}</HeaderFront>
+                    <HeaderFront>
+                        <TypoGraphy type="bold">Found:</TypoGraphy>
+                        <TypoGraphy type="middle">{oruIp}</TypoGraphy>
+                    </HeaderFront>
                     <HeaderBack gap={20}>
-                        Test Result: {value.fail ? value.fail : 'Progressing'}{' '}
+                        <Horizontal gap={10}>
+                            <TypoGraphy type="bold">Test Result:</TypoGraphy>
+                            <TypoGraphy
+                                type="middle"
+                                style={{ color: 'green' }}
+                            >
+                                {value.fail ? value.fail : 'Progressing'}{' '}
+                            </TypoGraphy>
+                        </Horizontal>
+
                         <Button
                             type={complete ? 'primary' : 'normal'}
                             label="Complete"
