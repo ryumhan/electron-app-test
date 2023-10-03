@@ -2,6 +2,7 @@ import styled from '@emotion/styled';
 
 export const PageContainer = styled.div`
     display: flex;
+    height: 100%;
 `;
 
 export const LoginBox = styled.div`
@@ -13,14 +14,8 @@ export const LoginBox = styled.div`
     border-radius: 10px;
 `;
 
-export const LoginLabel = styled.span`
-    font-family: 'SpoqaHanSansNeo';
-`;
-
-export const LoginInput = styled.input`
-    text-align: center;
-    border-radius: 4px;
-    border: solid gray 1px;
+export const InputWrapper = styled.div`
+    height: 50px;
 `;
 
 export const CopyrightBox = styled.div`

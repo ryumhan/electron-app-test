@@ -49,9 +49,18 @@ export const Center = styled.div`
 `;
 
 export const GlobalColor = {
-    // title: '#3c3c3c',
-    // generalTone: '#6e6e6e',
-    // contentsTone: '#828282',
-    // lightTone: '#3CB4FF',
-    // text: '#3c3c3c',
+    title: '#3c3c3c',
+    generalTone: '#6e6e6e',
+    contentsTone: '#828282',
+    lightTone: '#3CB4FF',
+    text: '#3c3c3c',
+    invalid: 'orange',
 };
+
+interface TypoGraphyProps {
+    type?: 'middle' | 'normal' | 'bold';
+}
+
+export const TypoGraphy = styled.span<TypoGraphyProps>(({ type }) => ({
+    fontWeight: type === 'middle' ? '500' : type === 'bold' ? 'bold' : '400',
+}));
