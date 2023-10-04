@@ -12,17 +12,15 @@ import { Controller, useForm } from 'react-hook-form';
 import { ComponentProps } from 'react';
 import CustomInput from '@/components/custom-input';
 import InputErrorMessage from '@/components/input-error-message';
-
-interface Props {
-    loginCallback: () => void;
-}
+import { useNavigate } from 'react-router-dom';
 
 type FormData = {
     id: string;
     password: string;
 };
 
-function Login({ loginCallback }: Props) {
+function Login() {
+    const navigate = useNavigate();
     const {
         control,
         formState: { errors, isValid },
@@ -47,10 +45,9 @@ function Login({ loginCallback }: Props) {
                 control.setError('password', {
                     message: '비밀번호가 일치하지 않습니다.',
                 });
-                return;
             }
 
-            loginCallback();
+            navigate('/ready');
         } catch (error) {
             control.setError('id', {
                 message: '로그인 오류가 발생하였습니다.',

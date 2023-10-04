@@ -1,26 +1,29 @@
 import Button from '@/components/button';
 import LoadingPannel from '@/components/loadingPannel';
-import { Horizontal } from '@/styled';
 import {
     WebViewPannel,
     InspectionView,
     InspectionTitle,
+    ButtonContainer,
 } from '../inspection.styled';
 
 import VerticalStepProgress from '../../../components/vertical-step-progress';
 import useTopPannelData from './hook';
-// import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import constants from '@/utils/constants';
 
 interface Props {
     completeStepCallback: (value: boolean) => void;
 }
 
 function TopPannel({ completeStepCallback }: Props): React.ReactElement {
+    const navigate = useNavigate();
+
     const [
         loaded,
         pageSrc,
-        checkList,
         svmElement,
+        currentStep,
         onLoadCallback,
         onSuccessCallback,
         timeOutCallback,
@@ -28,11 +31,16 @@ function TopPannel({ completeStepCallback }: Props): React.ReactElement {
         completeStepCallback,
     });
 
-    // const [goToReady, setReady] = useState(false);
-
     return (
         <WebViewPannel>
-            <VerticalStepProgress steps={checkList} currentStep={1} />
+            <VerticalStepProgress
+                steps={constants.SVM_INSPECTION_STEP.map(elem => {
+                    return { name: elem.name, checklist: elem.checkList };
+                })}
+                currentStep={currentStep}
+                position="left"
+                title="SVM 검사 항목"
+            />
             <InspectionTitle>SVM Inspection</InspectionTitle>
             <InspectionView>
                 {!loaded && (
@@ -55,20 +63,20 @@ function TopPannel({ completeStepCallback }: Props): React.ReactElement {
                 />
             </InspectionView>
 
-            <Horizontal gap={10} justifyContent="flex-end">
+            <ButtonContainer>
                 <Button
                     type="primary"
                     label="Success"
                     onClick={onSuccessCallback}
-                    disable={false}
+                    disable={loaded}
                 />
                 <Button
                     type="warning"
                     label="Fail"
-                    onClick={() => {}}
+                    onClick={() => navigate('/fail')}
                     disable={false}
                 />
-            </Horizontal>
+            </ButtonContainer>
         </WebViewPannel>
     );
 }

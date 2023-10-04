@@ -1,8 +1,10 @@
+import statusAtom from '@/atoms/status.atom';
 import useHttpMessage from '@/hooks/useHttpMessage';
-import { useTargetOru } from '@/hooks/useTargetOruContext';
+
 import { Diagnostics } from '@/model';
 import utils from '@/utils';
 import { useMemo } from 'react';
+import { useRecoilValue } from 'recoil';
 
 type ReturnType = [
     boolean,
@@ -21,7 +23,7 @@ type ReturnType = [
 ];
 
 const useBottomRightPannelData = (): ReturnType => {
-    const { oruIp } = useTargetOru();
+    const oruIp = useRecoilValue(statusAtom.oruIpAtom);
 
     const { data, loading, timeOutCallback } = useHttpMessage<Diagnostics>({
         url: utils.getAPIUrl(oruIp, 'diagnostics'),

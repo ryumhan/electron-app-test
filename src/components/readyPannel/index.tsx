@@ -1,15 +1,22 @@
-import React, { useState } from 'react';
 import { PannelMessage, PannelContainer } from './readyPannel.styled';
 import Button from '../button';
-// eslint-disable-next-line import/no-cycle
-import Inspection from '@/pages/inspection';
+
+import { useNavigate } from 'react-router-dom';
+import { useResetRecoilState } from 'recoil';
+import statusAtom from '@/atoms/status.atom';
 
 function ReadyPannel() {
-    const [goNext, setNext] = useState(false);
+    const navigate = useNavigate();
+    // reset
+    const resetOru = useResetRecoilState(statusAtom.oruIpAtom);
+    const resetStatus = useResetRecoilState(statusAtom.statusAtom);
 
-    if (goNext) {
-        return <Inspection />;
-    }
+    const handleNextInspection = () => {
+        resetOru();
+        resetStatus();
+
+        navigate('/inspection');
+    };
 
     return (
         <PannelContainer>
@@ -21,7 +28,7 @@ function ReadyPannel() {
                 type="primary"
                 label="계속 진행"
                 disable={false}
-                onClick={() => setNext(true)}
+                onClick={handleNextInspection}
             />
         </PannelContainer>
     );

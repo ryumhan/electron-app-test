@@ -1,13 +1,19 @@
 import Button from '@/components/button';
 import DataComPannel from '@/components/dataComPannel';
 import LoadingPannel from '@/components/loadingPannel';
-import { Vertical, Horizontal } from '@/styled';
-import { InspectionTitle, InspectionView } from '../inspection.styled';
+import { Vertical } from '@/styled';
+import {
+    ButtonContainer,
+    InspectionTitle,
+    InspectionView,
+} from '../inspection.styled';
 import useBottomLeftData from './hook';
 import VerticalStepProgressBar from '@/components/vertical-step-progress';
 import constants from '@/utils/constants';
+import { useNavigate } from 'react-router-dom';
 
 function BottomLeftPannel() {
+    const navigate = useNavigate();
     const [
         open,
         heartPresentData,
@@ -19,12 +25,17 @@ function BottomLeftPannel() {
     return (
         <>
             <VerticalStepProgressBar
-                steps={constants.COM_INSPECTION_STEP.map(elem => elem.name)}
+                steps={constants.COM_INSPECTION_STEP.map(elem => {
+                    return { name: elem.name, checklist: elem.checkList };
+                })}
+                selectList={[1]}
                 currentStep={0}
+                position="right"
+                title="통신 검사 항목"
             />
             <Vertical gap={20} style={{ width: '100%', height: '100%' }}>
-                <InspectionTitle>WebSocket Test</InspectionTitle>
                 <InspectionView>
+                    <InspectionTitle>WebSocket Test</InspectionTitle>
                     {open ? (
                         <Vertical style={{ height: '100%' }}>
                             <DataComPannel
@@ -63,21 +74,21 @@ function BottomLeftPannel() {
                             timeOutCallback={timeOutCallback}
                         />
                     )}
+                    <ButtonContainer>
+                        <Button
+                            type="primary"
+                            label="Success"
+                            onClick={() => {}}
+                            disable={!open}
+                        />
+                        <Button
+                            type="warning"
+                            label="Fail"
+                            onClick={() => navigate('/fail')}
+                            disable={false}
+                        />
+                    </ButtonContainer>
                 </InspectionView>
-                <Horizontal gap={10} justifyContent="flex-end">
-                    <Button
-                        type="primary"
-                        label="Success"
-                        onClick={() => {}}
-                        disable={!open}
-                    />
-                    <Button
-                        type="warning"
-                        label="Fail"
-                        onClick={() => alert('hi')}
-                        disable={false}
-                    />
-                </Horizontal>
             </Vertical>
         </>
     );

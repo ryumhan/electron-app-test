@@ -1,8 +1,9 @@
-import { useTargetOru } from '@/hooks/useTargetOruContext';
+import statusAtom from '@/atoms/status.atom';
 import useWebSocketClient from '@/hooks/useWebSocketClient';
 import { CameraStatus } from '@/model/webSocketMessage/cameraStatus';
 import { HearBeat } from '@/model/webSocketMessage/heartbeat';
 import { useMemo } from 'react';
+import { useRecoilValue } from 'recoil';
 
 type ReturnType = [
     boolean,
@@ -25,7 +26,7 @@ type ReturnType = [
 ];
 
 const useBottomLeftData = (): ReturnType => {
-    const { oruIp } = useTargetOru();
+    const oruIp = useRecoilValue(statusAtom.oruIpAtom);
     const { open, data, timeOver, timeOutCallback } = useWebSocketClient({
         oruIp,
     });

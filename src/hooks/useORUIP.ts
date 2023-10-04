@@ -1,29 +1,30 @@
 import { ipcRenderer } from 'electron';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import utils from '@/utils';
+import statusAtom from '@/atoms/status.atom';
+import { useRecoilState } from 'recoil';
 
 const useORUIP = (): {
     found: boolean;
     oruIp: string;
     timeOutCallback: () => void;
 } => {
-    const [ip, setOruIp] = useState('');
-
+    const [ip, setOruIpAtom] = useRecoilState(statusAtom.oruIpAtom);
     const timeOutCallback = () => {
-        setOruIp('');
+        setOruIpAtom('');
     };
 
     const findOru = () => {
         if (utils.isTestMode()) {
             setTimeout(() => {
-                setOruIp(utils.getTestAddress());
+                setOruIpAtom(utils.getTestAddress());
             }, 5000);
 
             return;
         }
 
         ipcRenderer.on('oruDiscover-module', (_, { data }) => {
-            setOruIp(data);
+            setOruIpAtom(data);
         });
     };
 
@@ -33,6 +34,7 @@ const useORUIP = (): {
                 data: ip,
             });
     }, [ip]);
+
     useEffect(() => {
         findOru();
     }, []);

@@ -1,4 +1,4 @@
-const TEST_MODE = false;
+const TEST_MODE = true;
 const BASE_URI = '/api';
 const API_PORT = 8000;
 const PAGE_PORT = 9005;
@@ -58,63 +58,6 @@ const SVM_STATE_INSPECTION_LIST = [
                     bottom: 0.504,
                     width: 0.246,
                     height: 0.246,
-                    fullscreen: false,
-                },
-            },
-        },
-    },
-    {
-        event: 'starboard-docking-view',
-        message: {
-            type: 'multiple',
-            data: {
-                topdown: {
-                    left: 0.004,
-                    bottom: 0.004,
-                    width: 0.492,
-                    height: 0.992,
-                    fullscreen: false,
-                },
-                front: {
-                    left: 0.56,
-                    bottom: 0.796,
-                    width: 0.2,
-                    height: 0.2,
-                    fullscreen: false,
-                },
-                left: {
-                    left: 0.0,
-                    bottom: 0.0,
-                    width: 0.0,
-                    height: 0.0,
-                    fullscreen: false,
-                },
-                right: {
-                    left: 0.66,
-                    bottom: 0.208,
-                    width: 0.29,
-                    height: 0.29,
-                    fullscreen: false,
-                },
-                rear: {
-                    left: 0.56,
-                    bottom: 0.004,
-                    width: 0.2,
-                    height: 0.2,
-                    fullscreen: false,
-                },
-                blindright: {
-                    left: 0.66,
-                    bottom: 0.502,
-                    width: 0.29,
-                    height: 0.29,
-                    fullscreen: false,
-                },
-                blindleft: {
-                    left: 0.0,
-                    bottom: 0.0,
-                    width: 0.0,
-                    height: 0.0,
                     fullscreen: false,
                 },
             },
@@ -260,33 +203,68 @@ const SVM_STATE_INSPECTION_LIST = [
     },
 ];
 
-const INSPECTION_STEP = [
+const SVM_INSPECTION_STEP = [
     {
-        name: 'SVMReady',
-        step: 1,
+        name: '탑다운 화면 스트리밍 검사',
+        key: 'SVMReady',
+
         checkList: [
-            'Camera Stream Check',
-            'Zoom IN/OUT Available using Mouse/Touch',
-            'Move Check using Mouse/Touch',
+            '카메라 스트리밍 확인',
+            '마우스/터치를 이용한 줌 인/아웃 정상동작 여부',
+            '마우스/터치를 이용한 이동 정상동작 여부',
         ],
     },
     {
-        name: 'CallSVM',
-        step: SVM_STATE_INSPECTION_LIST.length,
+        name: '6 개별 카메라 스트리밍 검사',
+        key: 'CallSVM',
+
         checkList: [
-            'SVM View Check',
-            'Camera Full Screen Available on Mutiple Camera Section',
-            'SVM State change when Click Success ',
+            '카메라 스트리밍 확인',
+            '개별 화면 터치 후 전체화면 변경 정상동작 여부',
         ],
     },
     {
-        name: 'Calibration',
-        step: 1,
+        name: '도킹 카메라 뷰 검사',
+        key: 'CallSVM',
+
         checkList: [
-            'Check Each Mode available in Stage Menu(Not Saved)',
-            'Click and Check Boat ON/OFF',
-            'Each tab Function check(Not Saved)',
-            'Click Initialize button in Result Mode',
+            '카메라 스트리밍 확인',
+            '개별 화면 터치 후 전체화면 변경 정상동작 여부',
+        ],
+    },
+    {
+        name: 'Distance Guide 모드',
+        key: 'CallSVM',
+
+        checkList: ['가이드 정상 표시 확인'],
+    },
+    {
+        name: 'Night theme 모드',
+        key: 'CallSVM',
+
+        checkList: ['카메라 배경화면 테마 변경 확인'],
+    },
+    {
+        name: 'Dark theme 모드',
+        key: 'CallSVM',
+
+        checkList: ['카메라 배경화면 테마 변경 확인'],
+    },
+    {
+        name: 'Light theme 모드',
+        key: 'CallSVM',
+
+        checkList: ['카메라 배경화면 테마 변경 확인'],
+    },
+    {
+        name: '캘리브레이션',
+        key: 'Calibration',
+
+        checkList: [
+            '각 Stage 메뉴 선택 가능 여부 확인(저장X)',
+            '보트 ON/OFF 클릭 확인',
+            '개별 기능 체크(저장X)',
+            'Result Mode에서 Initialize 클릭',
         ],
     },
 ];
@@ -294,19 +272,17 @@ const INSPECTION_STEP = [
 const COM_INSPECTION_STEP = [
     {
         name: '웹소켓 통신 체크',
+
         checkList: [
-            'Camera Stream Check',
-            'Zoom IN/OUT Available using Mouse/Touch',
-            'Move Check using Mouse/Touch',
+            '초당 데이터 정상 수신 확인',
+            'HeartBeat 데이터 확인',
+            '카메라 상태 데이터 확인',
         ],
     },
     {
         name: 'Http통신 체크',
-        checkList: [
-            'SVM View Check',
-            'Camera Full Screen Available on Mutiple Camera Section',
-            'SVM State change when Click Success ',
-        ],
+
+        checkList: ['시리얼 넘버 확인'],
     },
 ];
 
@@ -317,6 +293,6 @@ export default {
     PAGE_PORT,
     PASSWORD,
     SVM_STATE_INSPECTION_LIST,
+    SVM_INSPECTION_STEP,
     COM_INSPECTION_STEP,
-    INSPECTION_STEP,
 };

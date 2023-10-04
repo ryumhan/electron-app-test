@@ -1,16 +1,18 @@
 import useHttpMessage from '@/hooks/useHttpMessage';
 import useSVMState from '@/hooks/useSVMState';
-import { useTargetOru } from '@/hooks/useTargetOruContext';
 import utils from '@/utils';
 import { RawAxiosRequestHeaders } from 'axios';
 import constants from '@/utils/constants';
 import { useState, useEffect } from 'react';
+import { useRecoilValue } from 'recoil';
+import statusAtom from '@/atoms/status.atom';
+import inspectionAtom from '@/atoms/inspection.atom';
 
 type ReturnType = [
     boolean,
     string,
-    string[],
     React.RefObject<HTMLIFrameElement>,
+    number,
     () => void,
     () => void,
     () => void,
@@ -20,13 +22,13 @@ interface Props {
 }
 
 const useTopPannelData = ({ completeStepCallback }: Props): ReturnType => {
-    const { oruIp } = useTargetOru();
+    const oruIp = useRecoilValue(statusAtom.oruIpAtom);
+    const inspectionResult = useRecoilValue(inspectionAtom.svmReportAtom);
 
     const [
         loaded,
         svmElement,
         inspectTitle,
-        checkList,
         onLoadCallback,
         onSuccessCallback,
         timeOutCallback,
@@ -47,6 +49,7 @@ const useTopPannelData = ({ completeStepCallback }: Props): ReturnType => {
     );
 
     const [pageSrc, setPageSrc] = useState(utils.getHttpPage(oruIp, ''));
+    const [token, setToken] = useState('');
 
     useEffect(() => {
         if (inspectTitle === 'Calibration' && !data?.result) {
@@ -65,16 +68,19 @@ const useTopPannelData = ({ completeStepCallback }: Props): ReturnType => {
                     'Content-Type': 'text/html; charset=utf-8',
                 },
             });
-        } else if (inspectTitle === 'Calibration' && !!data?.result) {
+
+            setToken(data.result.authtoken);
+        } else if (inspectTitle === 'Calibration' && token) {
+            console.log(token);
             setPageSrc(utils.getHttpPage(oruIp, 'calibration-for-tutorial'));
         }
-    }, [data, inspectTitle]);
+    }, [data, inspectTitle, token]);
 
     return [
         loaded,
         pageSrc,
-        [inspectTitle, ...checkList],
         svmElement,
+        inspectionResult.findIndex(elem => !elem.result) - 1,
         onLoadCallback,
         onSuccessCallback,
         () => {

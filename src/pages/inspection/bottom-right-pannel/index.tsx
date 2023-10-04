@@ -1,18 +1,24 @@
 import Button from '@/components/button';
 import DataComPannel from '@/components/dataComPannel';
 import LoadingPannel from '@/components/loadingPannel';
-import { Vertical, Horizontal } from '@/styled';
-import { InspectionTitle, InspectionView } from '../inspection.styled';
+import { Vertical } from '@/styled';
+import {
+    ButtonContainer,
+    InspectionTitle,
+    InspectionView,
+} from '../inspection.styled';
 import useBottomRightPannelData from './hook';
+import { useNavigate } from 'react-router-dom';
 
 function BottomRightPannel() {
+    const navigate = useNavigate();
     const [loading, oruData, ccuData, timeOutCallback] =
         useBottomRightPannelData();
 
     return (
         <Vertical gap={20} style={{ width: '100%', height: '100%' }}>
-            <InspectionTitle>HTTP Request Test</InspectionTitle>
             <InspectionView>
+                <InspectionTitle>HTTP Request Test</InspectionTitle>
                 {loading ? (
                     <LoadingPannel
                         loaded={!!(ccuData && oruData)}
@@ -26,7 +32,7 @@ function BottomRightPannel() {
                     />
                 )}
             </InspectionView>
-            <Horizontal gap={10} justifyContent="flex-end">
+            <ButtonContainer>
                 <Button
                     type="primary"
                     label="Success"
@@ -36,10 +42,10 @@ function BottomRightPannel() {
                 <Button
                     type="warning"
                     label="Fail"
-                    onClick={() => alert('hi')}
-                    disable={loading}
+                    onClick={() => navigate('/fail')}
+                    disable={false}
                 />
-            </Horizontal>
+            </ButtonContainer>
         </Vertical>
     );
 }

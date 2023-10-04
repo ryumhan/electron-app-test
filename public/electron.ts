@@ -13,7 +13,8 @@ const createWindow = () => {
         center: true,
         kiosk: !isDev,
         resizable: false,
-        fullscreen: false,
+        fullscreen: true,
+        autoHideMenuBar: true,
         webPreferences: {
             // node환경처럼 사용하기
             nodeIntegration: true,
