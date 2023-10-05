@@ -4,15 +4,15 @@ import { Vertical, Horizontal } from '@/styled';
 export const PageContainer = styled(Vertical)`
     height: 100%;
     margin: auto;
-    width: 50%;
+    width: 56%;
     padding: 0 40px;
     background-color: #f0f0f0;
     position: relative;
     border: 1px solid gray;
 `;
 
-export const PageHeader = styled(Horizontal)`
-    height: 40px;
+export const PageHeader = styled(Horizontal)<{ complete: boolean }>`
+    height: ${props => (props.complete ? '100%' : '45px')};
     width: 100%;
     z-index: 99;
     justify-content: space-between;
@@ -20,12 +20,12 @@ export const PageHeader = styled(Horizontal)`
     top: 0;
     left: 0;
     background-color: white;
-    /* opacity: 0.7; */
+    opacity: ${props => (props.complete ? 0.8 : 0.7)};
     border-radius: 5px;
+    transition: all 0.2s;
     :hover {
-        opacity: 0.9;
+        opacity: 1;
     }
-    /* padding: 0 20px; */
 `;
 
 export const HeaderFront = styled.div`
@@ -33,6 +33,7 @@ export const HeaderFront = styled.div`
     width: 50%;
     flex-direction: row;
     justify-content: center;
+    gap: 15px;
     font-weight: 500;
     /* padding: 0 50px; */
 `;

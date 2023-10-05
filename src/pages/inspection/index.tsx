@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import LoadingPannel from '@/components/loadingPannel';
 import useORUIP from '@/hooks/useORUIP';
 
@@ -22,14 +22,22 @@ import { ipcRenderer } from 'electron';
 import { useNavigate } from 'react-router-dom';
 import statusAtom from '@/atoms/status.atom';
 import { useRecoilValue } from 'recoil';
+import inspectionAtom from '@/atoms/inspection.atom';
 
 function Inspection(): React.ReactElement {
     const navigate = useNavigate();
 
     const { oruIp, found, timeOutCallback } = useORUIP();
-
     const status = useRecoilValue(statusAtom.statusAtom);
-    const [complete, setComplete] = useState(false);
+    const svmReport = useRecoilValue(inspectionAtom.svmReportAtom);
+    const comReport = useRecoilValue(inspectionAtom.comReportAtom);
+
+    const complete = useMemo(
+        () =>
+            svmReport.every(elem => elem.result) &&
+            comReport.every(elem => elem.result),
+        [svmReport, comReport],
+    );
 
     useEffect(() => {
         ipcRenderer.send('create-module', {});
@@ -50,10 +58,16 @@ function Inspection(): React.ReactElement {
 
     return (
         <PageContainer>
-            <PageHeader justifyContent="space-between" alignItems="center">
+            <PageHeader
+                justifyContent="space-between"
+                alignItems="center"
+                complete={complete}
+            >
                 <HeaderFront>
-                    <TypoGraphy type="bold">Found:</TypoGraphy>
-                    <TypoGraphy type="middle">{oruIp}</TypoGraphy>
+                    <TypoGraphy type="bold">Test Target:</TypoGraphy>
+                    <TypoGraphy type="bold" style={{ color: 'green' }}>
+                        {oruIp}
+                    </TypoGraphy>
                 </HeaderFront>
                 <HeaderBack gap={20}>
                     <Horizontal gap={10}>
@@ -70,7 +84,7 @@ function Inspection(): React.ReactElement {
             </PageHeader>
             <Vertical style={{ height: '100%', paddingTop: '20px' }} gap={10}>
                 {/* Top */}
-                <TopPannel completeStepCallback={setComplete} />
+                <TopPannel />
                 {/* Bottom */}
                 <BottomPannel>
                     {/* Left */}

@@ -4,16 +4,21 @@ import Button from '../button';
 import { useNavigate } from 'react-router-dom';
 import { useResetRecoilState } from 'recoil';
 import statusAtom from '@/atoms/status.atom';
+import inspectionAtom from '@/atoms/inspection.atom';
 
 function ReadyPannel() {
     const navigate = useNavigate();
     // reset
     const resetOru = useResetRecoilState(statusAtom.oruIpAtom);
     const resetStatus = useResetRecoilState(statusAtom.statusAtom);
+    const resetSVMReport = useResetRecoilState(inspectionAtom.svmReportAtom);
+    const resetComReport = useResetRecoilState(inspectionAtom.comReportAtom);
 
     const handleNextInspection = () => {
         resetOru();
         resetStatus();
+        resetComReport();
+        resetSVMReport();
 
         navigate('/inspection');
     };

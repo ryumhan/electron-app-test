@@ -9,7 +9,7 @@ const PORT = 64001; // Change to your desired port number
 const createPythonProcess = () => {
     if (pythonProcess) pythonProcess.kill();
 
-    pythonProcess = spawn('python', ['./public/oru_ip_find.py']);
+    pythonProcess = spawn('./public/dist/oru_ip_find.exe');
 
     pythonProcess.on('spawn', () =>
         console.log('[PYTHON-PROCESS] process start'),

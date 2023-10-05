@@ -11,6 +11,8 @@ import useBottomLeftData from './hook';
 import VerticalStepProgressBar from '@/components/vertical-step-progress';
 import constants from '@/utils/constants';
 import { useNavigate } from 'react-router-dom';
+import { useRecoilState } from 'recoil';
+import inspectionAtom from '@/atoms/inspection.atom';
 
 function BottomLeftPannel() {
     const navigate = useNavigate();
@@ -22,13 +24,37 @@ function BottomLeftPannel() {
         timeOutCallback,
     ] = useBottomLeftData();
 
+    const [comReport, setComReport] = useRecoilState(
+        inspectionAtom.comReportAtom,
+    );
+
+    const failHandler = () => {
+        setComReport(current => {
+            return current.map((elem, idx) =>
+                idx === 0 ? { name: elem.name, result: false } : elem,
+            );
+        });
+
+        navigate('/fail');
+    };
+
+    const successandler = () => {
+        setComReport(current => {
+            return current.map((elem, idx) =>
+                idx === 0 ? { name: elem.name, result: true } : elem,
+            );
+        });
+    };
+
     return (
         <>
             <VerticalStepProgressBar
                 steps={constants.COM_INSPECTION_STEP.map(elem => {
                     return { name: elem.name, checklist: elem.checkList };
                 })}
-                selectList={[1]}
+                selectList={comReport
+                    .map((elem, idx) => (elem.result ? idx : -1))
+                    .filter(elem => elem !== -1)}
                 currentStep={0}
                 position="right"
                 title="통신 검사 항목"
@@ -40,7 +66,6 @@ function BottomLeftPannel() {
                         <Vertical style={{ height: '100%' }}>
                             <DataComPannel
                                 timeOver={timeOver}
-                                status="Interval"
                                 data={
                                     heartPresentData
                                         ? [heartPresentData]
@@ -54,7 +79,6 @@ function BottomLeftPannel() {
                             />
                             <DataComPannel
                                 timeOver={timeOver}
-                                status="Interval"
                                 data={
                                     cameraPresentData
                                         ? [cameraPresentData]
@@ -78,13 +102,13 @@ function BottomLeftPannel() {
                         <Button
                             type="primary"
                             label="Success"
-                            onClick={() => {}}
+                            onClick={successandler}
                             disable={!open}
                         />
                         <Button
                             type="warning"
                             label="Fail"
-                            onClick={() => navigate('/fail')}
+                            onClick={failHandler}
                             disable={false}
                         />
                     </ButtonContainer>

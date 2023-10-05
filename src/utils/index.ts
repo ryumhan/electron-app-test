@@ -3,7 +3,8 @@ import constants from './constants';
 
 const { TEST_MODE, API_PORT, BASE_URI, PAGE_PORT } = constants;
 
-const getTestAddress = () => '198.18.6.118';
+const getTestAddress = () => '192.168.0.200';
+// const getTestAddress = () => '198.18.6.118';
 
 const isDev = () => process.env.NODE_ENV === 'development';
 const isTestMode = () => process.env.NODE_ENV === 'development' && TEST_MODE;

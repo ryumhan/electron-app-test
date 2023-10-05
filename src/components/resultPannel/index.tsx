@@ -5,15 +5,22 @@ import {
 } from './readyPannel.styled';
 import Button from '../button';
 import { imgFailed, imgSuccess } from '@/assets';
-import { Vertical } from '@/styled';
+import { TypoGraphy, Vertical } from '@/styled';
 import { useNavigate } from 'react-router-dom';
+import useFileLogger from '@/hooks/useFileLogger';
+import { useRecoilValue } from 'recoil';
+import inspectionAtom from '@/atoms/inspection.atom';
 
 interface Props {
     type: 'success' | 'fail';
 }
 
 function ResultPannel({ type }: Props) {
+    useFileLogger();
+
     const navigate = useNavigate();
+    const failReport = useRecoilValue(inspectionAtom.failReportAtom);
+
     return (
         <PannelContainer>
             <Vertical gap={25} alignItems="center">
@@ -21,6 +28,16 @@ function ResultPannel({ type }: Props) {
                     <>
                         <ResultImg src={imgFailed} alt="result_failed" />
                         <PannelMessage>검사 결과 실패</PannelMessage>
+                        {failReport.map(error =>
+                            error ? (
+                                <TypoGraphy
+                                    type="normal"
+                                    style={{ color: 'red' }}
+                                >
+                                    {error}
+                                </TypoGraphy>
+                            ) : null,
+                        )}
                     </>
                 ) : (
                     <>

@@ -12,12 +12,12 @@ import useTopPannelData from './hook';
 import { useNavigate } from 'react-router-dom';
 import constants from '@/utils/constants';
 
-interface Props {
-    completeStepCallback: (value: boolean) => void;
-}
-
-function TopPannel({ completeStepCallback }: Props): React.ReactElement {
+function TopPannel(): React.ReactElement {
     const navigate = useNavigate();
+
+    const handleFail = () => {
+        navigate('/fail');
+    };
 
     const [
         loaded,
@@ -27,10 +27,9 @@ function TopPannel({ completeStepCallback }: Props): React.ReactElement {
         onLoadCallback,
         onSuccessCallback,
         timeOutCallback,
-    ] = useTopPannelData({
-        completeStepCallback,
-    });
+    ] = useTopPannelData();
 
+    console.log(currentStep);
     return (
         <WebViewPannel>
             <VerticalStepProgress
@@ -68,12 +67,12 @@ function TopPannel({ completeStepCallback }: Props): React.ReactElement {
                     type="primary"
                     label="Success"
                     onClick={onSuccessCallback}
-                    disable={loaded}
+                    disable={!loaded}
                 />
                 <Button
                     type="warning"
                     label="Fail"
-                    onClick={() => navigate('/fail')}
+                    onClick={handleFail}
                     disable={false}
                 />
             </ButtonContainer>

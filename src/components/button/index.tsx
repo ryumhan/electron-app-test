@@ -18,7 +18,14 @@ function Button({ disable, type, label, onClick }: Props) {
                     ? 'red'
                     : 'gray'
             }
-            onClick={disable ? () => {} : onClick}
+            onClick={
+                disable
+                    ? () => {}
+                    : e => {
+                          e.preventDefault();
+                          onClick();
+                      }
+            }
             disable={disable}
         >
             <ButtonLabel>{label}</ButtonLabel>

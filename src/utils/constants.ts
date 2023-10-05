@@ -233,6 +233,15 @@ const SVM_INSPECTION_STEP = [
         ],
     },
     {
+        name: '보우 카메라 뷰 검사',
+        key: 'CallSVM',
+
+        checkList: [
+            '카메라 스트리밍 확인',
+            '개별 화면 터치 후 전체화면 변경 정상동작 여부',
+        ],
+    },
+    {
         name: 'Distance Guide 모드',
         key: 'CallSVM',
 
@@ -242,7 +251,7 @@ const SVM_INSPECTION_STEP = [
         name: 'Night theme 모드',
         key: 'CallSVM',
 
-        checkList: ['카메라 배경화면 테마 변경 확인'],
+        checkList: ['보트 / 테마 변경 확인'],
     },
     {
         name: 'Dark theme 모드',

@@ -12,7 +12,7 @@ const createWindow = () => {
         height: 900,
         center: true,
         kiosk: !isDev,
-        resizable: false,
+        resizable: true,
         fullscreen: true,
         autoHideMenuBar: true,
         webPreferences: {

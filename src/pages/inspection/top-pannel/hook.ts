@@ -3,8 +3,8 @@ import useSVMState from '@/hooks/useSVMState';
 import utils from '@/utils';
 import { RawAxiosRequestHeaders } from 'axios';
 import constants from '@/utils/constants';
-import { useState, useEffect } from 'react';
-import { useRecoilValue } from 'recoil';
+import { useState, useEffect, useMemo } from 'react';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
 import statusAtom from '@/atoms/status.atom';
 import inspectionAtom from '@/atoms/inspection.atom';
 
@@ -17,14 +17,12 @@ type ReturnType = [
     () => void,
     () => void,
 ];
-interface Props {
-    completeStepCallback: (value: boolean) => void;
-}
 
-const useTopPannelData = ({ completeStepCallback }: Props): ReturnType => {
+const useTopPannelData = (): ReturnType => {
     const oruIp = useRecoilValue(statusAtom.oruIpAtom);
     const inspectionResult = useRecoilValue(inspectionAtom.svmReportAtom);
 
+    const setFailReport = useSetRecoilState(inspectionAtom.failReportAtom);
     const [
         loaded,
         svmElement,
@@ -32,7 +30,7 @@ const useTopPannelData = ({ completeStepCallback }: Props): ReturnType => {
         onLoadCallback,
         onSuccessCallback,
         timeOutCallback,
-    ] = useSVMState({ completeStepCallback });
+    ] = useSVMState();
 
     const [requestObj, setRequestObj] = useState<{
         url: string;
@@ -40,26 +38,24 @@ const useTopPannelData = ({ completeStepCallback }: Props): ReturnType => {
         body?: { password: string };
         headers?: RawAxiosRequestHeaders;
     }>({
-        url: '',
+        url: utils.getAPIUrl(oruIp, 'auth'),
         method: 'POST',
+        body: { password: constants.PASSWORD },
     });
 
-    const { data } = useHttpMessage<{ result: { authtoken: string } }>(
+    const { data, error } = useHttpMessage<{ result: { authtoken: string } }>(
         requestObj,
     );
 
     const [pageSrc, setPageSrc] = useState(utils.getHttpPage(oruIp, ''));
-    const [token, setToken] = useState('');
+
+    const currentStep = useMemo(() => {
+        const found = inspectionResult.findIndex(elem => !elem.result);
+        return found === -1 ? inspectionResult.length - 1 : found - 1;
+    }, [inspectionResult]);
 
     useEffect(() => {
-        if (inspectTitle === 'Calibration' && !data?.result) {
-            setRequestObj({
-                ...requestObj,
-                method: 'POST',
-                url: utils.getAPIUrl(oruIp, 'auth'),
-                body: { password: constants.PASSWORD },
-            });
-        } else if (data?.result?.authtoken) {
+        if (data?.result?.authtoken) {
             setRequestObj({
                 url: utils.getHttpPage(oruIp, 'calibration'),
                 method: 'GET',
@@ -68,19 +64,23 @@ const useTopPannelData = ({ completeStepCallback }: Props): ReturnType => {
                     'Content-Type': 'text/html; charset=utf-8',
                 },
             });
-
-            setToken(data.result.authtoken);
-        } else if (inspectTitle === 'Calibration' && token) {
-            console.log(token);
+        } else if (inspectTitle === 'Calibration') {
             setPageSrc(utils.getHttpPage(oruIp, 'calibration-for-tutorial'));
         }
-    }, [data, inspectTitle, token]);
+    }, [data, inspectTitle]);
+
+    useEffect(() => {
+        if (error)
+            setFailReport(current =>
+                current.concat(current, `[Calibration Inspection] ${error}`),
+            );
+    }, [error]);
 
     return [
         loaded,
         pageSrc,
         svmElement,
-        inspectionResult.findIndex(elem => !elem.result) - 1,
+        currentStep,
         onLoadCallback,
         onSuccessCallback,
         () => {

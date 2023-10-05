@@ -17,13 +17,10 @@ type ReturnType = [
     () => void,
 ];
 
-interface Props {
-    completeStepCallback: (value: boolean) => void;
-}
-
-const useSVMState = ({ completeStepCallback }: Props): ReturnType => {
-    const oruIp = useRecoilValue(statusAtoms.oruIpAtom);
+const useSVMState = (): ReturnType => {
     const setReport = useSetRecoilState(inspectionAtom.svmReportAtom);
+
+    const oruIp = useRecoilValue(statusAtoms.oruIpAtom);
 
     const [inspectionStep, setInspectionStep] = useState(-1);
 
@@ -38,13 +35,17 @@ const useSVMState = ({ completeStepCallback }: Props): ReturnType => {
     };
 
     const onLoadCallback = () => {
-        setInspectionStep(0);
+        if (
+            inspectionStep === -1 ||
+            SVM_INSPECTION_STEP[inspectionStep].key !== 'Calibration'
+        )
+            setInspectionStep(0);
     };
 
     const onSuccessCallback = () => {
         if (!svmElement.current || inspectionStep < 0) return;
 
-        if (SVM_INSPECTION_STEP[inspectionStep].key === 'CallSVM') {
+        if (SVM_INSPECTION_STEP[inspectionStep].key !== 'Calibration') {
             const message = SVM_STATE_INSPECTION_LIST[checkStep];
             svmElement.current.contentWindow?.postMessage(
                 message,
@@ -52,8 +53,6 @@ const useSVMState = ({ completeStepCallback }: Props): ReturnType => {
             );
 
             setCheckStep(checkStep + 1);
-        } else if (inspectionStep + 1 === SVM_INSPECTION_STEP.length) {
-            completeStepCallback(true);
         }
 
         setInspectionStep(inspectionStep + 1);
@@ -75,9 +74,14 @@ const useSVMState = ({ completeStepCallback }: Props): ReturnType => {
     };
 
     useEffect(() => {
-        if (inspectionStep < 0) return;
+        if (
+            inspectionStep < 0 ||
+            inspectionStep >= SVM_INSPECTION_STEP.length ||
+            !SVM_INSPECTION_STEP[inspectionStep]
+        )
+            return;
 
-        setInspectTitle(SVM_INSPECTION_STEP[inspectionStep].name);
+        setInspectTitle(SVM_INSPECTION_STEP[inspectionStep].key);
     }, [inspectionStep]);
 
     return [

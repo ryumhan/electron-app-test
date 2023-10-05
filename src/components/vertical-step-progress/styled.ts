@@ -6,7 +6,7 @@ const gapSize = '10px';
 
 export const ProgressBarContainer = styled(Vertical)<{ position: string }>`
     position: fixed;
-    width: 25%;
+    width: 22%;
     height: 100%;
     background-color: #f0f0f0;
     top: 0;
@@ -55,11 +55,13 @@ export const SucceedStep = styled.img`
     height: ${stepCircleSize};
 `;
 
-export const StepContainer = styled(Vertical)``;
+export const StepContainer = styled(Vertical)`
+    font-size: 14px;
+`;
 
 export const CheckListContainer = styled(Vertical)`
     justify-content: center;
     width: 85%;
-    font-size: 12px;
+    font-size: 11px;
     color: gray;
 `;

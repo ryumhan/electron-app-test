@@ -10,7 +10,7 @@ export const PannelContainer = styled(Vertical)`
 export const DataKey = styled.div`
     width: 130px;
     font-weight: 500;
-    font-size: 14px;
+    font-size: 11px;
     color: gray;
     text-align: right;
 `;
@@ -18,7 +18,7 @@ export const DataKey = styled.div`
 export const DataValue = styled.div`
     width: 130px;
     font-weight: normal;
-    font-size: 12px;
+    font-size: 10px;
     color: black;
     text-align: left;
 `;
@@ -26,7 +26,7 @@ export const DataValue = styled.div`
 export const DataText = styled.span``;
 
 export const FailurePannelContainer = styled.div`
-    height: 100%;
+    /* height: 100%; */
     align-items: center;
     justify-content: center;
     gap: 10px;

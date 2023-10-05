@@ -1,12 +1,6 @@
 import Button from '@/components/button';
 import { Horizontal, Vertical } from '@/styled';
-import {
-    CopyrightBox,
-    CopyrightMessage,
-    InputWrapper,
-    LoginBox,
-    PageContainer,
-} from './login.styled';
+import { InputWrapper, LoginBox, PageContainer } from './login.styled';
 
 import { Controller, useForm } from 'react-hook-form';
 import { ComponentProps } from 'react';
@@ -69,9 +63,7 @@ function Login() {
     return (
         <PageContainer>
             <LoginBox>
-                <Vertical
-                    style={{ justifyContent: 'space-between', height: '100%' }}
-                >
+                <Vertical gap={40}>
                     <Vertical style={{ gap: '30px' }}>
                         <Vertical style={{ gap: '10px' }}>
                             <Controller
@@ -134,12 +126,12 @@ function Login() {
                         </Vertical>
                     </Vertical>
 
-                    <CopyrightBox>
+                    {/* <CopyrightBox>
                         <CopyrightMessage>
                             This Application is available to only allowed people
                             @avikus
                         </CopyrightMessage>
-                    </CopyrightBox>
+                    </CopyrightBox> */}
                     <Horizontal style={{ justifyContent: 'end' }}>
                         <Button
                             type="primary"
