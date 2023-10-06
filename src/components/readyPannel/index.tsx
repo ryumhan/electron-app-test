@@ -2,7 +2,7 @@ import { PannelMessage, PannelContainer } from './readyPannel.styled';
 import Button from '../button';
 
 import { useNavigate } from 'react-router-dom';
-import { useResetRecoilState } from 'recoil';
+import { useRecoilState, useResetRecoilState, useSetRecoilState } from 'recoil';
 import statusAtom from '@/atoms/status.atom';
 import inspectionAtom from '@/atoms/inspection.atom';
 
@@ -11,15 +11,31 @@ function ReadyPannel() {
     // reset
     const resetOru = useResetRecoilState(statusAtom.oruIpAtom);
     const resetStatus = useResetRecoilState(statusAtom.statusAtom);
-    const resetSVMReport = useResetRecoilState(inspectionAtom.svmReportAtom);
-    const resetComReport = useResetRecoilState(inspectionAtom.comReportAtom);
+    const [svmDefaultVal, resetSVMReport] = useRecoilState(
+        inspectionAtom.svmReportAtom,
+    );
+    const [comDefaultVal, resetComReport] = useRecoilState(
+        inspectionAtom.comReportAtom,
+    );
+
+    const startNewInspection = useSetRecoilState(inspectionAtom.rootReporter);
 
     const handleNextInspection = () => {
         resetOru();
         resetStatus();
-        resetComReport();
-        resetSVMReport();
+        resetSVMReport(inspectionAtom.defaultSvm);
+        resetComReport(inspectionAtom.defaultCom);
 
+        startNewInspection(current =>
+            current.concat([
+                {
+                    error: [''],
+                    last_date: '',
+                    svmReports: svmDefaultVal,
+                    comReports: comDefaultVal,
+                },
+            ]),
+        );
         navigate('/inspection');
     };
 

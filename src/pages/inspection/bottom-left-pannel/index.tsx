@@ -25,7 +25,7 @@ function BottomLeftPannel() {
     ] = useBottomLeftData();
 
     const [comReport, setComReport] = useRecoilState(
-        inspectionAtom.comReportAtom,
+        inspectionAtom.comSelector,
     );
 
     const failHandler = () => {

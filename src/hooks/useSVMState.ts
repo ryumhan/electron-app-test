@@ -19,7 +19,7 @@ type ReturnType = [
 ];
 
 const useSVMState = (): ReturnType => {
-    const setReport = useSetRecoilState(inspectionAtom.svmReportAtom);
+    const setReport = useSetRecoilState(inspectionAtom.svmSelector);
 
     const oruIp = useRecoilValue(statusAtoms.oruIpAtom);
 

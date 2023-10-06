@@ -1,30 +1,28 @@
 import constants from '@/utils/constants';
-// import dayjs from 'dayjs';
-import { atom } from 'recoil';
+import dayjs from 'dayjs';
+import { atom, selector } from 'recoil';
 
 interface InspectionData {
     name: string;
     result: boolean;
 }
 
-// interface rootReportData {
-//     error: string[];
-//     date: string;
-//     reports: InspectionData[];
-// }
+const defaultSvm = constants.SVM_INSPECTION_STEP.map(elem => {
+    return { name: elem.name, result: false };
+});
+
+const defaultCom = constants.COM_INSPECTION_STEP.map(elem => {
+    return { name: elem.name, result: false };
+});
 
 const svmReportAtom = atom<InspectionData[]>({
     key: 'svmReportAtom',
-    default: constants.SVM_INSPECTION_STEP.map(elem => {
-        return { name: elem.name, result: false };
-    }),
+    default: defaultSvm,
 });
 
 const comReportAtom = atom<InspectionData[]>({
     key: 'comReportAtom',
-    default: constants.COM_INSPECTION_STEP.map(elem => {
-        return { name: elem.name, result: false };
-    }),
+    default: defaultCom,
 });
 
 const failReportAtom = atom<string[]>({
@@ -32,59 +30,72 @@ const failReportAtom = atom<string[]>({
     default: [],
 });
 
-// const rootReporter = atom<rootReportData[]>({
-//     key: 'rootReporter',
-//     default: [],
-// });
+interface rootReportData {
+    error: string[];
+    last_date: string;
+    svmReports: InspectionData[];
+    comReports: InspectionData[];
+}
 
-// const reportSVMSelector = selector<InspectionData[]>({
-//     key: 'reportSVMSelector',
-//     get: ({ get }) => {
-//         const current = get(rootReporter);
-//         return current.length ? current[current.length - 1].reports : [];
-//     },
-//     set: ({ set, get }, newValue) => {
-//         const date = dayjs().toString();
+const rootReporter = atom<rootReportData[]>({
+    key: 'rootReporter',
+    default: [
+        {
+            error: [],
+            last_date: '',
+            svmReports: defaultSvm,
+            comReports: defaultCom,
+        },
+    ],
+});
 
-//         const root = get(rootReporter);
-//         const current = root.length ? root[root.length - 1].reports : [];
+const svmSelector = selector<InspectionData[]>({
+    key: 'svmSelector',
+    get: ({ get }) => {
+        const current = get(rootReporter);
+        return current[current.length - 1].svmReports;
+    },
+    set: ({ set, get }, newValue) => {
+        set(svmReportAtom, newValue);
 
-//         const error = get(failReportAtom);
-//         // current.concat(current, newValue),
+        const date = dayjs().toString();
+        const root = get(rootReporter);
 
-//         // const next: rootReportData = {
-//         //     error,
-//         //     date,
-//         //     reports: newValue,
-//         // };
+        const currentReport = root[root.length - 1];
+        currentReport.last_date = date;
+        currentReport.svmReports = newValue as InspectionData[];
 
-//         // set(rootReporter, next);
-//     },
-// });
+        set(rootReporter, root);
+    },
+});
 
-// const reportCOMSelector = selector<InspectionData[]>({
-//     key: 'reportCOMSelector',
-//     get: ({ get }) => {
-//         const current = get(rootReporter);
-//         return current.length ? current[current.length - 1].reports : [];
-//     },
-//     set: ({ set, get }, newValue) => {
-//         const date = dayjs().toString();
+const comSelector = selector<InspectionData[]>({
+    key: 'comSelector',
+    get: ({ get }) => {
+        const current = get(rootReporter);
+        return current[current.length - 1].comReports;
+    },
+    set: ({ set, get }, newValue) => {
+        set(svmReportAtom, newValue);
 
-//         const root = get(rootReporter);
-//         const current = root.length ? root[root.length - 1].reports : [];
+        const date = dayjs().toString();
+        const root = get(rootReporter);
 
-//         const error = get(failReportAtom);
-//                 current.concat(newValue as InspectionData[]),
+        const currentReport = root[root.length - 1];
+        currentReport.last_date = date;
+        currentReport.comReports = newValue as InspectionData[];
 
-//         // const next: rootReportData = {
-//         //     error,
-//         //     date,
-//         //     reports: newValue,
-//         // };
+        set(rootReporter, root);
+    },
+});
 
-//         // set(rootReporter, next);
-//     },
-// });
-
-export default { svmReportAtom, comReportAtom, failReportAtom };
+export default {
+    rootReporter,
+    svmReportAtom,
+    defaultSvm,
+    defaultCom,
+    comReportAtom,
+    failReportAtom,
+    svmSelector,
+    comSelector,
+};

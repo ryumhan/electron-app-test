@@ -10,7 +10,7 @@ import { useRecoilValue } from 'recoil';
 // ];
 
 const useFileLogger = () => {
-    const failReport = useRecoilValue(inspectionAtom.failReportAtom);
+    const failReport = useRecoilValue(inspectionAtom.rootReporter);
     // const comReport = useRecoilValue(inspectionAtom.comReportAtom);
     // const svmReport = useRecoilValue(inspectionAtom.svmReportAtom);
 
@@ -22,6 +22,7 @@ const useFileLogger = () => {
     const createFileLogging = async () => {
         // Write the data to the CSV file
         try {
+            console.log(failReport);
             // csvWriter.writeRecords(data);
         } catch (error) {
             console.error(error);
