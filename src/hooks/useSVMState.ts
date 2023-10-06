@@ -15,6 +15,7 @@ type ReturnType = [
     () => void,
     () => void,
     () => void,
+    () => void,
 ];
 
 const useSVMState = (): ReturnType => {
@@ -42,25 +43,25 @@ const useSVMState = (): ReturnType => {
             setInspectionStep(0);
     };
 
-    const onSuccessCallback = () => {
-        if (!svmElement.current || inspectionStep < 0) return;
+    const handleNextStep = (step: number, nextCheckStep: number) => {
+        if (!svmElement.current || step < 0) return;
 
-        if (SVM_INSPECTION_STEP[inspectionStep].key !== 'Calibration') {
-            const message = SVM_STATE_INSPECTION_LIST[checkStep];
+        if (step === 0 || SVM_INSPECTION_STEP[step - 1].key !== 'Calibration') {
+            const message = SVM_STATE_INSPECTION_LIST[nextCheckStep - 1];
             svmElement.current.contentWindow?.postMessage(
                 message,
                 utils.getHttpPage(oruIp, ''),
             );
 
-            setCheckStep(checkStep + 1);
+            setCheckStep(nextCheckStep);
         }
 
-        setInspectionStep(inspectionStep + 1);
+        setInspectionStep(step);
         // save current result
         setReport(current => {
             const newReport = current.map(elem => {
                 const rst =
-                    elem.name === SVM_INSPECTION_STEP[inspectionStep].name
+                    elem.name === SVM_INSPECTION_STEP[step - 1].name
                         ? {
                               name: elem.name,
                               result: true,
@@ -71,6 +72,15 @@ const useSVMState = (): ReturnType => {
 
             return newReport;
         });
+    };
+
+    const onBackCallback = () => {
+        if (inspectionStep === -1) return;
+        handleNextStep(inspectionStep - 1, checkStep - 1);
+    };
+
+    const onSuccessCallback = () => {
+        handleNextStep(inspectionStep + 1, checkStep + 1);
     };
 
     useEffect(() => {
@@ -89,6 +99,7 @@ const useSVMState = (): ReturnType => {
         svmElement,
         inspectTitle,
         onLoadCallback,
+        onBackCallback,
         onSuccessCallback,
         timeOutCallback,
     ];

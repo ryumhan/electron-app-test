@@ -24,7 +24,7 @@ export const PageHeader = styled(Horizontal)<{ complete: boolean }>`
     border-radius: 5px;
     transition: all 0.2s;
     :hover {
-        height: 70px;
+        height: ${props => (props.complete ? '100%' : '70px')};
         opacity: 1;
     }
 `;
@@ -69,14 +69,16 @@ export const BottomPannel = styled(Horizontal)`
 `;
 
 export const InspectionTitle = styled.div`
-    width: 100%;
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: start;
     font-weight: bold;
-    padding: 15px 0;
+    padding: 15px 20px;
     position: absolute;
     z-index: 999;
+    background-color: #f0f0f0;
+    border-radius: 3px;
+    opacity: 0.7;
 `;
 
 export const InspectionView = styled.div`
@@ -85,15 +87,25 @@ export const InspectionView = styled.div`
     border: 2px solid gray;
     border-radius: 10px;
     background-color: transparent;
-    /* opacity: 0.2; */
     overflow: hidden;
     position: relative;
 `;
 
 export const ButtonContainer = styled(Horizontal)`
     position: absolute;
-    bottom: 15px;
-    right: 15px;
-    gap: 5px;
+    padding: 15px;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    /* gap: 5px; */
     z-index: 10;
+    justify-content: space-between;
+`;
+
+export const UndoContainer = styled(Horizontal)`
+    position: absolute;
+    left: 0;
+    top: 0;
+    z-index: 10;
+    transform: translateX(-150%);
 `;

@@ -5,6 +5,7 @@ import {
     InspectionView,
     InspectionTitle,
     ButtonContainer,
+    UndoContainer,
 } from '../inspection.styled';
 
 import VerticalStepProgress from '../../../components/vertical-step-progress';
@@ -25,12 +26,22 @@ function TopPannel(): React.ReactElement {
         svmElement,
         currentStep,
         onLoadCallback,
+        onBackCallback,
         onSuccessCallback,
         timeOutCallback,
     ] = useTopPannelData();
 
+    console.log(currentStep);
     return (
         <WebViewPannel>
+            <UndoContainer>
+                <Button
+                    type="normal"
+                    label="Undo"
+                    disable={false}
+                    onClick={onBackCallback}
+                />
+            </UndoContainer>
             <VerticalStepProgress
                 steps={constants.SVM_INSPECTION_STEP.map(elem => {
                     return { name: elem.name, checklist: elem.checkList };

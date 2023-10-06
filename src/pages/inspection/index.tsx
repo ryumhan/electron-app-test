@@ -74,7 +74,7 @@ function Inspection(): React.ReactElement {
 
                     <Button
                         type={complete ? 'primary' : 'normal'}
-                        label={status}
+                        label={complete ? 'Complete' : status}
                         disable={!complete}
                         onClick={() => navigate('/success')}
                     />

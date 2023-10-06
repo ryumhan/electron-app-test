@@ -26,6 +26,7 @@ function VerticalStepProgressBar({
     selectList,
     position,
 }: Props) {
+    const current = !selectList ? currentStep + 1 : currentStep;
     return (
         <ProgressBarContainer position={position}>
             <Title>
@@ -36,10 +37,15 @@ function VerticalStepProgressBar({
                     ? selectList.includes(index)
                     : index <= currentStep;
 
+                const isBold = current === index;
+
                 return (
                     <VerticalStepListContainer
                         done={done}
                         key={step + index.toString()}
+                        style={{
+                            opacity: isBold ? '1' : '0.6',
+                        }}
                     >
                         <Horizontal gap={23} alignItems="center">
                             {done ? (
@@ -49,8 +55,8 @@ function VerticalStepProgressBar({
                             )}
                             <StepContainer>
                                 <TypoGraphy
-                                    type="middle"
-                                    style={{ color: done ? 'green' : '' }}
+                                    type={isBold ? 'bold' : 'middle'}
+                                    style={{ color: done ? 'green' : 'black' }}
                                 >
                                     {step.name}
                                 </TypoGraphy>
@@ -64,8 +70,11 @@ function VerticalStepProgressBar({
                                 {step.checklist.map(elem => (
                                     <TypoGraphy
                                         key={elem}
-                                        type="middle"
-                                        style={{ color: done ? 'green' : '' }}
+                                        type={isBold ? 'bold' : 'middle'}
+                                        style={{
+                                            fontSize: isBold ? '13px' : '10px',
+                                            color: done ? 'green' : 'black',
+                                        }}
                                     >
                                         ✔ {elem}
                                     </TypoGraphy>

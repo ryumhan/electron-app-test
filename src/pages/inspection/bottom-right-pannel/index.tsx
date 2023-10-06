@@ -55,21 +55,21 @@ function BottomRightPannel() {
                         <DataComPannel data={oruData.concat(ccuData || [])} />
                     </Vertical>
                 )}
+                <ButtonContainer>
+                    <Button
+                        type="primary"
+                        label="Success"
+                        onClick={successandler}
+                        disable={loading}
+                    />
+                    <Button
+                        type="warning"
+                        label="Fail"
+                        onClick={failHandler}
+                        disable={false}
+                    />
+                </ButtonContainer>
             </InspectionView>
-            <ButtonContainer>
-                <Button
-                    type="primary"
-                    label="Success"
-                    onClick={successandler}
-                    disable={loading}
-                />
-                <Button
-                    type="warning"
-                    label="Fail"
-                    onClick={failHandler}
-                    disable={false}
-                />
-            </ButtonContainer>
         </Vertical>
     );
 }

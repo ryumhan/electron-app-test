@@ -31,9 +31,9 @@ const useBottomRightPannelData = (): ReturnType => {
 
     const oruData = useMemo(
         () => [
-            { key: `ORU-Serial`, value: data?.oruInfo.serialNumber || '' },
+            { key: `Customer Serial`, value: data?.oruInfo.serialNumber || '' },
             {
-                key: `ORU-AvikusSerial`,
+                key: `Avikus Serial`,
                 value: data?.oruInfo.AvksSerial || '',
             },
         ],
@@ -44,9 +44,12 @@ const useBottomRightPannelData = (): ReturnType => {
         () =>
             data?.ccuInfo
                 .map((ccu, idx) => [
-                    { key: `CCU${idx + 1}-Serial`, value: ccu.serialNumber },
                     {
-                        key: `CCU${idx + 1}-AvikusSerial`,
+                        key: `CCU${idx + 1}-Customer Serial`,
+                        value: ccu.serialNumber,
+                    },
+                    {
+                        key: `CCU${idx + 1}-Avikus Serial`,
                         value: ccu.AvksSerial,
                     },
                 ])

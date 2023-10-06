@@ -2,13 +2,13 @@ import styled from '@emotion/styled';
 import { Horizontal, Vertical } from '@/styled';
 
 export const PannelContainer = styled(Vertical)`
-    gap: 10px;
+    gap: 2px;
 `;
 
 export const DataKey = styled.div`
     width: 50%;
     font-weight: 500;
-    font-size: 14px;
+    font-size: 10px;
     color: gray;
     text-align: right;
 `;
@@ -16,7 +16,7 @@ export const DataKey = styled.div`
 export const DataValue = styled.div`
     width: 130px;
     font-weight: normal;
-    font-size: 13px;
+    font-size: 10px;
     color: black;
     text-align: right;
 `;

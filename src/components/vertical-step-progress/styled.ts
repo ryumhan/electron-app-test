@@ -62,6 +62,5 @@ export const StepContainer = styled(Vertical)`
 export const CheckListContainer = styled(Vertical)`
     justify-content: center;
     width: 85%;
-    font-size: 10px;
     color: gray;
 `;

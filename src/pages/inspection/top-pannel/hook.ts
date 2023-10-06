@@ -16,6 +16,7 @@ type ReturnType = [
     () => void,
     () => void,
     () => void,
+    () => void,
 ];
 
 const useTopPannelData = (): ReturnType => {
@@ -28,6 +29,7 @@ const useTopPannelData = (): ReturnType => {
         svmElement,
         inspectTitle,
         onLoadCallback,
+        onBackCallback,
         onSuccessCallback,
         timeOutCallback,
     ] = useSVMState();
@@ -82,6 +84,7 @@ const useTopPannelData = (): ReturnType => {
         svmElement,
         currentStep,
         onLoadCallback,
+        onBackCallback,
         onSuccessCallback,
         () => {
             timeOutCallback();

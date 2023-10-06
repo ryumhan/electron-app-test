@@ -46,7 +46,6 @@ function BottomLeftPannel() {
         });
     };
 
-    // console.log(cameraPresentData);
     return (
         <>
             <VerticalStepProgressBar

@@ -1,4 +1,4 @@
-const TEST_MODE = false;
+const TEST_MODE = true;
 const BASE_URI = '/api';
 const API_PORT = 8000;
 const PAGE_PORT = 9005;
@@ -10,6 +10,62 @@ const SVM_STATE_INSPECTION_LIST = [
         event: 'all-cameras-view',
         message: {
             type: 'multiple',
+            data: {
+                topdown: {
+                    left: 0.004,
+                    bottom: 0.004,
+                    width: 0.492,
+                    height: 0.992,
+                    fullscreen: false,
+                },
+                front: {
+                    left: 0.625,
+                    bottom: 0.75,
+                    width: 0.246,
+                    height: 0.246,
+                    fullscreen: false,
+                },
+                left: {
+                    left: 0.5,
+                    bottom: 0.254,
+                    width: 0.246,
+                    height: 0.246,
+                    fullscreen: false,
+                },
+                right: {
+                    left: 0.75,
+                    bottom: 0.254,
+                    width: 0.246,
+                    height: 0.246,
+                    fullscreen: false,
+                },
+                rear: {
+                    left: 0.625,
+                    bottom: 0.004,
+                    width: 0.246,
+                    height: 0.246,
+                    fullscreen: false,
+                },
+                blindright: {
+                    left: 0.75,
+                    bottom: 0.504,
+                    width: 0.246,
+                    height: 0.246,
+                    fullscreen: false,
+                },
+                blindleft: {
+                    left: 0.5,
+                    bottom: 0.504,
+                    width: 0.246,
+                    height: 0.246,
+                    fullscreen: false,
+                },
+            },
+        },
+    },
+    {
+        event: 'bow-distance-guide',
+        message: {
             data: {
                 topdown: {
                     left: 0.004,
@@ -178,7 +234,7 @@ const SVM_STATE_INSPECTION_LIST = [
         },
     },
     {
-        event: 'bow-distance-guide',
+        event: 'light-mode',
         message: {
             data: true,
         },
@@ -191,12 +247,6 @@ const SVM_STATE_INSPECTION_LIST = [
     },
     {
         event: 'dark-mode',
-        message: {
-            data: true,
-        },
-    },
-    {
-        event: 'light-mode',
         message: {
             data: true,
         },
@@ -224,6 +274,12 @@ const SVM_INSPECTION_STEP = [
         ],
     },
     {
+        name: 'Distance Guide 모드',
+        key: 'CallSVM',
+
+        checkList: ['가이드 정상 표시 확인'],
+    },
+    {
         name: '도킹 카메라 뷰 검사',
         key: 'CallSVM',
 
@@ -242,10 +298,10 @@ const SVM_INSPECTION_STEP = [
         ],
     },
     {
-        name: 'Distance Guide 모드',
+        name: 'Light theme 모드',
         key: 'CallSVM',
 
-        checkList: ['가이드 정상 표시 확인'],
+        checkList: ['카메라 배경화면 테마 변경 확인'],
     },
     {
         name: 'Night theme 모드',
@@ -255,12 +311,6 @@ const SVM_INSPECTION_STEP = [
     },
     {
         name: 'Dark theme 모드',
-        key: 'CallSVM',
-
-        checkList: ['카메라 배경화면 테마 변경 확인'],
-    },
-    {
-        name: 'Light theme 모드',
         key: 'CallSVM',
 
         checkList: ['카메라 배경화면 테마 변경 확인'],
