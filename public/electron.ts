@@ -13,8 +13,8 @@ const createWindow = () => {
         center: true,
         kiosk: !isDev,
         resizable: true,
-        fullscreen: true,
-        autoHideMenuBar: true,
+        fullscreen: false,
+        autoHideMenuBar: false,
         webPreferences: {
             // node환경처럼 사용하기
             nodeIntegration: true,
@@ -22,7 +22,7 @@ const createWindow = () => {
             // webview 사용
             webviewTag: true,
             // 개발자도구
-            devTools: isDev,
+            devTools: true,
             webSecurity: false,
         },
     });
@@ -32,9 +32,10 @@ const createWindow = () => {
     mainWindow.loadURL(
         isDev
             ? 'http://localhost:3000'
-            : `file://${path.join(__dirname, '../build/index.html')}`,
+            : 'file://'.concat(path.join(__dirname, '../build/index.html')),
     );
-
+    // `file://${__dirname}/build/index.html`
+    // "file://".concat(path.join(__dirname, '../build/index.html')));
     if (isDev) {
         mainWindow.webContents.openDevTools({ mode: 'detach' });
     }
@@ -66,6 +67,7 @@ app.on('ready', async () => {
 // Quit when all windows are closed.
 app.on('window-all-closed', () => {
     if (process.platform !== 'darwin') {
+        oruDiscoverModule.exitPythonProcess();
         app.quit();
     }
 });

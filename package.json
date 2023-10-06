@@ -35,11 +35,16 @@
   "homepage": "./",
   "build": {
     "productName": "inspection-app",
-    "asar": true,
+    "asar": false,
     "appId": "org.cpro95.inspection-app",
     "win": {
-      "target": "nsis",
+      "target": ["nsis","zip"],
       "icon": "public/avikus_logo.png"
+    },    
+    "directories": {
+      "buildResources": "./resources/installer/",
+      "output": "./dist/",
+      "app": "."
     }
   },
   "scripts": {
@@ -50,6 +55,7 @@
     "start": "tsc ./public/electron.ts && concurrently \"cross-env BROWSER=none npm run react-start\" \"wait-on http://127.0.0.1:3000 && electron .\"",
     "build": "npm run react-build && electron-builder",
     "release": "npm run react-build && electron-builder --publish=always",
+    "package": "npm run react-build && electron-packager ./ MyApp --platform=win32 --arch=x64",
     "lint": "eslint './src**/*.{ts,tsx}'",
     "lint:fix": "eslint --fix './src/**/*.{ts,tsx,js,jsx}'",
     "prettier": "prettier --write --config ./.prettierrc './src/**/*.{ts,tsx}'"
@@ -85,6 +91,7 @@
     "cross-env": "^7.0.3",
     "electron": "^26.2.1",
     "electron-builder": "^24.6.4",
+    "electron-packager": "^17.1.2",
     "eslint": "^8.49.0",
     "eslint-config-airbnb": "latest",
     "eslint-config-airbnb-typescript": "^17.1.0",
