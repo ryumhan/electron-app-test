@@ -3,7 +3,7 @@ import styled from '@emotion/styled';
 export const PageContainer = styled.div`
     display: flex;
     height: 100%;
-    background-color: #f0f0f0;
+    /* background-color: #f0f0f0; */
 `;
 
 export const LoginBox = styled.div`

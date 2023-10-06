@@ -2,15 +2,13 @@ import styled from '@emotion/styled';
 import { Horizontal, Vertical } from '@/styled';
 
 export const PannelContainer = styled(Vertical)`
-    height: 100%;
-    align-items: center;
-    justify-content: center;
+    gap: 10px;
 `;
 
 export const DataKey = styled.div`
-    width: 130px;
+    width: 50%;
     font-weight: 500;
-    font-size: 11px;
+    font-size: 14px;
     color: gray;
     text-align: right;
 `;
@@ -18,15 +16,14 @@ export const DataKey = styled.div`
 export const DataValue = styled.div`
     width: 130px;
     font-weight: normal;
-    font-size: 10px;
+    font-size: 13px;
     color: black;
-    text-align: left;
+    text-align: right;
 `;
 
 export const DataText = styled.span``;
 
 export const FailurePannelContainer = styled.div`
-    /* height: 100%; */
     align-items: center;
     justify-content: center;
     gap: 10px;
@@ -40,6 +37,5 @@ export const ComSignalIcon = styled.img`
 `;
 
 export const ValueContainer = styled(Horizontal)`
-    width: 100%;
-    gap: 5px;
+    width: 50%;
 `;

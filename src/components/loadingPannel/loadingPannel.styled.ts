@@ -42,7 +42,7 @@ export const LoadingIcons = styled.img`
 `;
 
 export const LoadingPannelMessage = styled.span`
-    height: 24px;
+    /* height: 24px; */
     overflow: hidden;
     white-space: nowrap;
     animation: ${typing} 4s steps(80, end) infinite;

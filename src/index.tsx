@@ -10,10 +10,10 @@ const root = ReactDOM.createRoot(
 );
 
 root.render(
-    <React.StrictMode>
+    <>
         <Global styles={GlobalStyle} />
         <RecoilRoot>
             <App />
         </RecoilRoot>
-    </React.StrictMode>,
+    </>,
 );

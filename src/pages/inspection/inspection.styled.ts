@@ -8,22 +8,23 @@ export const PageContainer = styled(Vertical)`
     padding: 0 40px;
     background-color: #f0f0f0;
     position: relative;
-    border: 1px solid gray;
+    border: 1px solid gainsboro;
 `;
 
 export const PageHeader = styled(Horizontal)<{ complete: boolean }>`
-    height: ${props => (props.complete ? '100%' : '45px')};
+    height: ${props => (props.complete ? '100%' : '40px')};
     width: 100%;
-    z-index: 99;
+    z-index: 1000;
     justify-content: space-between;
     position: fixed;
     top: 0;
     left: 0;
     background-color: white;
-    opacity: ${props => (props.complete ? 0.8 : 0.7)};
+    opacity: ${props => (props.complete ? 0.8 : 0.5)};
     border-radius: 5px;
     transition: all 0.2s;
     :hover {
+        height: 70px;
         opacity: 1;
     }
 `;
@@ -75,6 +76,7 @@ export const InspectionTitle = styled.div`
     font-weight: bold;
     padding: 15px 0;
     position: absolute;
+    z-index: 999;
 `;
 
 export const InspectionView = styled.div`

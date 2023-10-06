@@ -46,6 +46,7 @@ function BottomLeftPannel() {
         });
     };
 
+    // console.log(cameraPresentData);
     return (
         <>
             <VerticalStepProgressBar
@@ -63,31 +64,23 @@ function BottomLeftPannel() {
                 <InspectionView>
                     <InspectionTitle>WebSocket Test</InspectionTitle>
                     {open ? (
-                        <Vertical style={{ height: '100%' }}>
+                        <Vertical
+                            style={{ height: '100%' }}
+                            justifyContent="center"
+                            gap={10}
+                        >
                             <DataComPannel
                                 timeOver={timeOver}
                                 data={
-                                    heartPresentData
-                                        ? [heartPresentData]
-                                        : [
-                                              {
-                                                  key: 'NotifyHeartBeat',
-                                                  value: undefined,
-                                              },
-                                          ]
+                                    heartPresentData ||
+                                    constants.DEFAULT_HEARTBEAT_DATA
                                 }
                             />
                             <DataComPannel
                                 timeOver={timeOver}
                                 data={
-                                    cameraPresentData
-                                        ? [cameraPresentData]
-                                        : [
-                                              {
-                                                  key: 'NotifyCameraStatus',
-                                                  value: undefined,
-                                              },
-                                          ]
+                                    cameraPresentData ||
+                                    constants.DEFAULT_CAMERA_DATA
                                 }
                             />
                         </Vertical>

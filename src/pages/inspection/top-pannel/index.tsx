@@ -29,7 +29,6 @@ function TopPannel(): React.ReactElement {
         timeOutCallback,
     ] = useTopPannelData();
 
-    console.log(currentStep);
     return (
         <WebViewPannel>
             <VerticalStepProgress

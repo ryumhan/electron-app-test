@@ -1,4 +1,4 @@
-const TEST_MODE = true;
+const TEST_MODE = false;
 const BASE_URI = '/api';
 const API_PORT = 8000;
 const PAGE_PORT = 9005;
@@ -295,8 +295,49 @@ const COM_INSPECTION_STEP = [
     },
 ];
 
+const DEFAULT_HEARTBEAT_DATA = [
+    {
+        key: 'NotifyHeartBeat (ccu)',
+        value: undefined,
+    },
+    {
+        key: 'NotifyHeartBeat (oru)',
+        value: undefined,
+    },
+];
+
+const DEFAULT_CAMERA_DATA = [
+    {
+        key: 'NotifyCameraStatus (cam1)',
+        value: undefined,
+    },
+    {
+        key: 'NotifyCameraStatus (cam2)',
+        value: undefined,
+    },
+
+    {
+        key: 'NotifyCameraStatus (cam3)',
+        value: undefined,
+    },
+    {
+        key: 'NotifyCameraStatus (cam4)',
+        value: undefined,
+    },
+    {
+        key: 'NotifyCameraStatus (cam5)',
+        value: undefined,
+    },
+    {
+        key: 'NotifyCameraStatus (cam6)',
+        value: undefined,
+    },
+];
+
 export default {
     TEST_MODE,
+    DEFAULT_HEARTBEAT_DATA,
+    DEFAULT_CAMERA_DATA,
     BASE_URI,
     API_PORT,
     PAGE_PORT,

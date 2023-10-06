@@ -11,14 +11,14 @@ type ReturnType = [
         | {
               key: string;
               value: string;
-          }
+          }[]
         | undefined
     ),
     (
         | {
               key: string;
               value: string;
-          }
+          }[]
         | undefined
     ),
     boolean,
@@ -34,22 +34,28 @@ const useBottomLeftData = (): ReturnType => {
     const heartPresentData = useMemo(() => {
         if (data?.method.includes('NotifyHeartBeat')) {
             const heartData = data as HearBeat;
-            return {
-                key: 'NotifyHeartBeat',
-                value: `ccu-${heartData?.params?.CCU} oru-${heartData?.params?.ORU}`,
-            };
+            return [
+                {
+                    key: 'NotifyHeartBeat (ccu)',
+                    value: `${heartData?.params?.CCU}`,
+                },
+                {
+                    key: 'NotifyHeartBeat (oru)',
+                    value: `${heartData?.params?.ORU}`,
+                },
+            ];
         }
     }, [data]);
 
     const cameraPresentData = useMemo(() => {
         if (data?.method.includes('NotifyCameraStatus')) {
             const cameraData = data as CameraStatus;
-            return {
-                key: 'NotifyCameraStatus',
-                value: `${cameraData?.params?.inputStatus.camList
-                    .map((cam, idx) => `cam${idx + 1}: ${cam.status}`)
-                    .join('')}`,
-            };
+            return cameraData?.params?.inputStatus.camList.map((cam, idx) => {
+                return {
+                    key: `NotifyCameraStatus (cam${idx + 1})`,
+                    value: cam.status,
+                };
+            });
         }
     }, [data]);
 

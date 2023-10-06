@@ -12,6 +12,7 @@ export const ButtonBox = styled.div<ButtonProps>`
     border-radius: 10px;
     background-color: ${props => (props.disable ? '#666' : props.type)};
     display: flex;
+    /* opacity: 0.7; */
     cursor: ${props => (props.disable ? 'not-allowed' : 'pointer')};
     :hover {
         opacity: 0.3;

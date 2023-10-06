@@ -65,9 +65,7 @@ function Inspection(): React.ReactElement {
             >
                 <HeaderFront>
                     <TypoGraphy type="bold">Test Target:</TypoGraphy>
-                    <TypoGraphy type="bold" style={{ color: 'green' }}>
-                        {oruIp}
-                    </TypoGraphy>
+                    <TypoGraphy type="bold">{oruIp}</TypoGraphy>
                 </HeaderFront>
                 <HeaderBack gap={20}>
                     <Horizontal gap={10}>

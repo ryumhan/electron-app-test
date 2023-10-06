@@ -1,6 +1,12 @@
 import Button from '@/components/button';
-import { Horizontal, Vertical } from '@/styled';
-import { InputWrapper, LoginBox, PageContainer } from './login.styled';
+import { Horizontal, TypoGraphy, Vertical } from '@/styled';
+import {
+    CopyrightBox,
+    CopyrightMessage,
+    InputWrapper,
+    LoginBox,
+    PageContainer,
+} from './login.styled';
 
 import { Controller, useForm } from 'react-hook-form';
 import { ComponentProps } from 'react';
@@ -62,86 +68,100 @@ function Login() {
 
     return (
         <PageContainer>
-            <LoginBox>
-                <Vertical gap={40}>
-                    <Vertical style={{ gap: '30px' }}>
-                        <Vertical style={{ gap: '10px' }}>
-                            <Controller
-                                name="id"
-                                control={control}
-                                rules={{
-                                    required: {
-                                        value: true,
-                                        message: '아이디를 입력하여 주세요.',
-                                    },
-                                }}
-                                render={({ field: { onChange, name } }) => (
-                                    <InputWrapper>
-                                        <CustomInput
-                                            name={name}
-                                            type="text"
-                                            label="아이디"
-                                            style={{ width: '100%' }}
-                                            onChangeCallback={onChange}
-                                        />
-                                        {errors.id && errors.id.message && (
-                                            <InputErrorMessage
-                                                msg={errors.id.message}
+            <Vertical
+                justifyContent="center"
+                gap={40}
+                style={{ margin: 'auto' }}
+            >
+                <Horizontal justifyContent="center">
+                    <TypoGraphy type="bold" style={{ fontSize: '25px' }}>
+                        ORU INSPECTION SW
+                    </TypoGraphy>
+                </Horizontal>
+                <LoginBox>
+                    <Vertical gap={40}>
+                        <Vertical style={{ gap: '30px' }}>
+                            <Vertical style={{ gap: '10px' }}>
+                                <Controller
+                                    name="id"
+                                    control={control}
+                                    rules={{
+                                        required: {
+                                            value: true,
+                                            message:
+                                                '아이디를 입력하여 주세요.',
+                                        },
+                                    }}
+                                    render={({ field: { onChange, name } }) => (
+                                        <InputWrapper>
+                                            <CustomInput
+                                                name={name}
+                                                type="text"
+                                                label="아이디"
+                                                style={{ width: '100%' }}
+                                                onChangeCallback={onChange}
                                             />
-                                        )}
-                                    </InputWrapper>
-                                )}
-                            />
-                        </Vertical>
-                        <Vertical style={{ gap: '10px' }}>
-                            <Controller
-                                name="password"
-                                control={control}
-                                rules={{
-                                    required: {
-                                        value: true,
-                                        message: '패스워드를 입력하여 주세요',
-                                    },
-                                }}
-                                render={({ field: { onChange, name } }) => (
-                                    <InputWrapper onKeyDown={handleKeyDown}>
-                                        <CustomInput
-                                            name={name}
-                                            type="password"
-                                            label="비밀번호"
-                                            style={{ width: '100%' }}
-                                            onChangeCallback={onChange}
-                                        />
-                                        {errors.password &&
-                                            errors.password.message && (
+                                            {errors.id && errors.id.message && (
                                                 <InputErrorMessage
-                                                    msg={
-                                                        errors.password.message
-                                                    }
+                                                    msg={errors.id.message}
                                                 />
                                             )}
-                                    </InputWrapper>
-                                )}
-                            />
+                                        </InputWrapper>
+                                    )}
+                                />
+                            </Vertical>
+                            <Vertical style={{ gap: '10px' }}>
+                                <Controller
+                                    name="password"
+                                    control={control}
+                                    rules={{
+                                        required: {
+                                            value: true,
+                                            message:
+                                                '패스워드를 입력하여 주세요',
+                                        },
+                                    }}
+                                    render={({ field: { onChange, name } }) => (
+                                        <InputWrapper onKeyDown={handleKeyDown}>
+                                            <CustomInput
+                                                name={name}
+                                                type="password"
+                                                label="비밀번호"
+                                                style={{ width: '100%' }}
+                                                onChangeCallback={onChange}
+                                            />
+                                            {errors.password &&
+                                                errors.password.message && (
+                                                    <InputErrorMessage
+                                                        msg={
+                                                            errors.password
+                                                                .message
+                                                        }
+                                                    />
+                                                )}
+                                        </InputWrapper>
+                                    )}
+                                />
+                            </Vertical>
                         </Vertical>
-                    </Vertical>
 
-                    {/* <CopyrightBox>
-                        <CopyrightMessage>
-                            This Application is available to only allowed people
-                            @avikus
-                        </CopyrightMessage>
-                    </CopyrightBox> */}
-                    <Horizontal style={{ justifyContent: 'end' }}>
-                        <Button
-                            type="primary"
-                            label="Verify"
-                            onClick={handleSubmit(onValid, onInValid)}
-                            disable={!isValid}
-                        />
-                    </Horizontal>
-                </Vertical>
-            </LoginBox>
+                        <CopyrightBox>
+                            <CopyrightMessage>
+                                This Application is available to only allowed
+                                people
+                            </CopyrightMessage>
+                        </CopyrightBox>
+                        <Horizontal style={{ justifyContent: 'end' }}>
+                            <Button
+                                type="primary"
+                                label="Verify"
+                                onClick={handleSubmit(onValid, onInValid)}
+                                disable={!isValid}
+                            />
+                        </Horizontal>
+                    </Vertical>
+                </LoginBox>
+            </Vertical>
         </PageContainer>
     );
 }

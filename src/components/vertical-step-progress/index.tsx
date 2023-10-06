@@ -48,7 +48,10 @@ function VerticalStepProgressBar({
                                 <TodoStep />
                             )}
                             <StepContainer>
-                                <TypoGraphy type="middle">
+                                <TypoGraphy
+                                    type="middle"
+                                    style={{ color: done ? 'green' : '' }}
+                                >
                                     {step.name}
                                 </TypoGraphy>
                             </StepContainer>
@@ -59,7 +62,11 @@ function VerticalStepProgressBar({
                         >
                             <CheckListContainer gap={10}>
                                 {step.checklist.map(elem => (
-                                    <TypoGraphy key={elem} type="middle">
+                                    <TypoGraphy
+                                        key={elem}
+                                        type="middle"
+                                        style={{ color: done ? 'green' : '' }}
+                                    >
                                         ✔ {elem}
                                     </TypoGraphy>
                                 ))}

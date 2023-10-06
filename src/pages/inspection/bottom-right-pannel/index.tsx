@@ -48,7 +48,12 @@ function BottomRightPannel() {
                         timeOutCallback={timeOutCallback}
                     />
                 ) : (
-                    <DataComPannel data={oruData.concat(ccuData || [])} />
+                    <Vertical
+                        style={{ height: '100%' }}
+                        justifyContent="center"
+                    >
+                        <DataComPannel data={oruData.concat(ccuData || [])} />
+                    </Vertical>
                 )}
             </InspectionView>
             <ButtonContainer>

@@ -56,12 +56,12 @@ export const SucceedStep = styled.img`
 `;
 
 export const StepContainer = styled(Vertical)`
-    font-size: 14px;
+    font-size: 13px;
 `;
 
 export const CheckListContainer = styled(Vertical)`
     justify-content: center;
     width: 85%;
-    font-size: 11px;
+    font-size: 10px;
     color: gray;
 `;

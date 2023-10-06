@@ -18,16 +18,15 @@ interface Props {
 
 function DataComPannel({ data, timeOver }: Props) {
     const ResultDataList = useMemo(() => {
-        return data?.map(current => {
+        return data?.map((current, idx) => {
             return (
                 <Horizontal
-                    gap={20}
-                    key={current.key}
+                    gap={40}
+                    key={current.key + idx.toString()}
                     style={{
                         width: '100%',
-                        padding: '0 20px',
+                        // padding: '0 15px',
                     }}
-                    alignItems="center"
                 >
                     <DataKey>
                         <TypoGraphy type="bold">{current.key}</TypoGraphy>
@@ -35,7 +34,15 @@ function DataComPannel({ data, timeOver }: Props) {
                     <ValueContainer>
                         {current.value ? (
                             <DataValue>
-                                <TypoGraphy type="middle">
+                                <TypoGraphy
+                                    type="bold"
+                                    style={{
+                                        color:
+                                            current.value === 'normal'
+                                                ? 'green'
+                                                : '',
+                                    }}
+                                >
                                     {current.value}
                                 </TypoGraphy>
                             </DataValue>
@@ -50,7 +57,7 @@ function DataComPannel({ data, timeOver }: Props) {
         });
     }, [data, timeOver]);
 
-    return <PannelContainer gap={10}>{ResultDataList}</PannelContainer>;
+    return <PannelContainer>{ResultDataList}</PannelContainer>;
 }
 
 export default DataComPannel;
