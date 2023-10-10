@@ -3,7 +3,7 @@ import useSVMState from '@/hooks/useSVMState';
 import utils from '@/utils';
 import { RawAxiosRequestHeaders } from 'axios';
 import constants from '@/utils/constants';
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect } from 'react';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 import statusAtom from '@/atoms/status.atom';
 import inspectionAtom from '@/atoms/inspection.atom';
@@ -12,7 +12,6 @@ type ReturnType = [
     boolean,
     string,
     React.RefObject<HTMLIFrameElement>,
-    number,
     () => void,
     () => void,
     () => void,
@@ -21,9 +20,15 @@ type ReturnType = [
 
 const useTopPannelData = (): ReturnType => {
     const oruIp = useRecoilValue(statusAtom.oruIpAtom);
-    const inspectionResult = useRecoilValue(inspectionAtom.svmReportAtom);
 
     const setFailReport = useSetRecoilState(inspectionAtom.failReportAtom);
+
+    const [pageSrc, setPageSrc] = useState(utils.getHttpPage(oruIp, ''));
+
+    const resetSVMPage = () => {
+        setPageSrc(utils.getHttpPage(oruIp, ''));
+    };
+
     const [
         loaded,
         svmElement,
@@ -32,7 +37,9 @@ const useTopPannelData = (): ReturnType => {
         onBackCallback,
         onSuccessCallback,
         timeOutCallback,
-    ] = useSVMState();
+    ] = useSVMState({
+        setPageSrcCallback: resetSVMPage,
+    });
 
     const [requestObj, setRequestObj] = useState<{
         url: string;
@@ -49,12 +56,7 @@ const useTopPannelData = (): ReturnType => {
         requestObj,
     );
 
-    const [pageSrc, setPageSrc] = useState(utils.getHttpPage(oruIp, ''));
-
-    const currentStep = useMemo(() => {
-        const found = inspectionResult.findIndex(elem => !elem.result);
-        return found === -1 ? inspectionResult.length - 1 : found - 1;
-    }, [inspectionResult]);
+    const [token, setToken] = useState('');
 
     useEffect(() => {
         if (data?.result?.authtoken) {
@@ -66,7 +68,9 @@ const useTopPannelData = (): ReturnType => {
                     'Content-Type': 'text/html; charset=utf-8',
                 },
             });
-        } else if (inspectTitle === 'Calibration') {
+
+            setToken(data?.result?.authtoken);
+        } else if (inspectTitle === 'Calibration' && !!token) {
             setPageSrc(utils.getHttpPage(oruIp, 'calibration-for-tutorial'));
         }
     }, [data, inspectTitle]);
@@ -82,7 +86,6 @@ const useTopPannelData = (): ReturnType => {
         loaded,
         pageSrc,
         svmElement,
-        currentStep,
         onLoadCallback,
         onBackCallback,
         onSuccessCallback,

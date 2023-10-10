@@ -35,7 +35,7 @@
   "homepage": "./",
   "build": {
     "productName": "inspection-app",
-    "asar": false,
+    "asar": true,
     "appId": "org.cpro95.inspection-app",
     "win": {
       "target": ["nsis","zip"],

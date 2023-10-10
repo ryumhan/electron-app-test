@@ -17,7 +17,7 @@ function BottomRightPannel() {
     const [loading, oruData, ccuData, timeOutCallback] =
         useBottomRightPannelData();
 
-    const setComReport = useSetRecoilState(inspectionAtom.comSelector);
+    const setComReport = useSetRecoilState(inspectionAtom.comReportAtom);
 
     const failHandler = () => {
         setComReport(current => {

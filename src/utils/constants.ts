@@ -1,4 +1,4 @@
-const TEST_MODE = true;
+const TEST_MODE = false;
 const BASE_URI = '/api';
 const API_PORT = 8000;
 const PAGE_PORT = 9005;
@@ -66,57 +66,7 @@ const SVM_STATE_INSPECTION_LIST = [
     {
         event: 'bow-distance-guide',
         message: {
-            data: {
-                topdown: {
-                    left: 0.004,
-                    bottom: 0.004,
-                    width: 0.492,
-                    height: 0.992,
-                    fullscreen: false,
-                },
-                front: {
-                    left: 0.625,
-                    bottom: 0.75,
-                    width: 0.246,
-                    height: 0.246,
-                    fullscreen: false,
-                },
-                left: {
-                    left: 0.5,
-                    bottom: 0.254,
-                    width: 0.246,
-                    height: 0.246,
-                    fullscreen: false,
-                },
-                right: {
-                    left: 0.75,
-                    bottom: 0.254,
-                    width: 0.246,
-                    height: 0.246,
-                    fullscreen: false,
-                },
-                rear: {
-                    left: 0.625,
-                    bottom: 0.004,
-                    width: 0.246,
-                    height: 0.246,
-                    fullscreen: false,
-                },
-                blindright: {
-                    left: 0.75,
-                    bottom: 0.504,
-                    width: 0.246,
-                    height: 0.246,
-                    fullscreen: false,
-                },
-                blindleft: {
-                    left: 0.5,
-                    bottom: 0.504,
-                    width: 0.246,
-                    height: 0.246,
-                    fullscreen: false,
-                },
-            },
+            data: true,
         },
     },
     {
@@ -240,13 +190,283 @@ const SVM_STATE_INSPECTION_LIST = [
         },
     },
     {
+        event: 'dark-mode',
+        message: {
+            data: true,
+        },
+    },
+    {
         event: 'night-mode',
+        message: {
+            data: true,
+        },
+    },
+];
+
+const BACKWARD_SVM_STATE_INSPECTION_LIST = [
+    {
+        event: 'top-down-view',
+        message: {
+            type: 'single',
+            data: {
+                topdown: {
+                    left: 0.0,
+                    bottom: 0.0,
+                    width: 1.0,
+                    height: 1.0,
+                    fullscreen: true,
+                },
+                front: {
+                    left: 0.0,
+                    bottom: 0.0,
+                    width: 0.0,
+                    height: 0.0,
+                    fullscreen: false,
+                },
+                left: {
+                    left: 0.0,
+                    bottom: 0.0,
+                    width: 0.0,
+                    height: 0.0,
+                    fullscreen: false,
+                },
+                right: {
+                    left: 0.0,
+                    bottom: 0.0,
+                    width: 0.0,
+                    height: 0.0,
+                    fullscreen: false,
+                },
+                rear: {
+                    left: 0.0,
+                    bottom: 0.0,
+                    width: 0.0,
+                    height: 0.0,
+                    fullscreen: false,
+                },
+                blindright: {
+                    left: 0.0,
+                    bottom: 0.0,
+                    width: 0.0,
+                    height: 0.0,
+                    fullscreen: false,
+                },
+                blindleft: {
+                    left: 0.0,
+                    bottom: 0.0,
+                    width: 0.0,
+                    height: 0.0,
+                    fullscreen: false,
+                },
+            },
+        },
+    },
+    {
+        event: 'all-cameras-view',
+        message: {
+            type: 'multiple',
+            data: {
+                topdown: {
+                    left: 0.004,
+                    bottom: 0.004,
+                    width: 0.492,
+                    height: 0.992,
+                    fullscreen: false,
+                },
+                front: {
+                    left: 0.625,
+                    bottom: 0.75,
+                    width: 0.246,
+                    height: 0.246,
+                    fullscreen: false,
+                },
+                left: {
+                    left: 0.5,
+                    bottom: 0.254,
+                    width: 0.246,
+                    height: 0.246,
+                    fullscreen: false,
+                },
+                right: {
+                    left: 0.75,
+                    bottom: 0.254,
+                    width: 0.246,
+                    height: 0.246,
+                    fullscreen: false,
+                },
+                rear: {
+                    left: 0.625,
+                    bottom: 0.004,
+                    width: 0.246,
+                    height: 0.246,
+                    fullscreen: false,
+                },
+                blindright: {
+                    left: 0.75,
+                    bottom: 0.504,
+                    width: 0.246,
+                    height: 0.246,
+                    fullscreen: false,
+                },
+                blindleft: {
+                    left: 0.5,
+                    bottom: 0.504,
+                    width: 0.246,
+                    height: 0.246,
+                    fullscreen: false,
+                },
+            },
+        },
+    },
+    {
+        event: 'bow-distance-guide',
+        message: {
+            data: false,
+        },
+    },
+    {
+        event: 'starboard-docking-view',
+        message: {
+            type: 'multiple',
+            data: {
+                topdown: {
+                    left: 0.004,
+                    bottom: 0.004,
+                    width: 0.492,
+                    height: 0.992,
+                    fullscreen: false,
+                },
+                front: {
+                    left: 0.56,
+                    bottom: 0.796,
+                    width: 0.2,
+                    height: 0.2,
+                    fullscreen: false,
+                },
+                left: {
+                    left: 0.0,
+                    bottom: 0.0,
+                    width: 0.0,
+                    height: 0.0,
+                    fullscreen: false,
+                },
+                right: {
+                    left: 0.66,
+                    bottom: 0.208,
+                    width: 0.29,
+                    height: 0.29,
+                    fullscreen: false,
+                },
+                rear: {
+                    left: 0.56,
+                    bottom: 0.004,
+                    width: 0.2,
+                    height: 0.2,
+                    fullscreen: false,
+                },
+                blindright: {
+                    left: 0.66,
+                    bottom: 0.502,
+                    width: 0.29,
+                    height: 0.29,
+                    fullscreen: false,
+                },
+                blindleft: {
+                    left: 0.0,
+                    bottom: 0.0,
+                    width: 0.0,
+                    height: 0.0,
+                    fullscreen: false,
+                },
+            },
+        },
+    },
+    {
+        event: 'dark-mode',
+        message: {
+            data: true,
+        },
+    },
+    {
+        event: 'light-mode',
         message: {
             data: true,
         },
     },
     {
         event: 'dark-mode',
+        message: {
+            data: true,
+        },
+    },
+];
+
+const RESET_SVM_STATE_INSPECTION_LIST = [
+    {
+        event: 'bow-distance-guide',
+        message: {
+            data: true,
+        },
+    },
+    {
+        event: 'bow-camera-view',
+        message: {
+            type: 'multiple',
+            data: {
+                topdown: {
+                    left: 0.004,
+                    bottom: 0.004,
+                    width: 0.492,
+                    height: 0.992,
+                    fullscreen: false,
+                },
+                front: {
+                    left: 0.5,
+                    bottom: 0.252,
+                    width: 0.496,
+                    height: 0.496,
+                    fullscreen: false,
+                },
+                left: {
+                    left: 0,
+                    bottom: 0,
+                    width: 0,
+                    height: 0,
+                    fullscreen: false,
+                },
+                right: {
+                    left: 0,
+                    bottom: 0,
+                    width: 0,
+                    height: 0,
+                    fullscreen: false,
+                },
+                rear: {
+                    left: 0,
+                    bottom: 0,
+                    width: 0,
+                    height: 0,
+                    fullscreen: false,
+                },
+                blindright: {
+                    left: 0.0,
+                    bottom: 0.0,
+                    width: 0.0,
+                    height: 0.0,
+                    fullscreen: false,
+                },
+                blindleft: {
+                    left: 0.0,
+                    bottom: 0.0,
+                    width: 0.0,
+                    height: 0.0,
+                    fullscreen: false,
+                },
+            },
+        },
+    },
+    {
+        event: 'night-mode',
         message: {
             data: true,
         },
@@ -304,16 +524,16 @@ const SVM_INSPECTION_STEP = [
         checkList: ['카메라 배경화면 테마 변경 확인'],
     },
     {
-        name: 'Night theme 모드',
-        key: 'CallSVM',
-
-        checkList: ['보트 / 테마 변경 확인'],
-    },
-    {
         name: 'Dark theme 모드',
         key: 'CallSVM',
 
         checkList: ['카메라 배경화면 테마 변경 확인'],
+    },
+    {
+        name: 'Night theme 모드',
+        key: 'CallSVM',
+
+        checkList: ['보트 / 테마 변경 확인'],
     },
     {
         name: '캘리브레이션',
@@ -389,10 +609,12 @@ export default {
     DEFAULT_HEARTBEAT_DATA,
     DEFAULT_CAMERA_DATA,
     BASE_URI,
+    BACKWARD_SVM_STATE_INSPECTION_LIST,
     API_PORT,
     PAGE_PORT,
     PASSWORD,
     SVM_STATE_INSPECTION_LIST,
+    RESET_SVM_STATE_INSPECTION_LIST,
     SVM_INSPECTION_STEP,
     COM_INSPECTION_STEP,
 };

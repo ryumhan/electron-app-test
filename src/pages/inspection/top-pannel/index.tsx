@@ -12,10 +12,11 @@ import VerticalStepProgress from '../../../components/vertical-step-progress';
 import useTopPannelData from './hook';
 import { useNavigate } from 'react-router-dom';
 import constants from '@/utils/constants';
+import { useRecoilValue } from 'recoil';
+import inspectionAtom from '@/atoms/inspection.atom';
 
 function TopPannel(): React.ReactElement {
     const navigate = useNavigate();
-
     const handleFail = () => {
         navigate('/fail');
     };
@@ -24,14 +25,14 @@ function TopPannel(): React.ReactElement {
         loaded,
         pageSrc,
         svmElement,
-        currentStep,
         onLoadCallback,
         onBackCallback,
         onSuccessCallback,
         timeOutCallback,
     ] = useTopPannelData();
 
-    console.log(currentStep);
+    const currentStep = useRecoilValue(inspectionAtom.svmStepSelector);
+
     return (
         <WebViewPannel>
             <UndoContainer>

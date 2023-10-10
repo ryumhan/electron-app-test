@@ -75,8 +75,7 @@ export const InspectionTitle = styled.div`
     font-weight: bold;
     padding: 15px 20px;
     position: absolute;
-    z-index: 999;
-    background-color: #f0f0f0;
+    z-index: 10;
     border-radius: 3px;
     opacity: 0.7;
 `;
@@ -94,6 +93,7 @@ export const InspectionView = styled.div`
 export const ButtonContainer = styled(Horizontal)`
     position: absolute;
     padding: 15px;
+    margin-right: 20px;
     right: 0;
     bottom: 0;
     width: 100%;

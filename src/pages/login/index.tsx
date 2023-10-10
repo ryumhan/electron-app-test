@@ -33,7 +33,7 @@ function Login() {
     const onValid = async (data: FormData) => {
         try {
             const { id, password } = data;
-            if (id !== 'avikus') {
+            if (id !== 'avikus' && id !== 'motrex') {
                 control.setError('id', {
                     message: '해당하는 아이디가 존재 하지 않습니다.',
                 });
@@ -41,10 +41,20 @@ function Login() {
                 return;
             }
 
-            if (password !== 'avikus12#') {
+            if (id === 'motrex' && password !== 'mtx6000') {
                 control.setError('password', {
                     message: '비밀번호가 일치하지 않습니다.',
                 });
+
+                return;
+            }
+
+            if (id === 'avikus' && password !== 'avikus12#') {
+                control.setError('password', {
+                    message: '비밀번호가 일치하지 않습니다.',
+                });
+
+                return;
             }
 
             navigate('/ready');
