@@ -21,7 +21,7 @@ const exitPythonProcess = () => {
 const createPythonProcess = () => {
     exitPythonProcess();
 
-    pythonProcess = spawn(exePath);
+    pythonProcess = spawn(exePath, { detached: true });
 
     pythonProcess.on('spawn', () =>
         console.log('[PYTHON-PROCESS] process start'),
