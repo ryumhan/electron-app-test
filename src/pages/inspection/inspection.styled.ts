@@ -93,7 +93,7 @@ export const InspectionView = styled.div`
 export const ButtonContainer = styled(Horizontal)`
     position: absolute;
     padding: 15px;
-    margin-right: 20px;
+    /* margin-right: 20px; */
     right: 0;
     bottom: 0;
     width: 100%;
@@ -107,5 +107,6 @@ export const UndoContainer = styled(Horizontal)`
     left: 0;
     top: 0;
     z-index: 10;
+    padding-right: 20px;
     transform: translateX(-150%);
 `;

@@ -72,11 +72,26 @@ const useSVMState = ({ setPageSrcCallback }: Props): ReturnType => {
 
         if (inspectTitle !== 'Calibration') {
             const nextCheckStep = checkStep - 1;
-            const message = BACKWARD_SVM_STATE_INSPECTION_LIST[nextCheckStep];
-            svmElement.current.contentWindow?.postMessage(
-                message,
-                utils.getHttpPage(oruIp, ''),
-            );
+            BACKWARD_SVM_STATE_INSPECTION_LIST[nextCheckStep];
+
+            if (BACKWARD_SVM_STATE_INSPECTION_LIST[nextCheckStep].array) {
+                BACKWARD_SVM_STATE_INSPECTION_LIST[
+                    nextCheckStep
+                ].array?.forEach(
+                    msg =>
+                        svmElement.current?.contentWindow?.postMessage(
+                            msg,
+                            utils.getHttpPage(oruIp, ''),
+                        ),
+                );
+            } else {
+                const message =
+                    BACKWARD_SVM_STATE_INSPECTION_LIST[nextCheckStep];
+                svmElement.current.contentWindow?.postMessage(
+                    message,
+                    utils.getHttpPage(oruIp, ''),
+                );
+            }
 
             setCheckStep(nextCheckStep);
         }
@@ -114,16 +129,25 @@ const useSVMState = ({ setPageSrcCallback }: Props): ReturnType => {
             (nextStep <= SVM_STATE_INSPECTION_LIST.length &&
                 SVM_INSPECTION_STEP[nextStep + 1].key !== 'Calibration')
         ) {
-            const message = SVM_STATE_INSPECTION_LIST[nextCheckStep - 1];
-            svmElement.current.contentWindow?.postMessage(
-                message,
-                utils.getHttpPage(oruIp, ''),
-            );
+            if (SVM_STATE_INSPECTION_LIST[nextCheckStep - 1].array) {
+                SVM_STATE_INSPECTION_LIST[nextCheckStep - 1].array?.forEach(
+                    msg =>
+                        svmElement.current?.contentWindow?.postMessage(
+                            msg,
+                            utils.getHttpPage(oruIp, ''),
+                        ),
+                );
+            } else {
+                const message = SVM_STATE_INSPECTION_LIST[nextCheckStep - 1];
+                svmElement.current.contentWindow?.postMessage(
+                    message,
+                    utils.getHttpPage(oruIp, ''),
+                );
+            }
 
             setCheckStep(nextCheckStep);
         }
 
-        console.log(nextCheckStep);
         // save current result
         setReport(current => {
             const newReport = current.map(elem => {

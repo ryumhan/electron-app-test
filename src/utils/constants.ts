@@ -1,4 +1,4 @@
-const TEST_MODE = false;
+const TEST_MODE = true;
 const BASE_URI = '/api';
 const API_PORT = 8000;
 const PAGE_PORT = 9005;
@@ -64,10 +64,32 @@ const SVM_STATE_INSPECTION_LIST = [
         },
     },
     {
-        event: 'bow-distance-guide',
-        message: {
-            data: true,
-        },
+        array: [
+            {
+                event: 'bow-distance-guide',
+                message: {
+                    data: true,
+                },
+            },
+            {
+                event: 'stern-distance-guide',
+                message: {
+                    data: true,
+                },
+            },
+            {
+                event: 'port-distance-guide',
+                message: {
+                    data: true,
+                },
+            },
+            {
+                event: 'starboard-distance-guide',
+                message: {
+                    data: true,
+                },
+            },
+        ],
     },
     {
         event: 'starboard-docking-view',
@@ -262,6 +284,34 @@ const BACKWARD_SVM_STATE_INSPECTION_LIST = [
         },
     },
     {
+        array: [
+            {
+                event: 'bow-distance-guide',
+                message: {
+                    data: false,
+                },
+            },
+            {
+                event: 'stern-distance-guide',
+                message: {
+                    data: false,
+                },
+            },
+            {
+                event: 'port-distance-guide',
+                message: {
+                    data: false,
+                },
+            },
+            {
+                event: 'starboard-distance-guide',
+                message: {
+                    data: false,
+                },
+            },
+        ],
+    },
+    {
         event: 'all-cameras-view',
         message: {
             type: 'multiple',
@@ -316,12 +366,6 @@ const BACKWARD_SVM_STATE_INSPECTION_LIST = [
                     fullscreen: false,
                 },
             },
-        },
-    },
-    {
-        event: 'bow-distance-guide',
-        message: {
-            data: false,
         },
     },
     {
@@ -404,6 +448,24 @@ const BACKWARD_SVM_STATE_INSPECTION_LIST = [
 const RESET_SVM_STATE_INSPECTION_LIST = [
     {
         event: 'bow-distance-guide',
+        message: {
+            data: true,
+        },
+    },
+    {
+        event: 'stern-distance-guide',
+        message: {
+            data: true,
+        },
+    },
+    {
+        event: 'port-distance-guide',
+        message: {
+            data: true,
+        },
+    },
+    {
+        event: 'starboard-distance-guide',
         message: {
             data: true,
         },

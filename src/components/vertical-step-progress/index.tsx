@@ -37,7 +37,7 @@ function VerticalStepProgressBar({
                     ? selectList.includes(index)
                     : index <= currentStep;
 
-                const isBold = current === index;
+                const isBold = selectList ? true : current === index;
 
                 return (
                     <VerticalStepListContainer
