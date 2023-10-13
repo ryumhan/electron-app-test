@@ -3,6 +3,7 @@ import { app, BrowserWindow, ipcMain } from 'electron';
 import * as isDev from 'electron-is-dev';
 import ipcModule from './ipc.module';
 import oruDiscoverModule from './oruDiscover.module';
+import childProcessModule from './childProcess.module';
 
 let mainWindow: BrowserWindow;
 
@@ -58,7 +59,7 @@ app.on('ready', async () => {
     // create Ipc Module
     ipcMain.on('create-module', () => {
         oruDiscoverModule.createUdpServer(mainWindow);
-        oruDiscoverModule.createPythonProcess();
+        childProcessModule.createPythonProcess();
 
         ipcModule.createWebsocket(mainWindow);
     });
@@ -67,7 +68,8 @@ app.on('ready', async () => {
 // Quit when all windows are closed.
 app.on('window-all-closed', () => {
     if (process.platform !== 'darwin') {
-        oruDiscoverModule.exitPythonProcess();
+        console.log('closing app');
+        childProcessModule.exitPythonProcess();
         app.quit();
     }
 });
