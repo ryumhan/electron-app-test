@@ -8,7 +8,7 @@ import {
     UndoContainer,
 } from '../inspection.styled';
 
-import VerticalStepProgress from '../../../components/vertical-step-progress';
+import VerticalStepProgress from '@/components/vertical-step-progress';
 import useTopPannelData from './hook';
 import { useNavigate } from 'react-router-dom';
 import constants from '@/utils/constants';

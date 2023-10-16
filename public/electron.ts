@@ -2,8 +2,8 @@ import * as path from 'path';
 import { app, BrowserWindow, ipcMain } from 'electron';
 import * as isDev from 'electron-is-dev';
 import ipcModule from './ipc.module';
-import oruDiscoverModule from './oruDiscover.module';
 import childProcessModule from './childProcess.module';
+import udpServerModule from './udpServer.module';
 
 let mainWindow: BrowserWindow;
 
@@ -56,11 +56,10 @@ const createWindow = () => {
 // Some APIs can only be used after this event occurs.
 app.on('ready', async () => {
     createWindow();
+    childProcessModule.createPythonProcess();
     // create Ipc Module
     ipcMain.on('create-module', () => {
-        oruDiscoverModule.createUdpServer(mainWindow);
-        childProcessModule.createPythonProcess();
-
+        udpServerModule.createUdpServer(mainWindow);
         ipcModule.createWebsocket(mainWindow);
     });
 });
@@ -68,7 +67,6 @@ app.on('ready', async () => {
 // Quit when all windows are closed.
 app.on('window-all-closed', () => {
     if (process.platform !== 'darwin') {
-        console.log('closing app');
         childProcessModule.exitPythonProcess();
         app.quit();
     }

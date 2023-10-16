@@ -36,11 +36,11 @@ const useBottomLeftData = (): ReturnType => {
             const heartData = data as HearBeat;
             return [
                 {
-                    key: 'NotifyHeartBeat (ccu)',
+                    key: 'NotifyHeartBeat(CCU)',
                     value: `${heartData?.params?.CCU}`,
                 },
                 {
-                    key: 'NotifyHeartBeat (oru)',
+                    key: 'NotifyHeartBeat(ORU)',
                     value: `${heartData?.params?.ORU}`,
                 },
             ];
@@ -52,7 +52,7 @@ const useBottomLeftData = (): ReturnType => {
             const cameraData = data as CameraStatus;
             return cameraData?.params?.inputStatus.camList.map((cam, idx) => {
                 return {
-                    key: `NotifyCameraStatus (cam${idx + 1})`,
+                    key: `NotifyCameraStatus(CAM${idx + 1})`,
                     value: cam.status,
                 };
             });

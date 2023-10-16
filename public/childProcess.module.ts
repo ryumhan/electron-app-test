@@ -17,17 +17,27 @@ const exitPythonProcess = () => {
 };
 
 const createPythonProcess = () => {
-    exitPythonProcess();
+    // exitPythonProcess();
+    if (!pythonProcess) {
+        pythonProcess = spawn(exePath);
 
-    pythonProcess = spawn(exePath);
+        pythonProcess.on('spawn', () =>
+            console.log('[PYTHON-PROCESS] process start'),
+        );
 
-    pythonProcess.on('spawn', () =>
-        console.log('[PYTHON-PROCESS] process start'),
-    );
+        pythonProcess.on('exit', exitCode => {
+            console.log(
+                `[PYTHON-PROCESS] Process ended with code (${exitCode})`,
+            );
+        });
+    }
 
-    pythonProcess.on('exit', exitCode => {
-        exec(`taskkill /pid ${pythonProcess.pid} /T /F`);
-        console.log(`[PYTHON-PROCESS] Process ended with code (${exitCode})`);
+    process.on('exit', () => {
+        if (pythonProcess) {
+            // Kill the child process when the Node.js application is about to exit
+            pythonProcess.kill();
+        }
     });
 };
+
 export default { createPythonProcess, exitPythonProcess };

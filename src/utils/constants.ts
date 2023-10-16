@@ -537,74 +537,72 @@ const RESET_SVM_STATE_INSPECTION_LIST = [
 
 const SVM_INSPECTION_STEP = [
     {
-        name: '탑다운 화면 스트리밍 검사',
+        name: '탑뷰 스트리밍 검사',
         key: 'SVMReady',
 
         checkList: [
             '카메라 스트리밍 확인',
-            '마우스/터치를 이용한 줌 인/아웃 정상동작 여부',
-            '마우스/터치를 이용한 이동 정상동작 여부',
+            '줌인/줌아웃 기능 확인',
+            '카메라이동 기능 확인',
         ],
     },
     {
-        name: '6 개별 카메라 스트리밍 검사',
+        name: '탑뷰/개별뷰 스트리밍',
         key: 'CallSVM',
 
         checkList: [
             '카메라 스트리밍 확인',
-            '개별 화면 터치 후 전체화면 변경 정상동작 여부',
+            '개별 카메라뷰 전체화면 전환 기능확인',
         ],
     },
     {
         name: 'Distance Guide 모드',
         key: 'CallSVM',
 
-        checkList: ['가이드 정상 표시 확인'],
+        checkList: ['가이드 라인 표시 확인'],
     },
     {
-        name: '도킹 카메라 뷰 검사',
+        name: '도킹뷰 스트리밍',
         key: 'CallSVM',
-
         checkList: [
             '카메라 스트리밍 확인',
-            '개별 화면 터치 후 전체화면 변경 정상동작 여부',
+            '개별 카메라뷰 전체화면 전환 기능확인',
         ],
     },
     {
-        name: '보우 카메라 뷰 검사',
+        name: '선수뷰 스트리밍',
         key: 'CallSVM',
-
         checkList: [
             '카메라 스트리밍 확인',
-            '개별 화면 터치 후 전체화면 변경 정상동작 여부',
+            '개별 카메라뷰 전체화면 전환 기능확인',
         ],
     },
     {
         name: 'Light theme 모드',
         key: 'CallSVM',
 
-        checkList: ['카메라 배경화면 테마 변경 확인'],
+        checkList: ['배경테마 변경 확인'],
     },
     {
         name: 'Dark theme 모드',
         key: 'CallSVM',
 
-        checkList: ['카메라 배경화면 테마 변경 확인'],
+        checkList: ['배경테마 변경 확인'],
     },
     {
         name: 'Night theme 모드',
         key: 'CallSVM',
 
-        checkList: ['보트 / 테마 변경 확인'],
+        checkList: ['배경테마 변경 확인'],
     },
     {
-        name: '캘리브레이션',
+        name: 'Calibration 모드',
         key: 'Calibration',
 
         checkList: [
-            '각 Stage 메뉴 선택 가능 여부 확인(저장X)',
-            '보트 ON/OFF 클릭 확인',
-            '개별 기능 체크(저장X)',
+            'Boat Configuration : 개별 동작 확인',
+            'Single Camera : 개별 동작 확인',
+            'Multi Camera : 개별 슬라이더 동작 확인',
             'Result Mode에서 Initialize 클릭',
         ],
     },
@@ -629,39 +627,39 @@ const COM_INSPECTION_STEP = [
 
 const DEFAULT_HEARTBEAT_DATA = [
     {
-        key: 'NotifyHeartBeat (ccu)',
+        key: 'NotifyHeartBeat(CCU)',
         value: undefined,
     },
     {
-        key: 'NotifyHeartBeat (oru)',
+        key: 'NotifyHeartBeat(ORU)',
         value: undefined,
     },
 ];
 
 const DEFAULT_CAMERA_DATA = [
     {
-        key: 'NotifyCameraStatus (cam1)',
+        key: 'NotifyCameraStatus(CAM1)',
         value: undefined,
     },
     {
-        key: 'NotifyCameraStatus (cam2)',
+        key: 'NotifyCameraStatus(CAM2)',
         value: undefined,
     },
 
     {
-        key: 'NotifyCameraStatus (cam3)',
+        key: 'NotifyCameraStatus(CAM3)',
         value: undefined,
     },
     {
-        key: 'NotifyCameraStatus (cam4)',
+        key: 'NotifyCameraStatus(CAM4)',
         value: undefined,
     },
     {
-        key: 'NotifyCameraStatus (cam5)',
+        key: 'NotifyCameraStatus(CAM5)',
         value: undefined,
     },
     {
-        key: 'NotifyCameraStatus (cam6)',
+        key: 'NotifyCameraStatus(CAM6)',
         value: undefined,
     },
 ];
