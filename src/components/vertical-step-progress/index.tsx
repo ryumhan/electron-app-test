@@ -34,7 +34,9 @@ function VerticalStepProgressBar({
                 <TypoGraphy type="bold">{title}</TypoGraphy>
             </Title>
             {steps.map((step, index) => {
-                const isBold = currentStep + 1 === index && multiple;
+                const isBold =
+                    (currentStep + 1 === index && multiple) ||
+                    position === 'right';
                 const { result } = reportList[index];
                 const color =
                     result === 'Progressing'
