@@ -120,11 +120,20 @@ export const ButtonContainer = styled(Horizontal)`
     justify-content: space-between;
 `;
 
-export const UndoContainer = styled(Horizontal)`
+export const FullScreenContainer = styled.div`
     position: absolute;
-    left: 0;
+    right: 0;
     top: 0;
-    z-index: 10;
-    padding-right: 20px;
-    transform: translateX(-150%);
+    margin: 5px;
+    padding: 5px;
+    z-index: 100000;
+    border-radius: 10px;
+    background-color: gray;
+    cursor: pointer;
+`;
+
+export const FullscreenIcon = styled.img`
+    width: 25px;
+    height: 25px;
+    object-fit: contain;
 `;

@@ -12,6 +12,8 @@ type ReturnType = [
     boolean,
     string,
     React.RefObject<HTMLIFrameElement>,
+    boolean,
+    () => void,
     () => void,
     () => void,
     () => void,
@@ -23,6 +25,7 @@ const useTopPannelData = (): ReturnType => {
     const oruIp = useRecoilValue(statusAtom.oruIpAtom);
 
     const setFailReport = useSetRecoilState(inspectionAtom.failReportAtom);
+    const [fullScreen, setFullscreen] = useState(false);
 
     const [pageSrc, setPageSrc] = useState(utils.getHttpPage(oruIp, ''));
 
@@ -88,6 +91,8 @@ const useTopPannelData = (): ReturnType => {
         loaded,
         pageSrc,
         svmElement,
+        fullScreen,
+        () => setFullscreen(!fullScreen),
         onLoadCallback,
         onBackCallback,
         onSuccessCallback,

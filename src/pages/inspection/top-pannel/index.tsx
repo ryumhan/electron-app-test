@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
 import Button from '@/components/button';
 import LoadingPannel from '@/components/loadingPannel';
 import {
@@ -5,16 +6,22 @@ import {
     InspectionView,
     InspectionTitle,
     ButtonContainer,
+    FullScreenContainer,
+    FullscreenIcon,
 } from '../inspection.styled';
 
 import useTopPannelData from './hook';
 import { Vertical } from '@/styled';
+import { ComponentProps } from 'react';
+import { imgFullscreen } from '@/assets';
 
 function TopPannel(): React.ReactElement {
     const [
         loaded,
         pageSrc,
         svmElement,
+        fullScreen,
+        setFullscreen,
         onLoadCallback,
         onBackCallback,
         onSuccessCallback,
@@ -22,10 +29,29 @@ function TopPannel(): React.ReactElement {
         timeOutCallback,
     ] = useTopPannelData();
 
+    const handleKeyDown: ComponentProps<'div'>['onKeyDown'] = event => {
+        if (event.key === 'Escape' && fullScreen) setFullscreen();
+    };
+
     return (
         <WebViewPannel>
             <InspectionTitle>SVM Inspection</InspectionTitle>
-            <InspectionView>
+            <InspectionView
+                tabIndex={-2}
+                onKeyDown={handleKeyDown}
+                style={
+                    fullScreen
+                        ? {
+                              position: 'fixed',
+                              top: '0',
+                              left: '0',
+                              width: '100%',
+                              height: '100%',
+                              zIndex: '99999',
+                          }
+                        : {}
+                }
+            >
                 {!loaded && (
                     <LoadingPannel
                         loaded={loaded}
@@ -34,12 +60,15 @@ function TopPannel(): React.ReactElement {
                     />
                 )}
 
+                <FullScreenContainer onClick={setFullscreen}>
+                    <FullscreenIcon src={imgFullscreen} />
+                </FullScreenContainer>
                 <iframe
                     ref={svmElement}
                     title="svm-page"
                     src={pageSrc}
                     onLoad={onLoadCallback}
-                    sandbox="allow-scripts allow-popups allow-same-origin"
+                    sandbox="allow-modals allow-forms allow-popups allow-scripts allow-same-origin"
                     style={{
                         visibility: loaded ? 'visible' : 'hidden',
                     }}
