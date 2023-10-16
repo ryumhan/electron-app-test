@@ -1,4 +1,4 @@
-import { BrowserWindow, ipcMain } from 'electron';
+import { BrowserWindow, dialog, ipcMain } from 'electron';
 import { WebSocket } from 'ws';
 
 let ws: WebSocket | null = null;
@@ -57,5 +57,15 @@ const createWebsocket = (mainWindow: BrowserWindow) => {
         }
     });
 };
+
+ipcMain.on('open-directory-dialog', event => {
+    dialog
+        .showOpenDialog({
+            properties: ['openDirectory'],
+        })
+        .then(result => {
+            event.reply('selected-directory', result.filePaths[0]);
+        });
+});
 
 export default { createWebsocket };

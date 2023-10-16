@@ -1,79 +1,86 @@
-import React from 'react';
 import {
     CheckListContainer,
     ProgressBarContainer,
     StepContainer,
-    SucceedStep,
+    StepIcon,
     Title,
     TodoStep,
     VerticalStepListContainer,
 } from './styled';
 import { Horizontal, TypoGraphy } from '@/styled';
-import { imgSuccess } from '@/assets';
+import { imgFailed, imgSuccess } from '@/assets';
+import { InspectionData } from '@/atoms/inspection.atom';
 
 interface Props {
+    multiple: boolean;
     title: string;
     steps: { name: string; checklist: string[] }[];
+    reportList: InspectionData[];
     currentStep: number;
-    selectList?: number[];
     position: 'left' | 'right';
 }
 
 function VerticalStepProgressBar({
+    multiple,
     title,
     currentStep,
+    reportList,
     steps,
-    selectList,
     position,
 }: Props) {
-    const current = !selectList ? currentStep + 1 : currentStep;
     return (
         <ProgressBarContainer position={position}>
             <Title>
                 <TypoGraphy type="bold">{title}</TypoGraphy>
             </Title>
             {steps.map((step, index) => {
-                const done = selectList
-                    ? selectList.includes(index)
-                    : index <= currentStep;
-
-                const isBold = selectList ? true : current === index;
-
+                const isBold = currentStep + 1 === index && multiple;
+                const { result } = reportList[index];
+                const color =
+                    result === 'Progressing'
+                        ? 'gray'
+                        : result === 'Pass'
+                        ? 'green'
+                        : 'red';
                 return (
                     <VerticalStepListContainer
-                        done={done}
+                        color={color}
                         key={step + index.toString()}
                         style={{
-                            opacity: isBold ? '1' : '0.6',
+                            opacity: isBold ? '1' : '0.4',
                         }}
                     >
                         <Horizontal gap={23} alignItems="center">
-                            {done ? (
-                                <SucceedStep src={imgSuccess} alt={step.name} />
+                            {result !== 'Progressing' ? (
+                                <StepIcon
+                                    src={
+                                        result === 'Pass'
+                                            ? imgSuccess
+                                            : imgFailed
+                                    }
+                                    alt={step.name}
+                                />
                             ) : (
                                 <TodoStep />
                             )}
                             <StepContainer>
                                 <TypoGraphy
                                     type={isBold ? 'bold' : 'middle'}
-                                    style={{ color: done ? 'green' : 'black' }}
+                                    style={{ color }}
                                 >
                                     {step.name}
                                 </TypoGraphy>
                             </StepContainer>
                         </Horizontal>
-                        <Horizontal
-                            justifyContent="flex-end"
-                            style={{ height: '100%' }}
-                        >
+                        <Horizontal justifyContent="flex-end">
                             <CheckListContainer gap={10}>
                                 {step.checklist.map(elem => (
                                     <TypoGraphy
                                         key={elem}
                                         type={isBold ? 'bold' : 'middle'}
                                         style={{
-                                            fontSize: isBold ? '13px' : '10px',
-                                            color: done ? 'green' : 'black',
+                                            fontSize: '10px',
+                                            color,
                                         }}
                                     >
                                         ✔ {elem}

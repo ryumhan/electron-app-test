@@ -38,9 +38,12 @@
     "asar": false,
     "appId": "org.cpro95.inspection-app",
     "win": {
-      "target": ["nsis","zip"],
+      "target": [
+        "nsis",
+        "zip"
+      ],
       "icon": "public/avikus_logo.png"
-    },    
+    },
     "directories": {
       "buildResources": "./resources/installer/",
       "output": "./dist/",

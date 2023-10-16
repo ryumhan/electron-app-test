@@ -2,11 +2,11 @@ import { Vertical } from '@/styled';
 import styled from '@emotion/styled';
 
 const stepCircleSize = '20px';
-const gapSize = '10px';
+const gapSize = '30px';
 
 export const ProgressBarContainer = styled(Vertical)<{ position: string }>`
     position: fixed;
-    width: 22%;
+    width: 23%;
     height: 100%;
     background-color: #f0f0f0;
     top: 0;
@@ -18,15 +18,13 @@ export const ProgressBarContainer = styled(Vertical)<{ position: string }>`
 `;
 
 export const Title = styled.div`
-    margin: auto;
-    height: 30px;
+    height: 20px;
 `;
 
-export const VerticalStepListContainer = styled(Vertical)<{ done: boolean }>`
-    gap: 5px;
+export const VerticalStepListContainer = styled(Vertical)<{ color: string }>`
+    gap: 15px;
     position: relative;
     transition: all 0.3s;
-    height: 100%;
     width: 100%;
 
     :after {
@@ -38,7 +36,7 @@ export const VerticalStepListContainer = styled(Vertical)<{ done: boolean }>`
         position: absolute;
         padding-bottom: ${gapSize};
         transform: translateX(calc(10px - 1.3px)) translateY(${stepCircleSize});
-        background-color: ${props => (props.done ? 'green' : 'gray')};
+        background-color: ${props => props.color};
         transition: all 0.3s;
     }
 `;
@@ -50,7 +48,7 @@ export const TodoStep = styled.div`
     border-radius: 50%;
 `;
 
-export const SucceedStep = styled.img`
+export const StepIcon = styled.img`
     width: ${stepCircleSize};
     height: ${stepCircleSize};
 `;

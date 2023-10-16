@@ -10,13 +10,17 @@ type handleCallback = {
 type returnType = [boolean, boolean, string, handleCallback];
 
 interface Props {
+    defaultValue?: string;
     onChangeCallback: (value: string) => void;
 }
 
-const useCustomInput = ({ onChangeCallback }: Props): returnType => {
+const useCustomInput = ({
+    defaultValue,
+    onChangeCallback,
+}: Props): returnType => {
     const [active, setActive] = useState<boolean>(false);
 
-    const [value, setValue] = useState('');
+    const [value, setValue] = useState(defaultValue || '');
     const [showHidden, setShowHidden] = useState<boolean>(false);
 
     const handleInputChange: ComponentProps<'input'>['onChange'] = e => {

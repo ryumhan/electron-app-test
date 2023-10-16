@@ -4,7 +4,7 @@ import constants from '@/utils/constants';
 import utils from '@/utils';
 import { useSetRecoilState, useRecoilValue } from 'recoil';
 import statusAtoms from '@/atoms/status.atom';
-import inspectionAtom from '@/atoms/inspection.atom';
+import inspectionAtom, { ResultType } from '@/atoms/inspection.atom';
 
 const {
     SVM_STATE_INSPECTION_LIST,
@@ -17,6 +17,7 @@ type ReturnType = [
     boolean,
     React.RefObject<HTMLIFrameElement>,
     string,
+    () => void,
     () => void,
     () => void,
     () => void,
@@ -74,24 +75,24 @@ const useSVMState = ({ setPageSrcCallback }: Props): ReturnType => {
             const nextCheckStep = checkStep - 1;
             BACKWARD_SVM_STATE_INSPECTION_LIST[nextCheckStep];
 
-            if (BACKWARD_SVM_STATE_INSPECTION_LIST[nextCheckStep].array) {
-                BACKWARD_SVM_STATE_INSPECTION_LIST[
-                    nextCheckStep
-                ].array?.forEach(
-                    msg =>
-                        svmElement.current?.contentWindow?.postMessage(
-                            msg,
-                            utils.getHttpPage(oruIp, ''),
-                        ),
-                );
-            } else {
-                const message =
-                    BACKWARD_SVM_STATE_INSPECTION_LIST[nextCheckStep];
-                svmElement.current.contentWindow?.postMessage(
-                    message,
-                    utils.getHttpPage(oruIp, ''),
-                );
-            }
+            // if (BACKWARD_SVM_STATE_INSPECTION_LIST[nextCheckStep].array) {
+            //     BACKWARD_SVM_STATE_INSPECTION_LIST[
+            //         nextCheckStep
+            //     ].array?.forEach(
+            //         msg =>
+            //             svmElement.current?.contentWindow?.postMessage(
+            //                 msg,
+            //                 utils.getHttpPage(oruIp, ''),
+            //             ),
+            //     );
+            // } else {
+            //     const message =
+            //         BACKWARD_SVM_STATE_INSPECTION_LIST[nextCheckStep];
+            //     svmElement.current.contentWindow?.postMessage(
+            //         message,
+            //         utils.getHttpPage(oruIp, ''),
+            //     );
+            // }
 
             setCheckStep(nextCheckStep);
         }
@@ -99,11 +100,12 @@ const useSVMState = ({ setPageSrcCallback }: Props): ReturnType => {
         // save current result
         setReport(current => {
             const newReport = current.map(elem => {
+                const prevResult: ResultType = 'Progressing';
                 const rst =
                     elem.name === SVM_INSPECTION_STEP[currentStep].name
                         ? {
                               name: elem.name,
-                              result: false,
+                              result: prevResult,
                           }
                         : elem;
                 return rst;
@@ -113,7 +115,7 @@ const useSVMState = ({ setPageSrcCallback }: Props): ReturnType => {
         });
     };
 
-    const onSuccessCallback = () => {
+    const onButtonSelectCallback = (result: ResultType) => {
         const nextStep = inspectionStep + 1;
         const nextCheckStep = checkStep + 1;
 
@@ -129,21 +131,21 @@ const useSVMState = ({ setPageSrcCallback }: Props): ReturnType => {
             (nextStep <= SVM_STATE_INSPECTION_LIST.length &&
                 SVM_INSPECTION_STEP[nextStep + 1].key !== 'Calibration')
         ) {
-            if (SVM_STATE_INSPECTION_LIST[nextCheckStep - 1].array) {
-                SVM_STATE_INSPECTION_LIST[nextCheckStep - 1].array?.forEach(
-                    msg =>
-                        svmElement.current?.contentWindow?.postMessage(
-                            msg,
-                            utils.getHttpPage(oruIp, ''),
-                        ),
-                );
-            } else {
-                const message = SVM_STATE_INSPECTION_LIST[nextCheckStep - 1];
-                svmElement.current.contentWindow?.postMessage(
-                    message,
-                    utils.getHttpPage(oruIp, ''),
-                );
-            }
+            // if (SVM_STATE_INSPECTION_LIST[nextCheckStep - 1].array) {
+            //     SVM_STATE_INSPECTION_LIST[nextCheckStep - 1].array?.forEach(
+            //         msg =>
+            //             svmElement.current?.contentWindow?.postMessage(
+            //                 msg,
+            //                 utils.getHttpPage(oruIp, ''),
+            //             ),
+            //     );
+            // } else {
+            //     const message = SVM_STATE_INSPECTION_LIST[nextCheckStep - 1];
+            //     svmElement.current.contentWindow?.postMessage(
+            //         message,
+            //         utils.getHttpPage(oruIp, ''),
+            //     );
+            // }
 
             setCheckStep(nextCheckStep);
         }
@@ -155,7 +157,7 @@ const useSVMState = ({ setPageSrcCallback }: Props): ReturnType => {
                     elem.name === SVM_INSPECTION_STEP[nextStep].name
                         ? {
                               name: elem.name,
-                              result: true,
+                              result,
                           }
                         : elem;
                 return rst;
@@ -164,6 +166,10 @@ const useSVMState = ({ setPageSrcCallback }: Props): ReturnType => {
             return newReport;
         });
     };
+
+    const onSuccessCallback = () => onButtonSelectCallback('Pass');
+
+    const onFailedCallback = () => onButtonSelectCallback('Failed');
 
     useEffect(() => {
         if (
@@ -183,6 +189,7 @@ const useSVMState = ({ setPageSrcCallback }: Props): ReturnType => {
         onLoadCallback,
         onBackCallback,
         onSuccessCallback,
+        onFailedCallback,
         timeOutCallback,
     ];
 };

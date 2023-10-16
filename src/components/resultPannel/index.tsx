@@ -5,11 +5,12 @@ import {
 } from './readyPannel.styled';
 import Button from '../button';
 import { imgFailed, imgSuccess } from '@/assets';
-import { TypoGraphy, Vertical } from '@/styled';
+import { Horizontal, Vertical } from '@/styled';
 import { useNavigate } from 'react-router-dom';
 import useFileLogger from '@/hooks/useFileLogger';
-import { useRecoilValue } from 'recoil';
-import inspectionAtom from '@/atoms/inspection.atom';
+import { ipcRenderer } from 'electron';
+import { useRecoilState } from 'recoil';
+import statusAtom from '@/atoms/status.atom';
 
 interface Props {
     type: 'success' | 'fail';
@@ -18,8 +19,16 @@ interface Props {
 function ResultPannel({ type }: Props) {
     useFileLogger();
 
+    const [filePath, setPath] = useRecoilState(statusAtom.filePathSelector);
+
     const navigate = useNavigate();
-    const failReport = useRecoilValue(inspectionAtom.failReportAtom);
+
+    const selectDirectory = () => {
+        if (!filePath) ipcRenderer.send('open-directory-dialog');
+        ipcRenderer.on('selected-directory', (_, path) => {
+            setPath(path);
+        });
+    };
 
     return (
         <PannelContainer>
@@ -28,16 +37,6 @@ function ResultPannel({ type }: Props) {
                     <>
                         <ResultImg src={imgFailed} alt="result_failed" />
                         <PannelMessage>검사 결과 실패</PannelMessage>
-                        {failReport.map(error =>
-                            error ? (
-                                <TypoGraphy
-                                    type="normal"
-                                    style={{ color: 'red' }}
-                                >
-                                    {error}
-                                </TypoGraphy>
-                            ) : null,
-                        )}
                     </>
                 ) : (
                     <>
@@ -46,12 +45,21 @@ function ResultPannel({ type }: Props) {
                     </>
                 )}
             </Vertical>
-            <Button
-                type="primary"
-                label="다음 검사"
-                disable={false}
-                onClick={() => navigate('/ready')}
-            />
+            <Horizontal gap={20}>
+                <Button
+                    type="primary"
+                    label="다음 검사"
+                    disable={false}
+                    onClick={() => navigate('/ready')}
+                />
+                <Button
+                    type="primary"
+                    label="저장 경로 설정"
+                    disable={false}
+                    onClick={selectDirectory}
+                />
+            </Horizontal>
+            <Vertical />
         </PannelContainer>
     );
 }

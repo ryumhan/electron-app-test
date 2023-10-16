@@ -15,7 +15,7 @@ const createWindow = () => {
         kiosk: !isDev,
         resizable: true,
         fullscreen: false,
-        autoHideMenuBar: false,
+        autoHideMenuBar: !isDev,
         webPreferences: {
             // node환경처럼 사용하기
             nodeIntegration: true,
@@ -23,7 +23,7 @@ const createWindow = () => {
             // webview 사용
             webviewTag: true,
             // 개발자도구
-            devTools: true,
+            devTools: isDev,
             webSecurity: false,
         },
     });
@@ -56,7 +56,7 @@ const createWindow = () => {
 // Some APIs can only be used after this event occurs.
 app.on('ready', async () => {
     createWindow();
-    childProcessModule.createPythonProcess();
+    // childProcessModule.createPythonProcess();
     // create Ipc Module
     ipcMain.on('create-module', () => {
         udpServerModule.createUdpServer(mainWindow);

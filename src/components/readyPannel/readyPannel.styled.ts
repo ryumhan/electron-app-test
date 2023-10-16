@@ -5,7 +5,7 @@ export const PannelContainer = styled(Vertical)`
     height: 100%;
     align-items: center;
     justify-content: center;
-    gap: 15px;
+    gap: 20px;
 `;
 
 export const PannelMessage = styled.span`

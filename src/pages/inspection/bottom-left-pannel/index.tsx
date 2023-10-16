@@ -1,21 +1,24 @@
 import Button from '@/components/button';
 import DataComPannel from '@/components/dataComPannel';
 import LoadingPannel from '@/components/loadingPannel';
-import { Vertical } from '@/styled';
+import { TypoGraphy, Vertical } from '@/styled';
 import {
     ButtonContainer,
+    FailText,
+    InspectionFail,
     InspectionTitle,
     InspectionView,
 } from '../inspection.styled';
 import useBottomLeftData from './hook';
-import VerticalStepProgressBar from '@/components/vertical-step-progress';
+
 import constants from '@/utils/constants';
-import { useNavigate } from 'react-router-dom';
+
 import { useRecoilState } from 'recoil';
 import inspectionAtom from '@/atoms/inspection.atom';
+import { imgFailed } from '@/assets';
+import { FailedIcons } from '@/components/loadingPannel/loadingPannel.styled';
 
 function BottomLeftPannel() {
-    const navigate = useNavigate();
     const [
         open,
         heartPresentData,
@@ -28,38 +31,30 @@ function BottomLeftPannel() {
         inspectionAtom.comReportAtom,
     );
 
-    const failHandler = () => {
+    const failHandler = () =>
         setComReport(current => {
             return current.map((elem, idx) =>
-                idx === 0 ? { name: elem.name, result: false } : elem,
+                idx === 0 ? { name: elem.name, result: 'Failed' } : elem,
             );
         });
 
-        navigate('/fail');
-    };
-
-    const successandler = () => {
+    const successandler = () =>
         setComReport(current => {
             return current.map((elem, idx) =>
-                idx === 0 ? { name: elem.name, result: true } : elem,
+                idx === 0 ? { name: elem.name, result: 'Pass' } : elem,
             );
         });
-    };
 
     return (
-        <>
-            <VerticalStepProgressBar
-                steps={constants.COM_INSPECTION_STEP.map(elem => {
-                    return { name: elem.name, checklist: elem.checkList };
-                })}
-                selectList={comReport
-                    .map((elem, idx) => (elem.result ? idx : -1))
-                    .filter(elem => elem !== -1)}
-                currentStep={0}
-                position="right"
-                title="통신 검사 항목"
-            />
-            <Vertical gap={20} style={{ width: '100%', height: '100%' }}>
+        <Vertical gap={20} style={{ width: '100%', height: '100%' }}>
+            {comReport[0].result === 'Failed' ? (
+                <InspectionFail>
+                    <FailText>
+                        <FailedIcons src={imgFailed} />
+                        <TypoGraphy>{`${comReport[0].name} 실패`}</TypoGraphy>
+                    </FailText>
+                </InspectionFail>
+            ) : (
                 <InspectionView>
                     <InspectionTitle>WebSocket Test</InspectionTitle>
                     {open ? (
@@ -105,8 +100,8 @@ function BottomLeftPannel() {
                         />
                     </ButtonContainer>
                 </InspectionView>
-            </Vertical>
-        </>
+            )}
+        </Vertical>
     );
 }
 

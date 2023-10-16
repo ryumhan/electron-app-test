@@ -4,6 +4,7 @@ import { InputContainer, Input, Label, PasswordDisplayButton } from './styled';
 import useCustomInput from './hook';
 
 interface Props {
+    defaultValue?: string;
     name: string;
     label: string;
     type: 'email' | 'number' | 'password' | 'text';
@@ -12,6 +13,7 @@ interface Props {
 }
 
 function CustomInput({
+    defaultValue,
     name,
     label,
     style,
@@ -19,6 +21,7 @@ function CustomInput({
     onChangeCallback,
 }: Props): React.ReactElement {
     const [active, showHidden, inputValue, handleCallback] = useCustomInput({
+        defaultValue,
         onChangeCallback,
     });
 
@@ -34,7 +37,7 @@ function CustomInput({
                 onFocus={handleCallback.inputClick}
                 onBlur={handleCallback.inputBlur}
             />
-            <Label active={active}>{label}</Label>
+            <Label active={!!defaultValue || active}>{label}</Label>
             {type === 'password' && (
                 <PasswordDisplayButton onClick={handleCallback.hiddenChange}>
                     {showHidden ? '숨김' : '표시'}

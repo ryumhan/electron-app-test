@@ -3,8 +3,8 @@ import useHttpMessage from '@/hooks/useHttpMessage';
 
 import { Diagnostics } from '@/model';
 import utils from '@/utils';
-import { useMemo } from 'react';
-import { useRecoilValue } from 'recoil';
+import { useEffect, useMemo } from 'react';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
 
 type ReturnType = [
     boolean,
@@ -23,6 +23,7 @@ type ReturnType = [
 ];
 
 const useBottomRightPannelData = (): ReturnType => {
+    const setSerial = useSetRecoilState(statusAtom.serialAtom);
     const oruIp = useRecoilValue(statusAtom.oruIpAtom);
 
     const { data, loading, timeOutCallback } = useHttpMessage<Diagnostics>({
@@ -56,6 +57,15 @@ const useBottomRightPannelData = (): ReturnType => {
                 .reduce((prev, next) => prev.concat(prev, next)),
         [data],
     );
+
+    useEffect(() => {
+        if (!data?.oruInfo) return;
+
+        setSerial({
+            avikus: data?.oruInfo.AvksSerial,
+            customer: data?.oruInfo.serialNumber,
+        });
+    }, [data]);
 
     return [loading || !oruData || !ccuData, oruData, ccuData, timeOutCallback];
 };

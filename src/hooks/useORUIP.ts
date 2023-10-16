@@ -18,7 +18,7 @@ const useORUIP = (): {
         if (utils.isTestMode()) {
             setTimeout(() => {
                 setOruIpAtom(utils.getTestAddress());
-            }, 5000);
+            }, 1000);
 
             return;
         }

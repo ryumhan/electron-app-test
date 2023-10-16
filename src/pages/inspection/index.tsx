@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from 'react';
+import React, { useEffect } from 'react';
 import LoadingPannel from '@/components/loadingPannel';
 import useORUIP from '@/hooks/useORUIP';
 
@@ -20,24 +20,27 @@ import Button from '@/components/button';
 
 import { ipcRenderer } from 'electron';
 import { useNavigate } from 'react-router-dom';
-import statusAtom from '@/atoms/status.atom';
+
 import { useRecoilValue } from 'recoil';
 import inspectionAtom from '@/atoms/inspection.atom';
+import constants from '@/utils/constants';
+import VerticalStepProgress from '@/components/vertical-step-progress';
+import VerticalStepProgressBar from '@/components/vertical-step-progress';
+import statusAtom from '@/atoms/status.atom';
+
+const { COM_INSPECTION_STEP } = constants;
 
 function Inspection(): React.ReactElement {
     const navigate = useNavigate();
 
     const { oruIp, found, timeOutCallback } = useORUIP();
-    const status = useRecoilValue(statusAtom.statusAtom);
+
+    const sn = useRecoilValue(statusAtom.snAtom);
+
+    const status = useRecoilValue(inspectionAtom.statusSelector);
     const svmReport = useRecoilValue(inspectionAtom.svmReportAtom);
     const comReport = useRecoilValue(inspectionAtom.comReportAtom);
-
-    const complete = useMemo(
-        () =>
-            svmReport.every(elem => elem.result) &&
-            comReport.every(elem => elem.result),
-        [svmReport, comReport],
-    );
+    const currentStep = useRecoilValue(inspectionAtom.svmStepSelector);
 
     useEffect(() => {
         ipcRenderer.send('create-module', {});
@@ -56,16 +59,36 @@ function Inspection(): React.ReactElement {
         );
     }
 
+    const buttonType =
+        status === 'Pass'
+            ? 'primary'
+            : status === 'Failed'
+            ? 'warning'
+            : 'normal';
+
+    const buttonCallback = () =>
+        status === 'Pass' ? navigate('/success') : navigate('/fail');
+
     return (
         <PageContainer>
             <PageHeader
                 justifyContent="space-between"
                 alignItems="center"
-                complete={complete}
+                complete={status === 'Pass'}
             >
                 <HeaderFront>
-                    <TypoGraphy type="bold">Test Target:</TypoGraphy>
-                    <TypoGraphy type="bold">{oruIp}</TypoGraphy>
+                    <Horizontal gap={10}>
+                        <TypoGraphy type="bold">SN:</TypoGraphy>
+                        <TypoGraphy type="bold" style={{ color: 'blue' }}>
+                            {sn}
+                        </TypoGraphy>
+                    </Horizontal>
+                    <Horizontal gap={10}>
+                        <TypoGraphy type="bold">Target Oru:</TypoGraphy>
+                        <TypoGraphy type="bold" style={{ color: 'blue' }}>
+                            {oruIp}
+                        </TypoGraphy>
+                    </Horizontal>
                 </HeaderFront>
                 <HeaderBack gap={20}>
                     <Horizontal gap={10}>
@@ -73,14 +96,27 @@ function Inspection(): React.ReactElement {
                     </Horizontal>
 
                     <Button
-                        type={complete ? 'primary' : 'normal'}
-                        label={complete ? 'Complete' : status}
-                        disable={!complete}
-                        onClick={() => navigate('/success')}
+                        type={buttonType}
+                        label={status === 'Pass' ? 'Complete' : status}
+                        disable={status === 'Progressing'}
+                        onClick={buttonCallback}
                     />
                 </HeaderBack>
             </PageHeader>
             <Vertical style={{ height: '100%', paddingTop: '20px' }} gap={10}>
+                {/* left pannel */}
+                <VerticalStepProgress
+                    multiple
+                    steps={constants.SVM_INSPECTION_STEP.map(elem => {
+                        return { name: elem.name, checklist: elem.checkList };
+                    })}
+                    reportList={svmReport}
+                    currentStep={currentStep}
+                    position="left"
+                    title="SVM 검사 항목"
+                />
+
+                {/* center pannel */}
                 {/* Top */}
                 <TopPannel />
                 {/* Bottom */}
@@ -90,6 +126,19 @@ function Inspection(): React.ReactElement {
                     {/* Right */}
                     <BottomRightPannel />
                 </BottomPannel>
+                {/* center pannel */}
+
+                {/* right pannel */}
+                <VerticalStepProgressBar
+                    multiple={false}
+                    steps={COM_INSPECTION_STEP.map(elem => {
+                        return { name: elem.name, checklist: elem.checkList };
+                    })}
+                    reportList={comReport}
+                    currentStep={0}
+                    position="right"
+                    title="통신 검사 항목"
+                />
             </Vertical>
         </PageContainer>
     );

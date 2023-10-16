@@ -16,6 +16,7 @@ type ReturnType = [
     () => void,
     () => void,
     () => void,
+    () => void,
 ];
 
 const useTopPannelData = (): ReturnType => {
@@ -36,6 +37,7 @@ const useTopPannelData = (): ReturnType => {
         onLoadCallback,
         onBackCallback,
         onSuccessCallback,
+        onFailedCallback,
         timeOutCallback,
     ] = useSVMState({
         setPageSrcCallback: resetSVMPage,
@@ -89,6 +91,7 @@ const useTopPannelData = (): ReturnType => {
         onLoadCallback,
         onBackCallback,
         onSuccessCallback,
+        onFailedCallback,
         () => {
             timeOutCallback();
             setPageSrc('');

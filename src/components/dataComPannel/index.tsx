@@ -40,7 +40,7 @@ function DataComPannel({ data, timeOver }: Props) {
                                         color:
                                             current.value === 'normal'
                                                 ? 'green'
-                                                : '',
+                                                : 'red',
                                     }}
                                 >
                                     {current.value}

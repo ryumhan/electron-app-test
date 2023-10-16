@@ -4,7 +4,7 @@ import { Vertical, Horizontal } from '@/styled';
 export const PageContainer = styled(Vertical)`
     height: 100%;
     margin: auto;
-    width: 56%;
+    width: 54%;
     padding: 0 40px;
     background-color: #f0f0f0;
     position: relative;
@@ -29,12 +29,12 @@ export const PageHeader = styled(Horizontal)<{ complete: boolean }>`
     }
 `;
 
-export const HeaderFront = styled.div`
+export const HeaderFront = styled(Horizontal)`
     display: flex;
     width: 50%;
     flex-direction: row;
     justify-content: center;
-    gap: 15px;
+    gap: 80px;
     font-weight: 500;
     /* padding: 0 50px; */
 `;
@@ -88,6 +88,24 @@ export const InspectionView = styled.div`
     background-color: transparent;
     overflow: hidden;
     position: relative;
+`;
+
+export const InspectionFail = styled.div`
+    width: 100%;
+    height: 100%;
+    border: 2px solid gray;
+    border-radius: 10px;
+    background-color: transparent;
+    overflow: hidden;
+    position: relative;
+    display: flex;
+`;
+
+export const FailText = styled(Vertical)`
+    margin: auto;
+    color: red;
+    align-items: center;
+    gap: 10px;
 `;
 
 export const ButtonContainer = styled(Horizontal)`
