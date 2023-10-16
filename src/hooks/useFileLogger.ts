@@ -1,31 +1,29 @@
-// import inspectionAtom from '@/atoms/inspection.atom';
-import { useEffect } from 'react';
-// import { useRecoilValue } from 'recoil';
-import { createObjectCsvWriter } from 'csv-writer';
 import dayjs from 'dayjs';
 import { useRecoilValue } from 'recoil';
 import statusAtom from '@/atoms/status.atom';
 import inspectionAtom from '@/atoms/inspection.atom';
+import * as fs from 'fs';
+import * as Papa from 'papaparse';
 
-const CSV_HEADER = [
-    { id: 'result', title: '검사결과' },
-    { id: 'sn', title: '모트렉스 SN' },
-    { id: 'oruIp', title: 'ORU IP' },
-    { id: 'customer', title: '고객 SN' },
-    { id: 'avikus', title: 'avikus SN' },
-    { id: 'startDate', title: '검사 시작' },
-    { id: 'doneDate', title: '검사 완료' },
-    { id: 'comhttp', title: '검사 완료' },
-    { id: 'comwebsocket', title: '검사 완료' },
-    { id: 'svm1', title: '탑뷰 스트리밍 검사' },
-    { id: 'svm2', title: '탑뷰/개별뷰 스트리밍' },
-    { id: 'svm3', title: 'Distance Guide 모드' },
-    { id: 'svm4', title: '도킹뷰 스트리밍' },
-    { id: 'svm5', title: '선수뷰 스트리밍' },
-    { id: 'svm6', title: 'Light theme 모드' },
-    { id: 'svm7', title: 'Dark theme 모드' },
-    { id: 'svm8', title: 'Night theme 모드' },
-    { id: 'svm9', title: 'Calibration 모드' },
+const DEFULAT_HEDAER = [
+    '검사결과',
+    '모트렉스 SN',
+    'ORU IP',
+    '고객 SN',
+    'avikus SN',
+    '검사 시작',
+    '검사 완료',
+    '웹소켓 검사',
+    'http 검사',
+    '탑뷰 스트리밍 검사',
+    '탑뷰/개별뷰 스트리밍',
+    'Distance Guide 모드',
+    '도킹뷰 스트리밍',
+    '선수뷰 스트리밍',
+    'Light theme 모드',
+    'Dark theme 모드',
+    'Night theme 모드',
+    'Calibration 모드',
 ];
 
 const useFileLogger = () => {
@@ -38,17 +36,14 @@ const useFileLogger = () => {
     const sn = useRecoilValue(statusAtom.snAtom);
     const { avikus, customer } = useRecoilValue(statusAtom.serialAtom);
 
-    const createFileLogging = async () => {
-        if (!filePath.path) {
-            alert('저장 경로를 설정하여 주세요.');
-            return;
-        }
-
+    const createFileLogging = () => {
         const list = [
             comReport
                 .filter(elem => elem.result === 'Failed')
                 .map(elem => elem.name),
-            svmReport.find(elem => elem.result === 'Failed')?.name,
+            svmReport
+                .filter(elem => elem.result === 'Failed')
+                .map(elem => elem.name),
         ];
 
         const result = statusSelector !== 'Pass' ? 'FAILED' : 'PASS';
@@ -56,76 +51,43 @@ const useFileLogger = () => {
         const dateTime = dayjs().format('YYYY_MM_DD_HH:mm');
         // Write the data to the CSV file
         try {
-            const csvWriter = createObjectCsvWriter({
-                path: `${
-                    filePath.path || __dirname
-                }/${date}_${oruIp}_${result}.csv`,
-                header: CSV_HEADER,
-            });
+            const newData = [
+                `${result}(${list.join('/')})`,
+                sn,
+                oruIp,
+                customer,
+                avikus,
+                filePath.startDate,
+                dateTime,
+                ...comReport.map(elem =>
+                    elem.result === 'Progressing' ? 'N/A' : elem.result,
+                ),
+                ...svmReport.map(elem =>
+                    elem.result === 'Progressing' ? 'N/A' : elem.result,
+                ),
+            ];
 
-            await csvWriter.writeRecords([
-                {
-                    result: `${result}(${list.join('/')})`,
-                    sn,
-                    oruIp,
-                    customer,
-                    avikus,
-                    startDate: filePath.startDate,
-                    doneDate: dateTime,
-                    comhttp:
-                        comReport[1].result === 'Progressing'
-                            ? 'N/A'
-                            : comReport[1].result,
-                    comwebsocket:
-                        comReport[0].result === 'Progressing'
-                            ? 'N/A'
-                            : comReport[0].result,
-                    svm1:
-                        svmReport[0].result === 'Progressing'
-                            ? 'N/A'
-                            : svmReport[0].result,
-                    svm2:
-                        svmReport[1].result === 'Progressing'
-                            ? 'N/A'
-                            : svmReport[1].result,
-                    svm3:
-                        svmReport[2].result === 'Progressing'
-                            ? 'N/A'
-                            : svmReport[2].result,
-                    svm4:
-                        svmReport[3].result === 'Progressing'
-                            ? 'N/A'
-                            : svmReport[3].result,
-                    svm5:
-                        svmReport[4].result === 'Progressing'
-                            ? 'N/A'
-                            : svmReport[4].result,
-                    svm6:
-                        svmReport[5].result === 'Progressing'
-                            ? 'N/A'
-                            : svmReport[5].result,
-                    svm7:
-                        svmReport[6].result === 'Progressing'
-                            ? 'N/A'
-                            : svmReport[6].result,
-                    svm8:
-                        svmReport[7].result === 'Progressing'
-                            ? 'N/A'
-                            : svmReport[7].result,
-                    svm9:
-                        svmReport[8].result === 'Progressing'
-                            ? 'N/A'
-                            : svmReport[8].result,
-                },
-            ]);
+            const file = `${filePath.path}/${date}_${result}.csv`;
+
+            let csv: string = '';
+            if (fs.existsSync(file)) {
+                const csvData = fs.readFileSync(file, 'utf8');
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                const parsed: any = Papa.parse(csvData, { header: false });
+                csv = Papa.unparse([...parsed.data, newData], { header: true });
+            } else {
+                csv = Papa.unparse([DEFULAT_HEDAER, newData], {
+                    header: true,
+                });
+            }
+
+            fs.writeFileSync(file, csv, 'utf8');
         } catch (error) {
             console.error(error);
         }
     };
 
-    useEffect(() => {
-        createFileLogging();
-    }, []);
+    return { createFileLogging };
 };
 
 export default useFileLogger;

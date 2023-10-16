@@ -17,14 +17,23 @@ interface Props {
 }
 
 function ResultPannel({ type }: Props) {
-    useFileLogger();
+    const { createFileLogging } = useFileLogger();
 
     const [filePath, setPath] = useRecoilState(statusAtom.filePathSelector);
 
     const navigate = useNavigate();
 
+    const handleNext = () => {
+        if (!filePath) {
+            alert('저장 경로를 설정해 주세요.');
+            return;
+        }
+        createFileLogging();
+        navigate('/ready');
+    };
+
     const selectDirectory = () => {
-        if (!filePath) ipcRenderer.send('open-directory-dialog');
+        ipcRenderer.send('open-directory-dialog');
         ipcRenderer.on('selected-directory', (_, path) => {
             setPath(path);
         });
@@ -48,9 +57,9 @@ function ResultPannel({ type }: Props) {
             <Horizontal gap={20}>
                 <Button
                     type="primary"
-                    label="다음 검사"
+                    label="저장 후 진행"
                     disable={false}
-                    onClick={() => navigate('/ready')}
+                    onClick={handleNext}
                 />
                 <Button
                     type="primary"
