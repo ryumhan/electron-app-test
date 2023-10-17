@@ -5,12 +5,14 @@ interface Props {
     type: ButtonType;
     label: string;
     disable: boolean;
+    size?: 'sm' | 'mid' | 'large';
     onClick: () => void;
 }
 
-function Button({ disable, type, label, onClick }: Props) {
+function Button({ disable, type, label, size, onClick }: Props) {
     return (
         <ButtonBox
+            size={size || 'mid'}
             type={
                 type === 'primary'
                     ? 'blue'

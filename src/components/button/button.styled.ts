@@ -4,11 +4,22 @@ import { ButtonColor } from './button.type';
 interface ButtonProps {
     type: ButtonColor;
     disable: boolean;
+    size: 'sm' | 'mid' | 'large';
 }
 
 export const ButtonBox = styled.div<ButtonProps>`
-    width: 80px;
-    height: 30px;
+    width: ${props =>
+        props.size === 'mid'
+            ? '80px'
+            : props.size === 'large'
+            ? '120px'
+            : '50px'};
+    height: ${props =>
+        props.size === 'mid'
+            ? '30px'
+            : props.size === 'large'
+            ? '40px'
+            : '20px'};
     border-radius: 10px;
     background-color: ${props => (props.disable ? '#666' : props.type)};
     display: flex;

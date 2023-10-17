@@ -1,57 +1,65 @@
-import { ChildProcessWithoutNullStreams, spawn, exec } from 'child_process';
+import { ChildProcess, exec, execFile } from 'child_process';
 import * as isDev from 'electron-is-dev';
 
-let pythonProcess: ChildProcessWithoutNullStreams;
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const find = require('find-process');
+
+let pythonProcess: ChildProcess | null;
+let processList: number[] = [];
 
 const exePath = isDev
     ? './public/dist/oru_ip_find.exe'
     : `${__dirname}/dist/oru_ip_find.exe`;
 
 const exitPythonProcess = () => {
-    if (pythonProcess) {
-        pythonProcess.kill();
-    }
-
     if (pythonProcess?.pid) {
-        console.log('[PYTHON-PROCESS] taskkill');
+        console.log('[PYTHON-PROCESS] kill process', pythonProcess.pid);
         exec(`taskkill /pid ${pythonProcess.pid} /T /F`);
+        pythonProcess.removeAllListeners();
+        // pythonProcess.kill();
+        pythonProcess = null;
+        processList = [];
     }
-
-    pythonProcess?.removeAllListeners();
 };
 
-const destructPython = () => {
-    exitPythonProcess();
-    process.removeAllListeners();
-};
-
-const createPythonProcess = () => {
-    exitPythonProcess();
+const createPythonProcess = async () => {
+    if (pythonProcess) exitPythonProcess();
 
     if (!pythonProcess) {
-        pythonProcess = spawn(exePath, []);
+        pythonProcess = execFile(exePath);
 
-        pythonProcess.on('spawn', () =>
-            console.log('[PYTHON-PROCESS] process start'),
-        );
+        pythonProcess.on('spawn', async () => {
+            const list = await find('name', 'oru_ip_find.exe');
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            processList = list.map((elem: any) => elem.pid);
+            console.log(
+                '[PYTHON-PROCESS] process start -',
+                pythonProcess?.pid,
+                ' : ',
+                processList,
+            );
+        });
 
         pythonProcess.on('exit', exitCode => {
             console.log(
-                `[PYTHON-PROCESS] Process ended with code (${exitCode})`,
+                `[PYTHON-PROCESS] Process, ${pythonProcess?.pid} ended with code (${exitCode})`,
             );
-
-            if (pythonProcess?.pid)
-                exec(`taskkill /pid ${pythonProcess.pid} /T /F`);
         });
     }
-
-    process.on('SIGINT', () => {
-        exitPythonProcess();
-    });
-
-    process.on('exit', () => {
-        exitPythonProcess();
-    });
 };
 
-export default { createPythonProcess, destructPython };
+const destructProcess = () => {
+    const list = processList.reverse();
+    list.reverse().forEach(pid => exec(`taskkill /pid ${pid} /T /F`));
+};
+
+process.on('SIGINT', () => {
+    console.log('[PYTHON-PROCESS] SIGINT');
+    exitPythonProcess();
+});
+
+process.on('exit', async () => {
+    console.log('[PYTHON-PROCESS] EXIT');
+});
+
+export default { createPythonProcess, destructProcess };

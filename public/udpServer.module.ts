@@ -4,6 +4,13 @@ import { BrowserWindow, ipcMain } from 'electron';
 let server: dgram.Socket;
 const PORT = 64001; // Change to your desired port number
 
+const destructUdp = () => {
+    if (server) {
+        server.close();
+        server.removeAllListeners();
+    }
+};
+
 const createUdpServer = (mainWindow: BrowserWindow) => {
     interface MessageType {
         new_oru: number;
@@ -13,10 +20,7 @@ const createUdpServer = (mainWindow: BrowserWindow) => {
     let gotAck = false;
     let recentIp = '';
 
-    if (server) {
-        server.close();
-        server.removeAllListeners();
-    }
+    destructUdp();
 
     server = dgram.createSocket('udp4');
     server.on('error', err => {
@@ -27,7 +31,7 @@ const createUdpServer = (mainWindow: BrowserWindow) => {
     server.on('message', msg => {
         const got: MessageType = JSON.parse(msg.toString());
         recentIp = got.oru_ip;
-        // console.log(got);
+        console.log(got);
 
         if (!gotAck) {
             mainWindow.webContents.send('oruDiscover-module', {
@@ -56,4 +60,4 @@ const createUdpServer = (mainWindow: BrowserWindow) => {
     server.bind(PORT);
 };
 
-export default { createUdpServer };
+export default { createUdpServer, destructUdp };

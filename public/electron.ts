@@ -14,7 +14,7 @@ const createWindow = () => {
         center: true,
         kiosk: !isDev,
         resizable: true,
-        fullscreen: false,
+        fullscreen: true,
         autoHideMenuBar: !isDev,
         webPreferences: {
             // node환경처럼 사용하기
@@ -64,12 +64,14 @@ app.on('ready', async () => {
     });
 });
 
+app.on('before-quit', async () => {
+    // Add your cleanup or resource release code here.\
+    udpServerModule.destructUdp();
+});
+
 // Quit when all windows are closed.
 app.on('window-all-closed', () => {
     if (process.platform !== 'darwin') {
-        childProcessModule.destructPython();
-
-        app.removeAllListeners();
         app.quit();
     }
 });

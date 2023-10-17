@@ -20,6 +20,10 @@ function ReadyPannel() {
     const [sn, setSn] = useRecoilState(statusAtom.snAtom);
 
     const handleNextInspection = () => {
+        if (!sn) {
+            return;
+        }
+
         resetOru();
 
         resetSVMReport();

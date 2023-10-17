@@ -112,22 +112,23 @@ export const FailText = styled(Vertical)`
 export const ButtonContainer = styled(Horizontal)`
     position: absolute;
     padding: 15px;
-    /* margin-right: 20px; */
     right: 0;
     bottom: 0;
     width: 100%;
-    /* gap: 5px; */
     z-index: 10;
     justify-content: space-between;
 `;
 
-export const FullScreenContainer = styled.div`
+export const ToolBoxContainer = styled.div`
     position: absolute;
     right: 0;
     top: 0;
     margin: 5px;
     padding: 5px;
     z-index: 100000;
+`;
+
+export const IconContainer = styled.div`
     border-radius: 10px;
     background-color: gray;
     opacity: 0.3;

@@ -6,8 +6,9 @@ import {
     InspectionView,
     InspectionTitle,
     ButtonContainer,
-    FullScreenContainer,
     FullscreenIcon,
+    IconContainer,
+    ToolBoxContainer,
 } from '../inspection.styled';
 
 import useTopPannelData from './hook';
@@ -59,15 +60,21 @@ function TopPannel(): React.ReactElement {
                         timeOutCallback={timeOutCallback}
                     />
                 )}
-                <Horizontal gap={20}>
-                    <FullScreenContainer onClick={setFullscreen}>
-                        <FullscreenIcon src={imgFullscreen} />
-                    </FullScreenContainer>
 
-                    <FullScreenContainer onClick={setFullscreen}>
-                        <FullscreenIcon src={imgFullscreen} />
-                    </FullScreenContainer>
-                </Horizontal>
+                <ToolBoxContainer>
+                    <Horizontal gap={20}>
+                        <Button
+                            size="sm"
+                            type="normal"
+                            label="캡쳐"
+                            disable={false}
+                            onClick={() => {}}
+                        />
+                        <IconContainer onClick={setFullscreen}>
+                            <FullscreenIcon src={imgFullscreen} />
+                        </IconContainer>
+                    </Horizontal>
+                </ToolBoxContainer>
                 <iframe
                     ref={svmElement}
                     title="svm-page"
