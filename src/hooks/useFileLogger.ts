@@ -10,7 +10,7 @@ const DEFULAT_HEDAER = [
     '모트렉스 SN',
     'ORU IP',
     '고객 SN',
-    'avikus SN',
+    'CCU SN',
     '검사 시작',
     '검사 완료',
     '웹소켓 검사',
@@ -34,7 +34,7 @@ const useFileLogger = () => {
     const svmReport = useRecoilValue(inspectionAtom.svmReportAtom);
 
     const sn = useRecoilValue(statusAtom.snAtom);
-    const { avikus, customer } = useRecoilValue(statusAtom.serialAtom);
+    const { ccu, customer } = useRecoilValue(statusAtom.serialAtom);
 
     const createFileLogging = () => {
         const list = [
@@ -56,7 +56,7 @@ const useFileLogger = () => {
                 sn,
                 oruIp,
                 customer,
-                avikus,
+                ccu,
                 filePath.startDate,
                 dateTime,
                 ...comReport.map(elem =>
@@ -81,7 +81,7 @@ const useFileLogger = () => {
                 });
             }
 
-            fs.writeFileSync(file, csv, 'utf8');
+            fs.writeFileSync(file, `\uFEFF${csv}`, 'utf8');
         } catch (error) {
             console.error(error);
         }

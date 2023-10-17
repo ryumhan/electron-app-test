@@ -9,17 +9,27 @@ const exePath = isDev
 
 const exitPythonProcess = () => {
     if (pythonProcess) {
-        if (!pythonProcess.kill() && pythonProcess.pid) {
-            console.log('[PYTHON-PROCESS] taskkill');
-            exec(`taskkill /pid ${pythonProcess.pid} /T /F`);
-        }
+        pythonProcess.kill();
     }
+
+    if (pythonProcess?.pid) {
+        console.log('[PYTHON-PROCESS] taskkill');
+        exec(`taskkill /pid ${pythonProcess.pid} /T /F`);
+    }
+
+    pythonProcess?.removeAllListeners();
+};
+
+const destructPython = () => {
+    exitPythonProcess();
+    process.removeAllListeners();
 };
 
 const createPythonProcess = () => {
-    // exitPythonProcess();
+    exitPythonProcess();
+
     if (!pythonProcess) {
-        pythonProcess = spawn(exePath);
+        pythonProcess = spawn(exePath, []);
 
         pythonProcess.on('spawn', () =>
             console.log('[PYTHON-PROCESS] process start'),
@@ -29,15 +39,19 @@ const createPythonProcess = () => {
             console.log(
                 `[PYTHON-PROCESS] Process ended with code (${exitCode})`,
             );
+
+            if (pythonProcess?.pid)
+                exec(`taskkill /pid ${pythonProcess.pid} /T /F`);
         });
     }
 
+    process.on('SIGINT', () => {
+        exitPythonProcess();
+    });
+
     process.on('exit', () => {
-        if (pythonProcess) {
-            // Kill the child process when the Node.js application is about to exit
-            pythonProcess.kill();
-        }
+        exitPythonProcess();
     });
 };
 
-export default { createPythonProcess, exitPythonProcess };
+export default { createPythonProcess, destructPython };

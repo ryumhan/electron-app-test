@@ -32,11 +32,8 @@ const useBottomRightPannelData = (): ReturnType => {
 
     const oruData = useMemo(
         () => [
+            { key: 'Sw Version', value: data?.oruInfo.softwareVersion || '' },
             { key: `Customer Serial`, value: data?.oruInfo.serialNumber || '' },
-            {
-                key: `Avikus Serial`,
-                value: data?.oruInfo.AvksSerial || '',
-            },
         ],
         [data],
     );
@@ -49,12 +46,8 @@ const useBottomRightPannelData = (): ReturnType => {
                         key: `CCU${idx + 1}-Customer Serial`,
                         value: ccu.serialNumber,
                     },
-                    {
-                        key: `CCU${idx + 1}-Avikus Serial`,
-                        value: ccu.AvksSerial,
-                    },
                 ])
-                .reduce((prev, next) => prev.concat(prev, next)),
+                .reduce((prev, next) => prev.concat(next)),
         [data],
     );
 
@@ -62,7 +55,7 @@ const useBottomRightPannelData = (): ReturnType => {
         if (!data?.oruInfo) return;
 
         setSerial({
-            avikus: data?.oruInfo.AvksSerial,
+            ccu: data?.ccuInfo.map(ccu => ccu.serialNumber).join('/'),
             customer: data?.oruInfo.serialNumber,
         });
     }, [data]);

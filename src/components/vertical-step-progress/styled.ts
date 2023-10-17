@@ -15,6 +15,7 @@ export const ProgressBarContainer = styled(Vertical)<{ position: string }>`
     padding: 30px 35px;
     margin-top: 25px;
     gap: ${gapSize};
+    overflow-y: scroll;
 `;
 
 export const Title = styled.div`

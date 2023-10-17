@@ -56,9 +56,9 @@ const createWindow = () => {
 // Some APIs can only be used after this event occurs.
 app.on('ready', async () => {
     createWindow();
-    // childProcessModule.createPythonProcess();
     // create Ipc Module
     ipcMain.on('create-module', () => {
+        childProcessModule.createPythonProcess();
         udpServerModule.createUdpServer(mainWindow);
         ipcModule.createWebsocket(mainWindow);
     });
@@ -67,7 +67,9 @@ app.on('ready', async () => {
 // Quit when all windows are closed.
 app.on('window-all-closed', () => {
     if (process.platform !== 'darwin') {
-        childProcessModule.exitPythonProcess();
+        childProcessModule.destructPython();
+
+        app.removeAllListeners();
         app.quit();
     }
 });

@@ -13,7 +13,10 @@ const createUdpServer = (mainWindow: BrowserWindow) => {
     let gotAck = false;
     let recentIp = '';
 
-    if (server) server.close();
+    if (server) {
+        server.close();
+        server.removeAllListeners();
+    }
 
     server = dgram.createSocket('udp4');
     server.on('error', err => {
@@ -24,7 +27,7 @@ const createUdpServer = (mainWindow: BrowserWindow) => {
     server.on('message', msg => {
         const got: MessageType = JSON.parse(msg.toString());
         recentIp = got.oru_ip;
-        console.log(got);
+        // console.log(got);
 
         if (!gotAck) {
             mainWindow.webContents.send('oruDiscover-module', {

@@ -26,6 +26,7 @@ export const PageHeader = styled(Horizontal)<{ complete: boolean }>`
     :hover {
         height: ${props => (props.complete ? '100%' : '70px')};
         opacity: 1;
+        z-index: 100001;
     }
 `;
 
@@ -129,11 +130,24 @@ export const FullScreenContainer = styled.div`
     z-index: 100000;
     border-radius: 10px;
     background-color: gray;
+    opacity: 0.3;
     cursor: pointer;
+    :hover {
+        opacity: 0.8;
+    }
 `;
 
 export const FullscreenIcon = styled.img`
     width: 25px;
     height: 25px;
     object-fit: contain;
+`;
+
+export const RightPannelContainer = styled(Vertical)`
+    position: fixed;
+    padding: 15px;
+    right: 0;
+    bottom: 0;
+    z-index: 10;
+    gap: 20px;
 `;

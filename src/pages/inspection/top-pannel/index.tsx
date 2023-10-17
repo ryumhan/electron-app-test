@@ -11,7 +11,7 @@ import {
 } from '../inspection.styled';
 
 import useTopPannelData from './hook';
-import { Vertical } from '@/styled';
+import { Horizontal, Vertical } from '@/styled';
 import { ComponentProps } from 'react';
 import { imgFullscreen } from '@/assets';
 
@@ -59,10 +59,15 @@ function TopPannel(): React.ReactElement {
                         timeOutCallback={timeOutCallback}
                     />
                 )}
+                <Horizontal gap={20}>
+                    <FullScreenContainer onClick={setFullscreen}>
+                        <FullscreenIcon src={imgFullscreen} />
+                    </FullScreenContainer>
 
-                <FullScreenContainer onClick={setFullscreen}>
-                    <FullscreenIcon src={imgFullscreen} />
-                </FullScreenContainer>
+                    <FullScreenContainer onClick={setFullscreen}>
+                        <FullscreenIcon src={imgFullscreen} />
+                    </FullScreenContainer>
+                </Horizontal>
                 <iframe
                     ref={svmElement}
                     title="svm-page"

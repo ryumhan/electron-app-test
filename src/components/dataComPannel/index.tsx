@@ -2,12 +2,7 @@ import React, { useMemo } from 'react';
 import { Horizontal, TypoGraphy } from '@/styled';
 
 import { LoadingPannelMessage } from '../loadingPannel/loadingPannel.styled';
-import {
-    DataKey,
-    DataValue,
-    PannelContainer,
-    ValueContainer,
-} from './dataComPannel.styled';
+import { DataKey, DataValue, PannelContainer } from './dataComPannel.styled';
 
 interface Props {
     data:
@@ -20,38 +15,35 @@ function DataComPannel({ data, timeOver }: Props) {
     const ResultDataList = useMemo(() => {
         return data?.map((current, idx) => {
             return (
-                <Horizontal
-                    gap={40}
-                    key={current.key + idx.toString()}
-                    style={{
-                        width: '100%',
-                        // padding: '0 15px',
-                    }}
-                >
+                <Horizontal gap={30} key={current.key + idx.toString()}>
                     <DataKey>
                         <TypoGraphy type="bold">{current.key}</TypoGraphy>
                     </DataKey>
-                    <ValueContainer>
-                        {current.value ? (
-                            <DataValue>
-                                <TypoGraphy
-                                    type="bold"
-                                    style={{
-                                        color:
-                                            current.value === 'normal'
-                                                ? 'green'
-                                                : 'red',
-                                    }}
-                                >
-                                    {current.value}
-                                </TypoGraphy>
-                            </DataValue>
-                        ) : (
+
+                    {current.value ? (
+                        <DataValue>
+                            <TypoGraphy
+                                type="bold"
+                                style={{
+                                    color:
+                                        current.value === 'normal'
+                                            ? 'green'
+                                            : 'red',
+                                }}
+                            >
+                                {current.value}
+                            </TypoGraphy>
+                        </DataValue>
+                    ) : (
+                        <Horizontal
+                            justifyContent="center"
+                            style={{ width: '50%', height: '11px' }}
+                        >
                             <LoadingPannelMessage>
                                 .........
                             </LoadingPannelMessage>
-                        )}
-                    </ValueContainer>
+                        </Horizontal>
+                    )}
                 </Horizontal>
             );
         });

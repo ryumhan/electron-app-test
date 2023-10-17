@@ -28,10 +28,10 @@ const filePathAtom = atom<FilePath>({
     },
 });
 
-const serialAtom = atom<{ avikus: string; customer: string }>({
+const serialAtom = atom<{ ccu: string; customer: string }>({
     key: 'serialAtom',
     default: {
-        avikus: '',
+        ccu: '',
         customer: '',
     },
 });
