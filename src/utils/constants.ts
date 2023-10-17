@@ -5,6 +5,8 @@ const PAGE_PORT = 9005;
 
 const PASSWORD = 'NeuBoat23#DOCK!';
 
+const INIT_SVM = { event: 'initSVM-for-test', message: {} };
+
 const SVM_STATE_INSPECTION_LIST = [
     {
         event: 'all-cameras-view',
@@ -666,6 +668,7 @@ const DEFAULT_CAMERA_DATA = [
 
 export default {
     TEST_MODE,
+    INIT_SVM,
     DEFAULT_HEARTBEAT_DATA,
     DEFAULT_CAMERA_DATA,
     BASE_URI,

@@ -7,6 +7,7 @@ import statusAtoms from '@/atoms/status.atom';
 import inspectionAtom, { ResultType } from '@/atoms/inspection.atom';
 
 const {
+    INIT_SVM,
     SVM_STATE_INSPECTION_LIST,
     BACKWARD_SVM_STATE_INSPECTION_LIST,
     RESET_SVM_STATE_INSPECTION_LIST,
@@ -171,6 +172,18 @@ const useSVMState = ({ setPageSrcCallback }: Props): ReturnType => {
 
     const onFailedCallback = () => onButtonSelectCallback('Failed');
 
+    const callInitSVM = () => {
+        const interval = setInterval(() => {
+            if (svmElement.current) {
+                svmElement.current?.contentWindow?.postMessage(
+                    INIT_SVM,
+                    utils.getHttpPage(oruIp, ''),
+                );
+
+                clearInterval(interval);
+            }
+        }, 300);
+    };
     useEffect(() => {
         if (
             inspectionStep < 0 ||
@@ -182,6 +195,9 @@ const useSVMState = ({ setPageSrcCallback }: Props): ReturnType => {
         setInspectTitle(SVM_INSPECTION_STEP[inspectionStep + 1].key);
     }, [inspectionStep]);
 
+    useEffect(() => {
+        if (loaded) callInitSVM();
+    }, [loaded]);
     return [
         loaded,
         svmElement,
