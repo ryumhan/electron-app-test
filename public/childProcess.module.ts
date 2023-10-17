@@ -1,11 +1,7 @@
-import { ChildProcess, exec, execFile } from 'child_process';
+import { SpawnSyncReturns, execSync, spawnSync } from 'child_process';
 import * as isDev from 'electron-is-dev';
 
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const find = require('find-process');
-
-let pythonProcess: ChildProcess | null;
-let processList: number[] = [];
+let pythonProcess: SpawnSyncReturns<Buffer> | null;
 
 const exePath = isDev
     ? './public/dist/oru_ip_find.exe'
@@ -14,11 +10,9 @@ const exePath = isDev
 const exitPythonProcess = () => {
     if (pythonProcess?.pid) {
         console.log('[PYTHON-PROCESS] kill process', pythonProcess.pid);
-        exec(`taskkill /pid ${pythonProcess.pid} /T /F`);
-        pythonProcess.removeAllListeners();
+        execSync(`taskkill /pid ${pythonProcess.pid} /T /F`);
         // pythonProcess.kill();
         pythonProcess = null;
-        processList = [];
     }
 };
 
@@ -26,31 +20,8 @@ const createPythonProcess = async () => {
     if (pythonProcess) exitPythonProcess();
 
     if (!pythonProcess) {
-        pythonProcess = execFile(exePath);
-
-        pythonProcess.on('spawn', async () => {
-            const list = await find('name', 'oru_ip_find.exe');
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            processList = list.map((elem: any) => elem.pid);
-            console.log(
-                '[PYTHON-PROCESS] process start -',
-                pythonProcess?.pid,
-                ' : ',
-                processList,
-            );
-        });
-
-        pythonProcess.on('exit', exitCode => {
-            console.log(
-                `[PYTHON-PROCESS] Process, ${pythonProcess?.pid} ended with code (${exitCode})`,
-            );
-        });
+        pythonProcess = spawnSync(exePath);
     }
-};
-
-const destructProcess = () => {
-    const list = processList.reverse();
-    list.reverse().forEach(pid => exec(`taskkill /pid ${pid} /T /F`));
 };
 
 process.on('SIGINT', () => {
@@ -60,6 +31,7 @@ process.on('SIGINT', () => {
 
 process.on('exit', async () => {
     console.log('[PYTHON-PROCESS] EXIT');
+    exitPythonProcess();
 });
 
-export default { createPythonProcess, destructProcess };
+export default { createPythonProcess };

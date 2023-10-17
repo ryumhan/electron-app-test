@@ -42,6 +42,7 @@ function Inspection(): React.ReactElement {
     const svmReport = useRecoilValue(inspectionAtom.svmReportAtom);
     const comReport = useRecoilValue(inspectionAtom.comReportAtom);
     const currentStep = useRecoilValue(inspectionAtom.svmStepSelector);
+
     const setPath = useSetRecoilState(statusAtom.filePathSelector);
 
     useEffect(() => {
