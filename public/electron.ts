@@ -2,7 +2,7 @@ import * as path from 'path';
 import { app, BrowserWindow, ipcMain } from 'electron';
 import * as isDev from 'electron-is-dev';
 import ipcModule from './ipc.module';
-// import childProcessModule from './childProcess.module';
+import childProcessModule from './childProcess.module';
 import udpServerModule from './udpServer.module';
 
 let mainWindow: BrowserWindow;
@@ -58,7 +58,7 @@ app.on('ready', async () => {
     createWindow();
     // create Ipc Module
     ipcMain.on('create-module', () => {
-        // childProcessModule.createPythonProcess();
+        childProcessModule.createPythonProcess();
         udpServerModule.createUdpServer(mainWindow);
         ipcModule.createWebsocket(mainWindow);
     });
@@ -67,6 +67,7 @@ app.on('ready', async () => {
 app.on('before-quit', async () => {
     // Add your cleanup or resource release code here.\
     udpServerModule.destructUdp();
+    ipcModule.destructWebsocket();
 });
 
 // Quit when all windows are closed.

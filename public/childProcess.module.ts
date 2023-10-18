@@ -1,7 +1,7 @@
-import { SpawnSyncReturns, execSync, spawnSync } from 'child_process';
+import { ChildProcessWithoutNullStreams, execSync, spawn } from 'child_process';
 import * as isDev from 'electron-is-dev';
 
-let pythonProcess: SpawnSyncReturns<Buffer> | null;
+let pythonProcess: ChildProcessWithoutNullStreams | null;
 
 const exePath = isDev
     ? './public/dist/oru_ip_find.exe'
@@ -10,8 +10,10 @@ const exePath = isDev
 const exitPythonProcess = () => {
     if (pythonProcess?.pid) {
         console.log('[PYTHON-PROCESS] kill process', pythonProcess.pid);
+
         execSync(`taskkill /pid ${pythonProcess.pid} /T /F`);
-        // pythonProcess.kill();
+
+        pythonProcess.removeAllListeners();
         pythonProcess = null;
     }
 };
@@ -20,7 +22,16 @@ const createPythonProcess = async () => {
     if (pythonProcess) exitPythonProcess();
 
     if (!pythonProcess) {
-        pythonProcess = spawnSync(exePath);
+        pythonProcess = spawn(exePath);
+        pythonProcess.on('spawn', () => {
+            console.log('[PYTHON-PROCESS] process start -', pythonProcess?.pid);
+        });
+
+        pythonProcess.on('exit', exitCode => {
+            console.log(
+                `[PYTHON-PROCESS] Process, ${pythonProcess?.pid} ended with code (${exitCode})`,
+            );
+        });
     }
 };
 

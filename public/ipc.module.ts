@@ -3,15 +3,20 @@ import { WebSocket } from 'ws';
 
 let ws: WebSocket | null = null;
 
-const createWebsocket = (mainWindow: BrowserWindow) => {
+const destructWebsocket = () => {
     if (ws && ws.readyState === ws.OPEN) {
         try {
             ws?.close();
+            ws.removeAllListeners();
             ws = null;
         } catch (error) {
             console.error('[IPC-MODULE] closing Error');
         }
     }
+};
+
+const createWebsocket = (mainWindow: BrowserWindow) => {
+    destructWebsocket();
 
     const connect = (data: string) => {
         try {
@@ -68,4 +73,4 @@ ipcMain.on('open-directory-dialog', event => {
         });
 });
 
-export default { createWebsocket };
+export default { createWebsocket, destructWebsocket };
