@@ -24,7 +24,7 @@ export const PageHeader = styled(Horizontal)<{ complete: boolean }>`
     border-radius: 5px;
     transition: all 0.2s;
     :hover {
-        height: ${props => (props.complete ? '100%' : '70px')};
+        height: ${props => (props.complete ? '100%' : '100px')};
         opacity: 1;
         z-index: 100001;
     }
@@ -123,15 +123,20 @@ export const ToolBoxContainer = styled.div`
     position: absolute;
     right: 0;
     top: 0;
-    margin: 5px;
-    padding: 5px;
+    padding: 15px;
     z-index: 100000;
 `;
 
 export const IconContainer = styled.div`
     border-radius: 10px;
     background-color: gray;
-    opacity: 0.3;
+    opacity: 0.5;
+    background-color: white;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    display: flex;
     cursor: pointer;
     :hover {
         opacity: 0.8;
@@ -144,10 +149,10 @@ export const FullscreenIcon = styled.img`
     object-fit: contain;
 `;
 
-export const RightPannelContainer = styled(Vertical)`
+export const RightPannelContainer = styled(Horizontal)`
     position: fixed;
-    padding: 15px;
-    right: 0;
+    padding: 30px;
+    left: 77%;
     bottom: 0;
     z-index: 10;
     gap: 20px;

@@ -31,8 +31,6 @@ const createUdpServer = (mainWindow: BrowserWindow) => {
     server.on('message', msg => {
         const got: MessageType = JSON.parse(msg.toString());
         recentIp = got.oru_ip;
-        console.log(got);
-
         if (!gotAck) {
             mainWindow.webContents.send('oruDiscover-module', {
                 data: got.oru_ip,

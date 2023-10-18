@@ -1,4 +1,3 @@
-/* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
 import Button from '@/components/button';
 import LoadingPannel from '@/components/loadingPannel';
 import {
@@ -12,14 +11,15 @@ import {
 } from '../inspection.styled';
 
 import useTopPannelData from './hook';
-import { Horizontal, Vertical } from '@/styled';
-import { ComponentProps } from 'react';
+import { Vertical } from '@/styled';
+import { ComponentProps, useState } from 'react';
 import { imgFullscreen } from '@/assets';
-import html2canvas from 'html2canvas';
-import fs from 'fs';
-import { PNG } from 'pngjs';
+import { ipcRenderer } from 'electron';
+import { useRecoilValue } from 'recoil';
+import statusAtom from '@/atoms/status.atom';
 
 function TopPannel(): React.ReactElement {
+    const [count, setCount] = useState(1);
     const [
         loaded,
         pageSrc,
@@ -33,31 +33,20 @@ function TopPannel(): React.ReactElement {
         timeOutCallback,
     ] = useTopPannelData();
 
+    const filePath = useRecoilValue(statusAtom.filePathSelector);
+
     const handleKeyDown: ComponentProps<'div'>['onKeyDown'] = event => {
         if (event.key === 'Escape' && fullScreen) setFullscreen();
     };
 
     const handleCapture = () => {
-        const iframe = svmElement.current;
+        if (!filePath) {
+            alert('저장 경로를 설정하여 주세요');
+            return;
+        }
 
-        if (!iframe) return;
-
-        html2canvas(iframe).then(canvas => {
-            const imgData = canvas.toDataURL('image/png');
-            // 데이터 파싱
-const imageData = imgData.replace(/^data:image\/\w+;base64,/, '');
-const buffer = Buffer.from(imageData, 'base64');
-
-// PNG 이미지 생성
-const png = new PNG();
-png.parse(buffer, (error, data) => {
-  if (error) {
-    console.error('PNG 변환 중 오류가 발생했습니다.', error);
-  } else {
-    fs.createWriteStream('image.png').write(data);
-    console.log('이미지가 성공적으로 저장되었습니다.');
-  }
-        });
+        ipcRenderer.send('capture-image', { filePath, count });
+        setCount(count + 1);
     };
 
     return (
@@ -88,7 +77,7 @@ png.parse(buffer, (error, data) => {
                 )}
 
                 <ToolBoxContainer>
-                    <Horizontal gap={20}>
+                    <Vertical gap={10}>
                         <Button
                             size="sm"
                             type="normal"
@@ -99,7 +88,7 @@ png.parse(buffer, (error, data) => {
                         <IconContainer onClick={setFullscreen}>
                             <FullscreenIcon src={imgFullscreen} />
                         </IconContainer>
-                    </Horizontal>
+                    </Vertical>
                 </ToolBoxContainer>
                 <iframe
                     ref={svmElement}

@@ -25,7 +25,6 @@ import { useNavigate } from 'react-router-dom';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 import inspectionAtom from '@/atoms/inspection.atom';
 import constants from '@/utils/constants';
-import VerticalStepProgress from '@/components/vertical-step-progress';
 import VerticalStepProgressBar from '@/components/vertical-step-progress';
 import statusAtom from '@/atoms/status.atom';
 
@@ -76,8 +75,14 @@ function Inspection(): React.ReactElement {
             ? 'warning'
             : 'normal';
 
-    const buttonCallback = () =>
+    const resultButtonCallback = () =>
         status === 'Pass' ? navigate('/success') : navigate('/fail');
+
+    const exitButtonCallback = () => {
+        // eslint-disable-next-line no-alert, no-restricted-globals
+        const rst = confirm('정말로 종료하시겠습니까?');
+        if (rst) ipcRenderer.send('app-quit', {});
+    };
 
     return (
         <PageContainer>
@@ -100,22 +105,19 @@ function Inspection(): React.ReactElement {
                         </TypoGraphy>
                     </Horizontal>
                 </HeaderFront>
-                <HeaderBack gap={20}>
-                    <Horizontal gap={10}>
-                        <TypoGraphy type="bold">Test Result:</TypoGraphy>
-                    </Horizontal>
-
+                <HeaderBack gap={50}>
+                    <TypoGraphy type="bold">Test Result:</TypoGraphy>
                     <Button
                         type={buttonType}
-                        label={status === 'Pass' ? 'Complete' : status}
+                        label={status}
                         disable={status === 'Progressing'}
-                        onClick={buttonCallback}
+                        onClick={resultButtonCallback}
                     />
                 </HeaderBack>
             </PageHeader>
             <Vertical style={{ height: '100%', paddingTop: '20px' }} gap={10}>
                 {/* left pannel */}
-                <VerticalStepProgress
+                <VerticalStepProgressBar
                     multiple
                     steps={constants.SVM_INSPECTION_STEP.map(elem => {
                         return { name: elem.name, checklist: elem.checkList };
@@ -152,10 +154,19 @@ function Inspection(): React.ReactElement {
 
                 <RightPannelContainer>
                     <Button
+                        size="large"
                         type="normal"
                         label="저장 경로 설정"
                         disable={false}
                         onClick={selectDirectory}
+                    />
+
+                    <Button
+                        size="large"
+                        type="warning"
+                        label="테스트 종료"
+                        disable={false}
+                        onClick={exitButtonCallback}
                     />
                 </RightPannelContainer>
             </Vertical>

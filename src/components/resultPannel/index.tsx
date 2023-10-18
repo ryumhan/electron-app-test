@@ -59,12 +59,14 @@ function ResultPannel({ type }: Props) {
                     type="primary"
                     label="저장 후 진행"
                     disable={false}
+                    size="large"
                     onClick={handleNext}
                 />
                 <Button
                     type="primary"
                     label="저장 경로 설정"
                     disable={false}
+                    size="large"
                     onClick={selectDirectory}
                 />
             </Horizontal>

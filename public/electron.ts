@@ -5,12 +5,14 @@ import ipcModule from './ipc.module';
 import childProcessModule from './childProcess.module';
 import udpServerModule from './udpServer.module';
 
+import * as fs from 'fs';
+
 let mainWindow: BrowserWindow;
 
 const createWindow = () => {
     mainWindow = new BrowserWindow({
-        width: 880,
-        height: 900,
+        width: 800,
+        height: 600,
         center: true,
         kiosk: !isDev,
         resizable: true,
@@ -61,6 +63,30 @@ app.on('ready', async () => {
         childProcessModule.createPythonProcess();
         udpServerModule.createUdpServer(mainWindow);
         ipcModule.createWebsocket(mainWindow);
+    });
+
+    ipcMain.on('capture-image', async (_, { filePath, count }) => {
+        const img = await mainWindow.capturePage();
+        const conv = img
+            .resize({
+                // resize
+                width: 800,
+                height: 600,
+                quality: 'best',
+            })
+            .toPNG(); // to PNG
+        try {
+            fs.writeFileSync(
+                `${filePath || __dirname}/captured${count}.png`,
+                conv,
+            );
+        } catch (error) {
+            console.log(error);
+        }
+    });
+
+    ipcMain.on('app-quit', () => {
+        app.quit();
     });
 });
 

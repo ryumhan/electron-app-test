@@ -19,7 +19,7 @@ export const ButtonBox = styled.div<ButtonProps>`
             ? '30px'
             : props.size === 'large'
             ? '40px'
-            : '20px'};
+            : '25px'};
     border-radius: 10px;
     background-color: ${props => (props.disable ? '#666' : props.type)};
     display: flex;

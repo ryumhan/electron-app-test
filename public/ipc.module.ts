@@ -51,7 +51,7 @@ const createWebsocket = (mainWindow: BrowserWindow) => {
         };
     };
 
-    ipcMain.on('websocket-module', (ev, { type, data }) => {
+    ipcMain.on('websocket-module', (_, { type, data }) => {
         if (type === 'close' && ws && ws.readyState === ws.OPEN) {
             ws?.close();
             ws = null;
