@@ -7,12 +7,13 @@ import * as Papa from 'papaparse';
 
 const DEFULAT_HEDAER = [
     '검사결과',
-    '모트렉스 SN',
-    'ORU IP',
-    '고객 SN',
-    'CCU SN',
     '검사 시작',
     '검사 완료',
+    '모트렉스 SN',
+    'ORU IP',
+    'SW Version',
+    '고객 SN',
+    '고객 CCU SN',
     '웹소켓 검사',
     'http 검사',
     '탑뷰 스트리밍 검사',
@@ -20,7 +21,6 @@ const DEFULAT_HEDAER = [
     'Distance Guide 모드',
     '도킹뷰 스트리밍',
     '선수뷰 스트리밍',
-    'Light theme 모드',
     'Dark theme 모드',
     'Night theme 모드',
     'Calibration 모드',
@@ -29,6 +29,7 @@ const DEFULAT_HEDAER = [
 const useFileLogger = () => {
     const oruIp = useRecoilValue(statusAtom.oruIpAtom);
     const filePath = useRecoilValue(statusAtom.filePathAtom);
+    const version = useRecoilValue(statusAtom.swVersion);
     const statusSelector = useRecoilValue(inspectionAtom.statusSelector);
     const comReport = useRecoilValue(inspectionAtom.comReportAtom);
     const svmReport = useRecoilValue(inspectionAtom.svmReportAtom);
@@ -38,10 +39,10 @@ const useFileLogger = () => {
 
     const createFileLogging = () => {
         const list = [
-            comReport
+            ...comReport
                 .filter(elem => elem.result === 'Failed')
                 .map(elem => elem.name),
-            svmReport
+            ...svmReport
                 .filter(elem => elem.result === 'Failed')
                 .map(elem => elem.name),
         ];
@@ -53,12 +54,13 @@ const useFileLogger = () => {
         try {
             const newData = [
                 `${result}(${list.join('/')})`,
-                sn,
-                oruIp,
-                customer,
-                ccu,
                 filePath.startDate,
                 dateTime,
+                sn,
+                oruIp,
+                version,
+                customer,
+                ccu,
                 ...comReport.map(elem =>
                     elem.result === 'Progressing' ? 'N/A' : elem.result,
                 ),

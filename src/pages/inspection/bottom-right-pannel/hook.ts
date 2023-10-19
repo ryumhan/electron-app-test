@@ -25,6 +25,7 @@ type ReturnType = [
 const useBottomRightPannelData = (): ReturnType => {
     const setSerial = useSetRecoilState(statusAtom.serialAtom);
     const oruIp = useRecoilValue(statusAtom.oruIpAtom);
+    const setVersion = useSetRecoilState(statusAtom.swVersion);
 
     const { data, loading, timeOutCallback } = useHttpMessage<Diagnostics>({
         url: utils.getAPIUrl(oruIp, 'diagnostics'),
@@ -54,6 +55,7 @@ const useBottomRightPannelData = (): ReturnType => {
     useEffect(() => {
         if (!data?.oruInfo) return;
 
+        setVersion(data?.oruInfo.softwareVersion);
         setSerial({
             ccu: data?.ccuInfo.map(ccu => ccu.serialNumber).join('/'),
             customer: data?.oruInfo.serialNumber,

@@ -208,12 +208,6 @@ const SVM_STATE_INSPECTION_LIST = [
         },
     },
     {
-        event: 'light-mode',
-        message: {
-            data: true,
-        },
-    },
-    {
         event: 'dark-mode',
         message: {
             data: true,
@@ -428,12 +422,6 @@ const BACKWARD_SVM_STATE_INSPECTION_LIST = [
         },
     },
     {
-        event: 'dark-mode',
-        message: {
-            data: true,
-        },
-    },
-    {
         event: 'light-mode',
         message: {
             data: true,
@@ -448,6 +436,7 @@ const BACKWARD_SVM_STATE_INSPECTION_LIST = [
 ];
 
 const RESET_SVM_STATE_INSPECTION_LIST = [
+    INIT_SVM,
     {
         event: 'bow-distance-guide',
         message: {
@@ -580,12 +569,6 @@ const SVM_INSPECTION_STEP = [
         ],
     },
     {
-        name: 'Light theme 모드',
-        key: 'CallSVM',
-
-        checkList: ['배경테마 변경 확인'],
-    },
-    {
         name: 'Dark theme 모드',
         key: 'CallSVM',
 
@@ -623,7 +606,7 @@ const COM_INSPECTION_STEP = [
     {
         name: 'Http통신 체크',
 
-        checkList: ['시리얼 넘버 확인'],
+        checkList: ['SW Version 확인', '시리얼 넘버 확인'],
     },
 ];
 

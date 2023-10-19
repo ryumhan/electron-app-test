@@ -164,7 +164,7 @@ function Inspection(): React.ReactElement {
                     <Button
                         size="large"
                         type="warning"
-                        label="테스트 종료"
+                        label="프로그램 종료"
                         disable={false}
                         onClick={exitButtonCallback}
                     />
