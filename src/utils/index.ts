@@ -15,7 +15,7 @@ const getAPIUrl = (oru: string, category: string) => {
 };
 
 const getHttpPage = (oru: string, category: string) =>
-    `http://${oru}:${PAGE_PORT}/${category}`;
+    `http://${oru}:${PAGE_PORT}/v1/${category}`;
 
 async function getWebSrcUsingHeader(url: string, token: string) {
     try {
