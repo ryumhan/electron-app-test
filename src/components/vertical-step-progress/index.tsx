@@ -52,7 +52,7 @@ function VerticalStepProgressBar({
                             opacity: isBold ? '1' : '0.4',
                         }}
                     >
-                        <Horizontal gap={23} alignItems="center">
+                        <Horizontal gap={15} alignItems="center">
                             {result !== 'Progressing' ? (
                                 <StepIcon
                                     src={

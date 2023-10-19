@@ -151,9 +151,9 @@ export const FullscreenIcon = styled.img`
 
 export const RightPannelContainer = styled(Horizontal)`
     position: fixed;
-    padding: 30px;
+    padding: 30px 20px;
     left: 77%;
     bottom: 0;
     z-index: 10;
-    gap: 20px;
+    gap: 10px;
 `;

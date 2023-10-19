@@ -12,7 +12,7 @@ export const ProgressBarContainer = styled(Vertical)<{ position: string }>`
     top: 0;
     left: ${props => (props.position === 'left' ? '0' : '')};
     right: ${props => (props.position === 'right' ? '0' : '')};
-    padding: 30px 35px;
+    padding: 25px 25px;
     margin-top: 25px;
     gap: ${gapSize};
     overflow-y: scroll;
@@ -23,7 +23,7 @@ export const Title = styled.div`
 `;
 
 export const VerticalStepListContainer = styled(Vertical)<{ color: string }>`
-    gap: 15px;
+    gap: 10px;
     position: relative;
     transition: all 0.3s;
     width: 100%;
@@ -60,6 +60,8 @@ export const StepContainer = styled(Vertical)`
 
 export const CheckListContainer = styled(Vertical)`
     justify-content: center;
-    width: 85%;
+    width: 100%;
+    margin-left: 40px;
+    /* text-align: right; */
     color: gray;
 `;
