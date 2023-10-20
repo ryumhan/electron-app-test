@@ -56,7 +56,7 @@ const useSVMState = ({ setPageSrcCallback }: Props): ReturnType => {
             RESET_SVM_STATE_INSPECTION_LIST.forEach(msg => {
                 svmElement.current?.contentWindow?.postMessage(
                     msg,
-                    utils.getHttpPage(oruIp, ''),
+                    utils.getHttpPage(oruIp, 'v1'),
                 );
             });
         }
@@ -83,7 +83,7 @@ const useSVMState = ({ setPageSrcCallback }: Props): ReturnType => {
                     msg =>
                         svmElement.current?.contentWindow?.postMessage(
                             msg,
-                            utils.getHttpPage(oruIp, ''),
+                            utils.getHttpPage(oruIp, 'v1'),
                         ),
                 );
             } else {
@@ -91,7 +91,7 @@ const useSVMState = ({ setPageSrcCallback }: Props): ReturnType => {
                     BACKWARD_SVM_STATE_INSPECTION_LIST[nextCheckStep];
                 svmElement.current.contentWindow?.postMessage(
                     message,
-                    utils.getHttpPage(oruIp, ''),
+                    utils.getHttpPage(oruIp, 'v1'),
                 );
             }
 
@@ -137,14 +137,14 @@ const useSVMState = ({ setPageSrcCallback }: Props): ReturnType => {
                     msg =>
                         svmElement.current?.contentWindow?.postMessage(
                             msg,
-                            utils.getHttpPage(oruIp, ''),
+                            utils.getHttpPage(oruIp, 'v1'),
                         ),
                 );
             } else {
                 const message = SVM_STATE_INSPECTION_LIST[nextCheckStep - 1];
                 svmElement.current.contentWindow?.postMessage(
                     message,
-                    utils.getHttpPage(oruIp, ''),
+                    utils.getHttpPage(oruIp, 'v1'),
                 );
             }
 
@@ -177,7 +177,7 @@ const useSVMState = ({ setPageSrcCallback }: Props): ReturnType => {
             if (svmElement.current) {
                 svmElement.current?.contentWindow?.postMessage(
                     INIT_SVM,
-                    utils.getHttpPage(oruIp, ''),
+                    utils.getHttpPage(oruIp, 'v1'),
                 );
 
                 clearInterval(interval);

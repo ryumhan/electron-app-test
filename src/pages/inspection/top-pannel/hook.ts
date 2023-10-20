@@ -27,10 +27,10 @@ const useTopPannelData = (): ReturnType => {
     const setFailReport = useSetRecoilState(inspectionAtom.failReportAtom);
     const [fullScreen, setFullscreen] = useState(false);
 
-    const [pageSrc, setPageSrc] = useState(utils.getHttpPage(oruIp, ''));
+    const [pageSrc, setPageSrc] = useState(utils.getHttpPage(oruIp, 'v1'));
 
     const resetSVMPage = () => {
-        setPageSrc(utils.getHttpPage(oruIp, ''));
+        setPageSrc(utils.getHttpPage(oruIp, 'v1'));
     };
 
     const [
@@ -66,7 +66,7 @@ const useTopPannelData = (): ReturnType => {
     useEffect(() => {
         if (data?.result?.authtoken) {
             setRequestObj({
-                url: utils.getHttpPage(oruIp, 'calibration'),
+                url: utils.getHttpPage(oruIp, 'v1/calibration'),
                 method: 'GET',
                 headers: {
                     Authorization: data.result.authtoken,
