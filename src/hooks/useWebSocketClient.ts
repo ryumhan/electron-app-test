@@ -1,6 +1,8 @@
-import { ipcRenderer } from 'electron';
-import { useCallback, useEffect, useState } from 'react';
 import { webSocketMessage } from '@/model';
+import { ipcRenderer } from 'electron';
+import { useEffect, useState } from 'react';
+import { CameraStatus } from '@/model/webSocketMessage/cameraStatus';
+import { HearBeat } from '@/model/webSocketMessage/heartbeat';
 
 interface Props {
     oruIp: string;
@@ -8,16 +10,10 @@ interface Props {
 
 const useWebSocketClient = ({ oruIp }: Props) => {
     const [open, setOpen] = useState(false);
-    const [data, setData] = useState<webSocketMessage>();
+    const [cameraData, setCameraData] = useState<CameraStatus | null>();
+    const [heartBeatData, setHeartBeatData] = useState<HearBeat | null>();
+
     const [timeOver, setTimeOverLimit] = useState(false);
-    const [time, setTimePassed] = useState<number>(0);
-
-    const getDataSuccess = useCallback(() => {
-        if (time > 1000) setTimeOverLimit(true);
-        else setTimeOverLimit(false);
-
-        setTimePassed(0);
-    }, [time]);
 
     const timeOutCallback = () => {
         setOpen(false);
@@ -38,27 +34,39 @@ const useWebSocketClient = ({ oruIp }: Props) => {
         });
 
         ipcRenderer.on('websocket-module', (_, got) => {
-            setData(JSON.parse(got.data));
             setOpen(true);
+
+            const data = JSON.parse(got.data) as webSocketMessage;
+            if (data?.method.includes('NotifyHeartBeat')) {
+                setHeartBeatData(data as HearBeat);
+            } else if (data?.method.includes('NotifyCameraStatus')) {
+                setCameraData(data as CameraStatus);
+            } else {
+                setHeartBeatData(null);
+                setCameraData(null);
+            }
         });
     };
 
     useEffect(() => {
-        getDataSuccess();
-    }, [data]);
-
-    useEffect(() => {
         if (!open) createWebsocket();
-
-        // receive data in interval
-        const timeInst = setInterval(() => {
-            setTimePassed(current => current + 100);
-        }, 100);
-
-        return () => clearInterval(timeInst);
     }, []);
 
-    return { open, data, timeOver, timeOutCallback };
+    useEffect(() => {
+        const time = setTimeout(() => {
+            setHeartBeatData(null);
+        }, 500);
+        return () => clearTimeout(time);
+    }, [heartBeatData]);
+
+    useEffect(() => {
+        const time = setTimeout(() => {
+            setCameraData(null);
+        }, 500);
+        return () => clearTimeout(time);
+    }, [cameraData]);
+
+    return { open, cameraData, heartBeatData, timeOver, timeOutCallback };
 };
 
 export default useWebSocketClient;
