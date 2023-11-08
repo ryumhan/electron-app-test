@@ -6,7 +6,7 @@ let ws: WebSocket | null = null;
 const destructWebsocket = () => {
     if (ws && ws.readyState === ws.OPEN) {
         try {
-            ws?.close();
+            ws.close();
             ws.removeAllListeners();
             ws = null;
         } catch (error) {
@@ -53,7 +53,7 @@ const createWebsocket = (mainWindow: BrowserWindow) => {
 
     ipcMain.on('websocket-module', (_, { type, data }) => {
         if (type === 'close' && ws && ws.readyState === ws.OPEN) {
-            ws?.close();
+            ws.close();
             ws = null;
         } else if (type === 'create') {
             if (ws && ws.readyState === ws.CONNECTING) return;

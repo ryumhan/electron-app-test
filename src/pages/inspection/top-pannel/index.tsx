@@ -107,7 +107,7 @@ function TopPannel(): React.ReactElement {
                     <Button
                         type="normal"
                         label="Undo"
-                        disable={false}
+                        disable={!loaded}
                         onClick={onBackCallback}
                     />
 
@@ -122,7 +122,7 @@ function TopPannel(): React.ReactElement {
                     type="warning"
                     label="Fail"
                     onClick={onFailedCallback}
-                    disable={false}
+                    disable={!loaded}
                 />
             </ButtonContainer>
         </WebViewPannel>

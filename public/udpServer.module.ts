@@ -1,5 +1,5 @@
 import * as dgram from 'dgram';
-import { BrowserWindow, ipcMain } from 'electron';
+import { BrowserWindow, dialog, ipcMain } from 'electron';
 
 let server: dgram.Socket;
 const PORT = 64001; // Change to your desired port number
@@ -25,6 +25,12 @@ const createUdpServer = (mainWindow: BrowserWindow) => {
     server = dgram.createSocket('udp4');
     server.on('error', err => {
         server.close();
+
+        dialog.showErrorBox(
+            'Error',
+            'Port 64001 is not available now, please kill another process',
+        );
+
         console.error(`[UDP-MODULE] Server error:\n${err.stack}`);
     });
 

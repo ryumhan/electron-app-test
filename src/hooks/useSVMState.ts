@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 import constants from '@/utils/constants';
 import utils from '@/utils';
@@ -41,27 +41,60 @@ const useSVMState = ({ setPageSrcCallback }: Props): ReturnType => {
     const [inspectTitle, setInspectTitle] = useState(
         SVM_INSPECTION_STEP[0].name,
     );
+
     const svmElement = useRef<HTMLIFrameElement>(null);
+
+    const callInitSVM = () => {
+        const interval = setInterval(() => {
+            if (svmElement.current) {
+                svmElement.current?.contentWindow?.postMessage(
+                    INIT_SVM,
+                    utils.getHttpPage(oruIp, 'v1'),
+                );
+
+                clearInterval(interval);
+            }
+        }, 300);
+    };
+
+    const callFunctionAfterLoading = useCallback(
+        (time: number, callback?: () => void) => {
+            setLoaded(false);
+
+            const timeout = setTimeout(() => {
+                if (callback) callback();
+
+                setLoaded(true);
+                clearTimeout(timeout);
+            }, time);
+        },
+        [],
+    );
 
     const timeOutCallback = () => {
         setLoaded(false);
     };
 
     const onLoadCallback = () => {
-        if (
-            inspectionStep !== SVM_INSPECTION_STEP.length - 1 &&
-            inspectionStep !== -1 &&
-            svmElement
-        ) {
+        const resetSVM = () => {
             RESET_SVM_STATE_INSPECTION_LIST.forEach(msg => {
                 svmElement.current?.contentWindow?.postMessage(
                     msg,
                     utils.getHttpPage(oruIp, 'v1'),
                 );
             });
+        };
+
+        if (
+            inspectionStep !== SVM_INSPECTION_STEP.length - 1 &&
+            inspectionStep !== -1 &&
+            svmElement
+        ) {
+            callFunctionAfterLoading(500, resetSVM);
+            return callFunctionAfterLoading(1500);
         }
 
-        setLoaded(true);
+        callFunctionAfterLoading(5000, callInitSVM);
     };
 
     const onBackCallback = () => {
@@ -114,6 +147,8 @@ const useSVMState = ({ setPageSrcCallback }: Props): ReturnType => {
 
             return newReport;
         });
+
+        callFunctionAfterLoading(1500);
     };
 
     const onButtonSelectCallback = (result: ResultType) => {
@@ -166,24 +201,14 @@ const useSVMState = ({ setPageSrcCallback }: Props): ReturnType => {
 
             return newReport;
         });
+
+        callFunctionAfterLoading(1500);
     };
 
     const onSuccessCallback = () => onButtonSelectCallback('Pass');
 
     const onFailedCallback = () => onButtonSelectCallback('Failed');
 
-    const callInitSVM = () => {
-        const interval = setInterval(() => {
-            if (svmElement.current) {
-                svmElement.current?.contentWindow?.postMessage(
-                    INIT_SVM,
-                    utils.getHttpPage(oruIp, 'v1'),
-                );
-
-                clearInterval(interval);
-            }
-        }, 300);
-    };
     useEffect(() => {
         if (
             inspectionStep < 0 ||
@@ -195,9 +220,6 @@ const useSVMState = ({ setPageSrcCallback }: Props): ReturnType => {
         setInspectTitle(SVM_INSPECTION_STEP[inspectionStep + 1].key);
     }, [inspectionStep]);
 
-    useEffect(() => {
-        if (loaded) callInitSVM();
-    }, [loaded]);
     return [
         loaded,
         svmElement,
