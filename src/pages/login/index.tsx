@@ -83,9 +83,13 @@ function Login() {
                 gap={40}
                 style={{ margin: 'auto' }}
             >
-                <Horizontal justifyContent="center">
+                <Horizontal justifyContent="center" gap={2}>
                     <TypoGraphy type="bold" style={{ fontSize: '25px' }}>
                         ORU INSPECTION SW
+                    </TypoGraphy>
+                    <br />
+                    <TypoGraphy type="normal" style={{ fontSize: '10px' }}>
+                        Ver 1.1
                     </TypoGraphy>
                 </Horizontal>
                 <LoginBox>
@@ -157,8 +161,11 @@ function Login() {
 
                         <CopyrightBox>
                             <CopyrightMessage>
-                                This Application is available to only allowed
-                                people
+                                <TypoGraphy type="normal">
+                                    This Application is only available to
+                                    allowed people
+                                    <br />
+                                </TypoGraphy>
                             </CopyrightMessage>
                         </CopyrightBox>
                         <Horizontal style={{ justifyContent: 'end' }}>
