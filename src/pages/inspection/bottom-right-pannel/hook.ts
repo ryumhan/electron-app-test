@@ -23,12 +23,13 @@ type ReturnType = [
 ];
 
 const useBottomRightPannelData = (): ReturnType => {
-    const setSerial = useSetRecoilState(statusAtom.serialAtom);
     const oruIp = useRecoilValue(statusAtom.oruIpAtom);
+    const setSerial = useSetRecoilState(statusAtom.serialAtom);
     const setVersion = useSetRecoilState(statusAtom.swVersion);
 
     const { data, loading, timeOutCallback } = useHttpMessage<Diagnostics>({
         url: utils.getAPIUrl(oruIp, 'diagnostics'),
+        interval: true,
     });
 
     const oruData = useMemo(

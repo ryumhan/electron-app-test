@@ -11,6 +11,7 @@ interface UseAxiosProps<T> {
     url: string;
     initialData?: T | null;
     body?: { password: string };
+    interval?: boolean;
 }
 
 const useHttpMessage = <T>({
@@ -19,6 +20,7 @@ const useHttpMessage = <T>({
     initialData = null,
     headers,
     body,
+    interval = false,
 }: UseAxiosProps<T>) => {
     const [data, setData] = useState<T | null>(initialData);
     const [loading, setLoading] = useState(true);
@@ -51,7 +53,12 @@ const useHttpMessage = <T>({
             }
         };
 
-        fetchData();
+        let timeInst: NodeJS.Timer;
+        // interval request
+        if (interval) timeInst = setInterval(() => fetchData(), 2000);
+        else fetchData();
+
+        return () => clearInterval(timeInst);
     }, [url, method, headers, body]);
 
     return { data, loading, error, timeOutCallback };

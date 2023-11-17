@@ -89,7 +89,7 @@ function Login() {
                     </TypoGraphy>
                     <br />
                     <TypoGraphy type="normal" style={{ fontSize: '10px' }}>
-                        Ver 1.1
+                        Ver 1.2
                     </TypoGraphy>
                 </Horizontal>
                 <LoginBox>
