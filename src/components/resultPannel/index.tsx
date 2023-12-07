@@ -8,9 +8,6 @@ import { imgFailed, imgSuccess } from '@/assets';
 import { Horizontal, Vertical } from '@/styled';
 import { useNavigate } from 'react-router-dom';
 import useFileLogger from '@/hooks/useFileLogger';
-import { ipcRenderer } from 'electron';
-import { useRecoilState } from 'recoil';
-import statusAtom from '@/atoms/status.atom';
 
 interface Props {
     type: 'success' | 'fail';
@@ -19,24 +16,11 @@ interface Props {
 function ResultPannel({ type }: Props) {
     const { createFileLogging } = useFileLogger();
 
-    const [filePath, setPath] = useRecoilState(statusAtom.filePathSelector);
-
     const navigate = useNavigate();
 
     const handleNext = () => {
-        if (!filePath) {
-            alert('저장 경로를 설정해 주세요.');
-            return;
-        }
         createFileLogging();
-        navigate('/ready');
-    };
-
-    const selectDirectory = () => {
-        ipcRenderer.send('open-directory-dialog');
-        ipcRenderer.on('selected-directory', (_, path) => {
-            setPath(path);
-        });
+        navigate('/');
     };
 
     return (
@@ -57,17 +41,10 @@ function ResultPannel({ type }: Props) {
             <Horizontal gap={20}>
                 <Button
                     type="primary"
-                    label="저장 후 진행"
+                    label="다음 검사 진행"
                     disable={false}
                     size="large"
                     onClick={handleNext}
-                />
-                <Button
-                    type="primary"
-                    label="저장 경로 설정"
-                    disable={false}
-                    size="large"
-                    onClick={selectDirectory}
                 />
             </Horizontal>
             <Vertical />
