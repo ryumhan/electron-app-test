@@ -154,6 +154,5 @@ export const RightPannelContainer = styled(Horizontal)`
     padding: 30px 20px;
     right: 0px;
     z-index: 10;
-    gap: 10px;
     bottom: 0;
 `;

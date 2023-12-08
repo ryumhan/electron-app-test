@@ -6,9 +6,10 @@ import { useRecoilState, useResetRecoilState, useSetRecoilState } from 'recoil';
 import statusAtom from '@/atoms/status.atom';
 import inspectionAtom from '@/atoms/inspection.atom';
 import CustomInput from '../custom-input';
-import dayjs from 'dayjs';
 import { Horizontal, TypoGraphy } from '@/styled';
 import { ipcRenderer } from 'electron';
+
+import dayjs from 'dayjs';
 
 function ReadyPannel() {
     const navigate = useNavigate();
@@ -66,7 +67,7 @@ function ReadyPannel() {
                     defaultValue={sn}
                     name="SN"
                     type="text"
-                    label="검사 진행할 SN를 입력해주세요"
+                    label="검사 진행할 모트렉스 SN를 입력해주세요"
                     style={{ width: '100%' }}
                     onChangeCallback={onChange}
                 />

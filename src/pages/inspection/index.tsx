@@ -84,7 +84,7 @@ function Inspection(): React.ReactElement {
             >
                 <HeaderFront>
                     <Horizontal gap={10}>
-                        <TypoGraphy type="bold">SN:</TypoGraphy>
+                        <TypoGraphy type="bold">모트렉스 SN:</TypoGraphy>
                         <TypoGraphy type="bold" style={{ color: 'blue' }}>
                             {sn}
                         </TypoGraphy>
@@ -145,9 +145,9 @@ function Inspection(): React.ReactElement {
 
                 <RightPannelContainer>
                     <Button
-                        size="large"
+                        size="mid"
                         type="warning"
-                        label="프로그램 종료"
+                        label="검사 종료"
                         disable={false}
                         onClick={exitButtonCallback}
                     />
