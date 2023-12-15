@@ -3,11 +3,8 @@ import constants from './constants';
 
 const { TEST_MODE, API_PORT, BASE_URI, PAGE_PORT } = constants;
 
-const getTestAddress = () => '192.168.0.200';
-// const getTestAddress = () => '198.18.6.118';
-
-const isDev = () => process.env.NODE_ENV === 'development';
-const isTestMode = () => process.env.NODE_ENV === 'development' && TEST_MODE;
+const getTestAddress = () => process.env.REACT_APP_TEST_ADDRESS;
+const isTestMode = () => TEST_MODE;
 
 const getAPIUrl = (oru: string, category: string) => {
     const port = category === 'auth' ? PAGE_PORT : API_PORT;
@@ -38,6 +35,5 @@ export default {
     getHttpPage,
     getAPIUrl,
     getWebSrcUsingHeader,
-    isDev,
     isTestMode,
 };

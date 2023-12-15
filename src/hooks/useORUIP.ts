@@ -17,7 +17,7 @@ const useORUIP = (): {
     const findOru = () => {
         if (utils.isTestMode()) {
             setTimeout(() => {
-                setOruIpAtom(utils.getTestAddress());
+                setOruIpAtom(utils.getTestAddress() || 'Not Found');
             }, 1000);
 
             return;

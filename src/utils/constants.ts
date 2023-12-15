@@ -1,5 +1,7 @@
-const TEST_MODE = false;
 const BASE_URI = '/api';
+
+const TEST_MODE = process.env.REACT_APP_TEST_MODE === 'true';
+
 const API_PORT = 8000;
 const PAGE_PORT = 9005;
 
