@@ -1,5 +1,7 @@
-const TEST_MODE = false;
 const BASE_URI = '/api';
+
+const TEST_MODE = process.env.REACT_APP_TEST_MODE === 'true';
+
 const API_PORT = 8000;
 const PAGE_PORT = 9005;
 
@@ -531,65 +533,56 @@ const SVM_INSPECTION_STEP = [
         name: '탑뷰 스트리밍 검사',
         key: 'SVMReady',
 
-        checkList: [
-            '카메라 스트리밍 확인',
-            '줌인/줌아웃 기능 확인',
-            '카메라이동 기능 확인',
-        ],
+        checkList: ['탑뷰에서의 카메라 영상 정상출력 육안 확인'],
     },
     {
         name: '탑뷰/개별뷰 스트리밍',
         key: 'CallSVM',
 
-        checkList: [
-            '카메라 스트리밍 확인',
-            '개별 카메라뷰 전체화면 전환 기능확인',
-        ],
+        checkList: ['탑뷰/개별뷰 영상 전환 확인'],
     },
     {
         name: 'Distance Guide 모드',
         key: 'CallSVM',
 
-        checkList: ['가이드 라인 표시 확인'],
+        checkList: [
+            '좌측: 탑뷰에서의 가이드 라인 표시확인',
+            '우측: 개별뷰에서의 가이드 라인 표시확인',
+        ],
     },
     {
         name: '도킹뷰 스트리밍',
         key: 'CallSVM',
-        checkList: [
-            '카메라 스트리밍 확인',
-            '개별 카메라뷰 전체화면 전환 기능확인',
-        ],
+        checkList: ['도킹뷰로 영상 전환 확인'],
     },
     {
         name: '선수뷰 스트리밍',
         key: 'CallSVM',
-        checkList: [
-            '카메라 스트리밍 확인',
-            '개별 카메라뷰 전체화면 전환 기능확인',
-        ],
+        checkList: ['선수뷰로 영상 전환 확인'],
     },
     {
         name: 'Dark theme 모드',
         key: 'CallSVM',
 
-        checkList: ['배경테마 변경 확인'],
+        checkList: [
+            '좌측: 변경사항 없음',
+            '우측: 개별뷰에서의 카메라 배경 흑색출력 여부 확인',
+        ],
     },
     {
         name: 'Night theme 모드',
         key: 'CallSVM',
 
-        checkList: ['배경테마 변경 확인'],
+        checkList: [
+            '좌측: 탑뷰에서 보트모델과 가이드의 채도감소 확인',
+            '우측: 개별뷰에서의 가이드 채도감소 확인',
+        ],
     },
     {
         name: 'Calibration 모드',
         key: 'Calibration',
 
-        checkList: [
-            'Boat Configuration : 개별 동작 확인',
-            'Single Camera : 개별 동작 확인',
-            'Multi Camera : 개별 슬라이더 동작 확인',
-            'Result Mode에서 Initialize 클릭',
-        ],
+        checkList: ['Configuration 모드로 정상 진입여부 확인'],
     },
 ];
 
@@ -598,15 +591,18 @@ const COM_INSPECTION_STEP = [
         name: '웹소켓 통신 체크',
 
         checkList: [
-            '초당 데이터 정상 수신 확인',
-            'HeartBeat 데이터 확인',
-            '카메라 상태 데이터 확인',
+            'ORU의 Heartbeat 주기메세지 검사',
+            'CCU의 Heartbeat 주기메세지 검사',
         ],
     },
     {
         name: 'Http통신 체크',
 
-        checkList: ['SW Version 확인', '시리얼 넘버 확인'],
+        checkList: [
+            'SW Version 확인',
+            'ORU 고객사 시리얼넘버 육안 확인',
+            'CCU 고객사 시리얼넘버 육안 확인',
+        ],
     },
 ];
 

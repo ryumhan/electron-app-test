@@ -43,65 +43,7 @@
    "import/no-extraneous-dependencies": ["error", {"devDependencies": true}],
    "no-unused-expressions":"off",
    "import/order": [
-    "off",
-    // {
-    //   "groups": [
-    //     "type",
-    //     "builtin",
-    //     "external",
-    //     "internal",
-    //     "parent",
-    //     "sibling",
-    //     "index",
-    //     "unknown"
-    //   ],
-    //   "pathGroups": [
-    //     {
-    //       "pattern": "react*",
-    //       "group": "external",
-    //       "position": "before"
-    //     },
-    //     {
-    //       "pattern": "@emotion*",
-    //       "group": "external",
-    //       "position": "after"
-    //     },
-    //     {
-    //       "pattern": "@/pages*",
-    //       "group": "internal",
-    //       "position": "after"
-    //     },
-    //     {
-    //       "pattern": "@/components/*",
-    //       "group": "internal",
-    //       "position": "after"
-    //     },
-    //     {
-    //       "pattern": "@/assets*",
-    //       "group": "internal",
-    //       "position": "after"
-    //     },
-    //     {
-    //       "pattern": "@/hooks/*",
-    //       "group": "internal",
-    //       "position": "after"
-    //     },
-    //     {
-    //       "pattern": "@/styled*",
-    //       "group": "internal",
-    //       "position": "after"
-    //     },
-    //     {
-    //       "pattern": "@/utils/*",
-    //       "group": "internal",
-    //       "position": "after"
-    //     }
-    //   ],
-    //   "alphabetize": {
-    //     "order": "asc",
-    //     "caseInsensitive": true
-    //   }
-    // }
+    "off"
   ]
   },
     "settings": {

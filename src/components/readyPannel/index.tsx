@@ -6,8 +6,10 @@ import { useRecoilState, useResetRecoilState, useSetRecoilState } from 'recoil';
 import statusAtom from '@/atoms/status.atom';
 import inspectionAtom from '@/atoms/inspection.atom';
 import CustomInput from '../custom-input';
+import { Horizontal, TypoGraphy } from '@/styled';
+import { ipcRenderer } from 'electron';
+
 import dayjs from 'dayjs';
-import { TypoGraphy } from '@/styled';
 
 function ReadyPannel() {
     const navigate = useNavigate();
@@ -18,10 +20,24 @@ function ReadyPannel() {
     const resetComReport = useResetRecoilState(inspectionAtom.comReportAtom);
     const setStartDate = useSetRecoilState(statusAtom.startDateSelector);
 
+    const [filePath, setPath] = useRecoilState(statusAtom.filePathSelector);
+
+    const selectDirectory = () => {
+        ipcRenderer.send('open-directory-dialog');
+        ipcRenderer.on('selected-directory', (_, path) => {
+            setPath(path);
+        });
+    };
+
     const [sn, setSn] = useRecoilState(statusAtom.snAtom);
 
     const handleNextInspection = () => {
         if (!sn) {
+            return;
+        }
+
+        if (!filePath) {
+            alert('저장 경로를 설정하여 진행해 주세요.');
             return;
         }
 
@@ -51,17 +67,28 @@ function ReadyPannel() {
                     defaultValue={sn}
                     name="SN"
                     type="text"
-                    label="검사 진행할 SN를 입력해주세요"
+                    label="검사 진행할 모트렉스 SN를 입력해주세요"
                     style={{ width: '100%' }}
                     onChangeCallback={onChange}
                 />
             </div>
-            <Button
-                type="primary"
-                label="계속 진행"
-                disable={false}
-                onClick={handleNextInspection}
-            />
+            <Horizontal gap={15}>
+                <Button
+                    type="primary"
+                    label="계속 진행"
+                    disable={false}
+                    onClick={handleNextInspection}
+                />
+                {!filePath && (
+                    <Button
+                        size="mid"
+                        type="warning"
+                        label="저장 경로 설정"
+                        disable={false}
+                        onClick={selectDirectory}
+                    />
+                )}
+            </Horizontal>
         </PannelContainer>
     );
 }

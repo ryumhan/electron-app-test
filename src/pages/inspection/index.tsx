@@ -22,7 +22,7 @@ import Button from '@/components/button';
 import { ipcRenderer } from 'electron';
 import { useNavigate } from 'react-router-dom';
 
-import { useRecoilValue, useSetRecoilState } from 'recoil';
+import { useRecoilValue } from 'recoil';
 import inspectionAtom from '@/atoms/inspection.atom';
 import constants from '@/utils/constants';
 import VerticalStepProgressBar from '@/components/vertical-step-progress';
@@ -42,8 +42,6 @@ function Inspection(): React.ReactElement {
     const comReport = useRecoilValue(inspectionAtom.comReportAtom);
     const currentStep = useRecoilValue(inspectionAtom.svmStepSelector);
 
-    const setPath = useSetRecoilState(statusAtom.filePathSelector);
-
     useEffect(() => {
         ipcRenderer.send('create-module', {});
     }, []);
@@ -55,18 +53,11 @@ function Inspection(): React.ReactElement {
                 message="Finding ORU available..."
                 timeOutCallback={() => {
                     timeOutCallback();
-                    navigate('/ready');
+                    navigate('/');
                 }}
             />
         );
     }
-
-    const selectDirectory = () => {
-        ipcRenderer.send('open-directory-dialog');
-        ipcRenderer.on('selected-directory', (_, path) => {
-            setPath(path);
-        });
-    };
 
     const buttonType =
         status === 'Pass'
@@ -93,7 +84,7 @@ function Inspection(): React.ReactElement {
             >
                 <HeaderFront>
                     <Horizontal gap={10}>
-                        <TypoGraphy type="bold">SN:</TypoGraphy>
+                        <TypoGraphy type="bold">모트렉스 SN:</TypoGraphy>
                         <TypoGraphy type="bold" style={{ color: 'blue' }}>
                             {sn}
                         </TypoGraphy>
@@ -154,17 +145,9 @@ function Inspection(): React.ReactElement {
 
                 <RightPannelContainer>
                     <Button
-                        size="large"
-                        type="normal"
-                        label="저장 경로 설정"
-                        disable={false}
-                        onClick={selectDirectory}
-                    />
-
-                    <Button
-                        size="large"
+                        size="mid"
                         type="warning"
-                        label="프로그램 종료"
+                        label="검사 종료"
                         disable={false}
                         onClick={exitButtonCallback}
                     />

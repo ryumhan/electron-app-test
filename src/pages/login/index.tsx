@@ -57,7 +57,7 @@ function Login() {
                 return;
             }
 
-            navigate('/ready');
+            navigate('/');
         } catch (error) {
             control.setError('id', {
                 message: '로그인 오류가 발생하였습니다.',
