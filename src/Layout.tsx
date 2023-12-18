@@ -3,7 +3,7 @@ import ReadyPannel from './components/readyPannel';
 import FailPannel from './components/resultPannel/failPannel';
 import SuccessPannel from './components/resultPannel/successPannel';
 import Inspection from './pages/inspection';
-// import Login from './pages/login';
+
 import React from 'react';
 
 function Layout() {
