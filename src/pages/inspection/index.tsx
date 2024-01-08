@@ -42,18 +42,23 @@ function Inspection(): React.ReactElement {
     const comReport = useRecoilValue(inspectionAtom.comReportAtom);
     const currentStep = useRecoilValue(inspectionAtom.svmStepSelector);
 
-    useEffect(() => {
+    const reloadCallback = () => {
         ipcRenderer.send('create-module', {});
+    };
+
+    useEffect(() => {
+        reloadCallback();
     }, []);
 
     if (!found) {
         return (
             <LoadingPannel
+                loadingTimeout={20 * 1000}
                 loaded={found}
                 message="Finding ORU available..."
                 timeOutCallback={() => {
                     timeOutCallback();
-                    navigate('/');
+                    reloadCallback();
                 }}
             />
         );

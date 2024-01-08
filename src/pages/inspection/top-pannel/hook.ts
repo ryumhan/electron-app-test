@@ -10,6 +10,7 @@ import inspectionAtom from '@/atoms/inspection.atom';
 
 type ReturnType = [
     boolean,
+    number,
     string,
     React.RefObject<HTMLIFrameElement>,
     boolean,
@@ -23,10 +24,9 @@ type ReturnType = [
 
 const useTopPannelData = (): ReturnType => {
     const oruIp = useRecoilValue(statusAtom.oruIpAtom);
-
     const setFailReport = useSetRecoilState(inspectionAtom.failReportAtom);
-    const [fullScreen, setFullscreen] = useState(false);
 
+    const [fullScreen, setFullscreen] = useState(false);
     const [pageSrc, setPageSrc] = useState(utils.getHttpPage(oruIp, 'v1'));
 
     const resetSVMPage = () => {
@@ -35,6 +35,7 @@ const useTopPannelData = (): ReturnType => {
 
     const [
         loaded,
+        trigger,
         svmElement,
         inspectTitle,
         onLoadCallback,
@@ -89,6 +90,7 @@ const useTopPannelData = (): ReturnType => {
 
     return [
         loaded,
+        trigger,
         pageSrc,
         svmElement,
         fullScreen,

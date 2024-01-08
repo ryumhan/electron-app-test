@@ -22,6 +22,7 @@ function TopPannel(): React.ReactElement {
     const [count, setCount] = useState(1);
     const [
         loaded,
+        trigger,
         pageSrc,
         svmElement,
         fullScreen,
@@ -46,7 +47,7 @@ function TopPannel(): React.ReactElement {
         }
 
         ipcRenderer.send('capture-image', { filePath, count });
-        setCount(count + 1);
+        setCount(state => state + 1);
     };
 
     return (
@@ -70,6 +71,8 @@ function TopPannel(): React.ReactElement {
             >
                 {!loaded && (
                     <LoadingPannel
+                        trigger={trigger}
+                        loadingTimeout={100 * 1000}
                         loaded={loaded}
                         message="Connecting SVM..."
                         timeOutCallback={timeOutCallback}
@@ -122,7 +125,7 @@ function TopPannel(): React.ReactElement {
                     type="warning"
                     label="Fail"
                     onClick={onFailedCallback}
-                    disable={!loaded}
+                    disable={false}
                 />
             </ButtonContainer>
         </WebViewPannel>

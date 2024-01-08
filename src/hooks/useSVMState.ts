@@ -16,6 +16,7 @@ const {
 
 type ReturnType = [
     boolean,
+    number,
     React.RefObject<HTMLIFrameElement>,
     string,
     () => void,
@@ -33,9 +34,11 @@ const useSVMState = ({ setPageSrcCallback }: Props): ReturnType => {
     const setReport = useSetRecoilState(inspectionAtom.svmReportAtom);
 
     const oruIp = useRecoilValue(statusAtoms.oruIpAtom);
-    const inspectionStep = useRecoilValue(inspectionAtom.svmStepSelector);
-    const [loaded, setLoaded] = useState(false);
+    const [trigger, setTrigger] = useState(0);
 
+    const inspectionStep = useRecoilValue(inspectionAtom.svmStepSelector);
+
+    const [loaded, setLoaded] = useState(false);
     const [checkStep, setCheckStep] = useState(0);
 
     const [inspectTitle, setInspectTitle] = useState(
@@ -63,9 +66,9 @@ const useSVMState = ({ setPageSrcCallback }: Props): ReturnType => {
 
             const timeout = setTimeout(() => {
                 if (callback) callback();
-
                 setLoaded(true);
                 clearTimeout(timeout);
+                setTrigger(0);
             }, time);
         },
         [],
@@ -76,6 +79,11 @@ const useSVMState = ({ setPageSrcCallback }: Props): ReturnType => {
     };
 
     const onLoadCallback = () => {
+        if (!svmElement?.current?.contentDocument?.location.href) {
+            setTrigger(state => state + 1);
+            return;
+        }
+
         const resetSVM = () => {
             RESET_SVM_STATE_INSPECTION_LIST.forEach(msg => {
                 svmElement.current?.contentWindow?.postMessage(
@@ -222,6 +230,7 @@ const useSVMState = ({ setPageSrcCallback }: Props): ReturnType => {
 
     return [
         loaded,
+        trigger,
         svmElement,
         inspectTitle,
         onLoadCallback,
