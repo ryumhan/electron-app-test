@@ -43,9 +43,6 @@ const useWebSocketClient = ({ oruIp }: Props) => {
         setOpen(false);
         setTimeOverLimit(true);
         setTrigger(state => state + 1);
-
-        if (!oruIp) return;
-        window.location.reload();
     };
 
     useEffect(() => {

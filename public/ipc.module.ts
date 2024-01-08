@@ -7,7 +7,6 @@ const destructWebsocket = () => {
     if (ws && ws.readyState === ws.OPEN) {
         try {
             ws.close();
-            ws.removeAllListeners();
             ws = null;
         } catch (error) {
             console.error('[IPC-MODULE] closing Error');
@@ -16,49 +15,60 @@ const destructWebsocket = () => {
 };
 
 const createWebsocket = (mainWindow: BrowserWindow) => {
+    let ip = '';
+
     destructWebsocket();
 
-    const connect = (data: string) => {
+    const connect = () => {
         try {
-            const target = `ws://${data}:8000/neuboatdock `;
+            console.log('[IPC-MODULE] WebSocket is connectig to ', ip);
+            const target = `ws://${ip}:8000/neuboatdock `;
             ws = new WebSocket(target);
+
+            if (!ws) return;
+            ws.onmessage = event => {
+                // Handle the incoming message here
+                const message = event.data;
+                mainWindow.webContents.send('websocket-module', {
+                    type: 'data',
+                    data: message,
+                });
+            };
+
+            ws.onopen = () => {
+                console.log('[IPC-MODULE] WebSocket is Opend');
+            };
+
+            ws.onclose = e => {
+                console.log(
+                    '[IPC-MODULE] Socket is closed. Reconnect will be attempted in 1 second.',
+                    e.reason,
+                );
+
+                setTimeout(() => {
+                    connect();
+                }, 1000);
+            };
+
+            ws.onerror = err => {
+                console.error(
+                    '[IPC-MODULE] Socket encountered error: ',
+                    err.message,
+                    'Closing socket',
+                );
+
+                ws?.close();
+            };
         } catch (error) {
             console.error('[IPC-MODULE] WebSocket is Connection Error', error);
         }
     };
 
-    const bindMessageCallback = () => {
-        if (!ws) return;
-        ws.onmessage = event => {
-            // Handle the incoming message here
-            const message = event.data;
-            mainWindow.webContents.send('websocket-module', {
-                type: 'data',
-                data: message,
-            });
-        };
-
-        ws.onopen = () => {
-            console.log('[IPC-MODULE] WebSocket is Opend');
-        };
-
-        ws.onclose = () => {
-            console.log('[IPC-MODULE] WebSocket is Closed');
-        };
-
-        ws.onerror = event => {
-            console.log('[IPC-MODULE] WebSocket got error', event);
-        };
-    };
-
     ipcMain.on('websocket-module', (_, { type, data }) => {
-        if (type === 'close' && ws && ws.readyState === ws.OPEN) {
-            ws.close();
-            ws = null;
-        } else if (type === 'create') {
+        if (type === 'create') {
             if (ws && ws.readyState === ws.CONNECTING) return;
-            connect(data);
-            bindMessageCallback();
+            ip = data;
+            connect();
         }
     });
 };

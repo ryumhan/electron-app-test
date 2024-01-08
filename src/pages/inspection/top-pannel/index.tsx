@@ -12,7 +12,7 @@ import {
 
 import useTopPannelData from './hook';
 import { Vertical } from '@/styled';
-import { ComponentProps, useState } from 'react';
+import { ComponentProps, useEffect, useState } from 'react';
 import { imgFullscreen } from '@/assets';
 import { ipcRenderer } from 'electron';
 import { useRecoilValue } from 'recoil';
@@ -20,6 +20,8 @@ import statusAtom from '@/atoms/status.atom';
 
 function TopPannel(): React.ReactElement {
     const [count, setCount] = useState(1);
+    const [readyIframe, setReadyIframe] = useState(false);
+
     const [
         loaded,
         trigger,
@@ -50,6 +52,14 @@ function TopPannel(): React.ReactElement {
         setCount(state => state + 1);
     };
 
+    useEffect(() => {
+        const time = setTimeout(() => {
+            setReadyIframe(true);
+        }, 7 * 1000);
+
+        return () => clearTimeout(time);
+    }, []);
+
     return (
         <WebViewPannel>
             <InspectionTitle>SVM Inspection</InspectionTitle>
@@ -72,7 +82,7 @@ function TopPannel(): React.ReactElement {
                 {!loaded && (
                     <LoadingPannel
                         trigger={trigger}
-                        loadingTimeout={100 * 1000}
+                        loadingTimeout={50 * 1000}
                         loaded={loaded}
                         message="Connecting SVM..."
                         timeOutCallback={timeOutCallback}
@@ -93,16 +103,18 @@ function TopPannel(): React.ReactElement {
                         </IconContainer>
                     </Vertical>
                 </ToolBoxContainer>
-                <iframe
-                    ref={svmElement}
-                    title="svm-page"
-                    src={pageSrc}
-                    onLoad={onLoadCallback}
-                    sandbox="allow-modals allow-forms allow-popups allow-scripts allow-same-origin"
-                    style={{
-                        visibility: loaded ? 'visible' : 'hidden',
-                    }}
-                />
+                {readyIframe && (
+                    <iframe
+                        ref={svmElement}
+                        title="svm-page"
+                        src={pageSrc}
+                        onLoad={onLoadCallback}
+                        sandbox="allow-modals allow-forms allow-popups allow-same-origin allow-scripts"
+                        style={{
+                            visibility: loaded ? 'visible' : 'hidden',
+                        }}
+                    />
+                )}
             </InspectionView>
 
             <ButtonContainer>

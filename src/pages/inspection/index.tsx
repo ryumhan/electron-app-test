@@ -58,7 +58,7 @@ function Inspection(): React.ReactElement {
                 message="Finding ORU available..."
                 timeOutCallback={() => {
                     timeOutCallback();
-                    reloadCallback();
+                    navigate('/');
                 }}
             />
         );
