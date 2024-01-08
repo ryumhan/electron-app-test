@@ -57,7 +57,7 @@ function BottomRightPannel() {
                     <InspectionTitle>HTTP Request Test</InspectionTitle>
                     {loading ? (
                         <LoadingPannel
-                            loadingTimeout={200 * 1000}
+                            loadingTimeout={20 * 1000}
                             loaded={!!(ccuData && oruData)}
                             message="Connecting HttpServer..."
                             timeOutCallback={timeOutCallback}

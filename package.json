@@ -55,7 +55,7 @@
     "react-build": "react-app-rewired build",
     "test": "react-app-rewired test",
     "eject": "react-app-rewired eject",
-    "python-build" : "pyinstaller --onefile ./public/oru_ip_find.py",
+    "python-build": "pyinstaller --onefile ./public/oru_ip_find.py",
     "start": "tsc ./public/electron.ts && concurrently \"cross-env BROWSER=none npm run react-start\" \"wait-on http://127.0.0.1:3000 && electron .\"",
     "build": "npm run react-build && electron-builder",
     "build-arc86": "npm run react-build && electron-builder --x86",

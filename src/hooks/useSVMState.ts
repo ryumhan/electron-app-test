@@ -79,11 +79,6 @@ const useSVMState = ({ setPageSrcCallback }: Props): ReturnType => {
     };
 
     const onLoadCallback = () => {
-        if (!svmElement?.current?.contentDocument?.location.href) {
-            setTrigger(state => state + 1);
-            return;
-        }
-
         const resetSVM = () => {
             RESET_SVM_STATE_INSPECTION_LIST.forEach(msg => {
                 svmElement.current?.contentWindow?.postMessage(

@@ -65,11 +65,6 @@ app.on('ready', async () => {
         ipcModule.createWebsocket(mainWindow);
     });
 
-    ipcMain.on('init-websocket', () => {
-        console.log('try reconnect websocket');
-        ipcModule.createWebsocket(mainWindow);
-    });
-
     ipcMain.on('capture-image', async (_, { filePath, count }) => {
         const img = await mainWindow.capturePage();
         const conv = img
