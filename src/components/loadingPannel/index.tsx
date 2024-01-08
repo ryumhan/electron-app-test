@@ -8,7 +8,7 @@ import {
     PannelContainer,
 } from './loadingPannel.styled';
 
-const TIME_OUT = 20000;
+const TIME_OUT = 600000;
 
 interface Props {
     loaded: boolean;
