@@ -17,11 +17,13 @@ import { imgFullscreen } from '@/assets';
 import { ipcRenderer } from 'electron';
 import { useRecoilValue } from 'recoil';
 import statusAtom from '@/atoms/status.atom';
+import * as fs from 'fs';
 
 function TopPannel(): React.ReactElement {
     const [count, setCount] = useState(1);
     const [readyIframe, setReadyIframe] = useState(false);
 
+    const sn = useRecoilValue(statusAtom.snAtom);
     const [
         loaded,
         trigger,
@@ -48,14 +50,17 @@ function TopPannel(): React.ReactElement {
             return;
         }
 
-        ipcRenderer.send('capture-image', { filePath, count });
+        const targetPath = `${filePath}/${sn}`;
+        if (!fs.existsSync(targetPath)) fs.mkdirSync(targetPath);
+
+        ipcRenderer.send('capture-image', { filePath: targetPath, count });
         setCount(state => state + 1);
     };
 
     useEffect(() => {
         const time = setTimeout(() => {
             setReadyIframe(true);
-        }, 7 * 1000);
+        }, 5 * 1000);
 
         return () => clearTimeout(time);
     }, []);
@@ -129,7 +134,10 @@ function TopPannel(): React.ReactElement {
                     <Button
                         type="primary"
                         label="Success"
-                        onClick={onSuccessCallback}
+                        onClick={() => {
+                            handleCapture();
+                            onSuccessCallback();
+                        }}
                         disable={!loaded}
                     />
                 </Vertical>

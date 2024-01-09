@@ -7,7 +7,7 @@ const oruIpAtom = atom<string>({
 
 const snAtom = atom<string>({
     key: 'sn',
-    default: '',
+    default: localStorage.getItem('sn') || '',
 });
 
 const swVersion = atom<string>({
@@ -28,7 +28,7 @@ interface FilePath {
 const filePathAtom = atom<FilePath>({
     key: 'filePath',
     default: {
-        path: '',
+        path: localStorage.getItem('filePath') || '',
         startDate: '',
     },
 });
@@ -49,9 +49,12 @@ const filePathSelector = selector<string>({
     },
     set: ({ set, get }, newValue) => {
         const file = get(filePathAtom);
+        const path = newValue as string;
+
+        localStorage.setItem('filePath', path);
 
         set(filePathAtom, {
-            path: newValue as string,
+            path,
             startDate: file.startDate,
         });
     },

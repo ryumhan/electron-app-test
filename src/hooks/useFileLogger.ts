@@ -47,9 +47,11 @@ const useFileLogger = () => {
                 .map(elem => elem.name),
         ];
 
-        const result = statusSelector !== 'Pass' ? 'FAILED' : 'PASS';
+        const result = statusSelector !== 'Pass' ? 'FAILED' : 'OK';
+
         const date = dayjs().format('YYYY_MM_DD');
         const dateTime = dayjs().format('YYYY_MM_DD_HH:mm');
+
         // Write the data to the CSV file
         try {
             const newData = [
@@ -68,8 +70,10 @@ const useFileLogger = () => {
                     elem.result === 'Progressing' ? 'N/A' : elem.result,
                 ),
             ];
+            const resultFolder = `${filePath.path}/${result}`;
+            if (!fs.existsSync(resultFolder)) fs.mkdirSync(resultFolder);
 
-            const file = `${filePath.path}/${date}_${result}.csv`;
+            const file = `${resultFolder}/${date}_${result}.csv`;
 
             let csv: string = '';
             if (fs.existsSync(file)) {

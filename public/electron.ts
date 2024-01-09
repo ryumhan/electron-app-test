@@ -75,11 +75,11 @@ app.on('ready', async () => {
                 quality: 'best',
             })
             .toPNG(); // to PNG
+        const imgFile = `${filePath || __dirname}/captured${count}.png`;
+
+        console.log('capture-image', imgFile);
         try {
-            fs.writeFileSync(
-                `${filePath || __dirname}/captured${count}.png`,
-                conv,
-            );
+            fs.writeFileSync(imgFile, conv);
         } catch (error) {
             console.log(error);
         }
@@ -93,7 +93,7 @@ app.on('ready', async () => {
 app.on('before-quit', async () => {
     // Add your cleanup or resource release code here.\
     udpServerModule.destructUdp();
-    ipcModule.destructWebsocket();
+    // ipcModule.destructWebsocket();
 });
 
 // Quit when all windows are closed.
