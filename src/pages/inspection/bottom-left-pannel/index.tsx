@@ -21,6 +21,7 @@ import { FailedIcons } from '@/components/loadingPannel/loadingPannel.styled';
 function BottomLeftPannel() {
     const [
         open,
+        trigger,
         heartPresentData,
         cameraPresentData,
         timeOver,
@@ -80,6 +81,8 @@ function BottomLeftPannel() {
                         </Vertical>
                     ) : (
                         <LoadingPannel
+                            trigger={trigger}
+                            loadingTimeout={10 * 1000}
                             loaded={open}
                             message="Connecting WebSocket..."
                             timeOutCallback={timeOutCallback}

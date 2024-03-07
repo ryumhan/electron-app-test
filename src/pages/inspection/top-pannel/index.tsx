@@ -12,16 +12,21 @@ import {
 
 import useTopPannelData from './hook';
 import { Vertical } from '@/styled';
-import { ComponentProps, useState } from 'react';
+import { ComponentProps, useEffect, useState } from 'react';
 import { imgFullscreen } from '@/assets';
 import { ipcRenderer } from 'electron';
 import { useRecoilValue } from 'recoil';
 import statusAtom from '@/atoms/status.atom';
+import * as fs from 'fs';
 
 function TopPannel(): React.ReactElement {
     const [count, setCount] = useState(1);
+    const [readyIframe, setReadyIframe] = useState(false);
+
+    const sn = useRecoilValue(statusAtom.snAtom);
     const [
         loaded,
+        trigger,
         pageSrc,
         svmElement,
         fullScreen,
@@ -45,9 +50,20 @@ function TopPannel(): React.ReactElement {
             return;
         }
 
-        ipcRenderer.send('capture-image', { filePath, count });
-        setCount(count + 1);
+        const targetPath = `${filePath}/${sn}`;
+        if (!fs.existsSync(targetPath)) fs.mkdirSync(targetPath);
+
+        ipcRenderer.send('capture-image', { filePath: targetPath, count });
+        setCount(state => state + 1);
     };
+
+    useEffect(() => {
+        const time = setTimeout(() => {
+            setReadyIframe(true);
+        }, 5 * 1000);
+
+        return () => clearTimeout(time);
+    }, []);
 
     return (
         <WebViewPannel>
@@ -70,6 +86,8 @@ function TopPannel(): React.ReactElement {
             >
                 {!loaded && (
                     <LoadingPannel
+                        trigger={trigger}
+                        loadingTimeout={50 * 1000}
                         loaded={loaded}
                         message="Connecting SVM..."
                         timeOutCallback={timeOutCallback}
@@ -90,16 +108,18 @@ function TopPannel(): React.ReactElement {
                         </IconContainer>
                     </Vertical>
                 </ToolBoxContainer>
-                <iframe
-                    ref={svmElement}
-                    title="svm-page"
-                    src={pageSrc}
-                    onLoad={onLoadCallback}
-                    sandbox="allow-modals allow-forms allow-popups allow-scripts allow-same-origin"
-                    style={{
-                        visibility: loaded ? 'visible' : 'hidden',
-                    }}
-                />
+                {readyIframe && (
+                    <iframe
+                        ref={svmElement}
+                        title="svm-page"
+                        src={pageSrc}
+                        onLoad={onLoadCallback}
+                        sandbox="allow-modals allow-forms allow-popups allow-same-origin allow-scripts"
+                        style={{
+                            visibility: loaded ? 'visible' : 'hidden',
+                        }}
+                    />
+                )}
             </InspectionView>
 
             <ButtonContainer>
@@ -114,7 +134,10 @@ function TopPannel(): React.ReactElement {
                     <Button
                         type="primary"
                         label="Success"
-                        onClick={onSuccessCallback}
+                        onClick={() => {
+                            handleCapture();
+                            onSuccessCallback();
+                        }}
                         disable={!loaded}
                     />
                 </Vertical>
@@ -122,7 +145,7 @@ function TopPannel(): React.ReactElement {
                     type="warning"
                     label="Fail"
                     onClick={onFailedCallback}
-                    disable={!loaded}
+                    disable={false}
                 />
             </ButtonContainer>
         </WebViewPannel>

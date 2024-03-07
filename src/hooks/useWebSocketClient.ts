@@ -12,18 +12,9 @@ const useWebSocketClient = ({ oruIp }: Props) => {
     const [open, setOpen] = useState(false);
     const [cameraData, setCameraData] = useState<CameraStatus | null>();
     const [heartBeatData, setHeartBeatData] = useState<HearBeat | null>();
+    const [trigger, setTrigger] = useState<number>(0);
 
     const [timeOver, setTimeOverLimit] = useState(false);
-
-    const timeOutCallback = () => {
-        setOpen(false);
-        setTimeOverLimit(true);
-
-        ipcRenderer.send('websocket-module', {
-            type: 'close',
-            data: oruIp,
-        });
-    };
 
     const createWebsocket = () => {
         if (!oruIp) return;
@@ -48,6 +39,12 @@ const useWebSocketClient = ({ oruIp }: Props) => {
         });
     };
 
+    const timeOutCallback = () => {
+        setOpen(false);
+        setTimeOverLimit(true);
+        setTrigger(state => state + 1);
+    };
+
     useEffect(() => {
         if (!open) createWebsocket();
     }, []);
@@ -66,7 +63,14 @@ const useWebSocketClient = ({ oruIp }: Props) => {
         return () => clearTimeout(time);
     }, [cameraData]);
 
-    return { open, cameraData, heartBeatData, timeOver, timeOutCallback };
+    return {
+        open,
+        trigger,
+        cameraData,
+        heartBeatData,
+        timeOver,
+        timeOutCallback,
+    };
 };
 
 export default useWebSocketClient;

@@ -10,6 +10,7 @@ import { Horizontal, TypoGraphy } from '@/styled';
 import { ipcRenderer } from 'electron';
 
 import dayjs from 'dayjs';
+import * as fs from 'fs';
 
 function ReadyPannel() {
     const navigate = useNavigate();
@@ -24,8 +25,11 @@ function ReadyPannel() {
 
     const selectDirectory = () => {
         ipcRenderer.send('open-directory-dialog');
-        ipcRenderer.on('selected-directory', (_, path) => {
-            setPath(path);
+        ipcRenderer.on('selected-directory', (_, path: string) => {
+            const date = dayjs().format('YYYY_MM_DD');
+            const newFolder = `${path}/${date}`;
+
+            setPath(newFolder);
         });
     };
 
@@ -41,17 +45,21 @@ function ReadyPannel() {
             return;
         }
 
+        if (!fs.existsSync(filePath)) fs.mkdirSync(filePath);
+
         resetOru();
 
         resetSVMReport();
         resetComReport();
 
         navigate('/inspection');
-
         setStartDate(dayjs().format('YYYY_MM_DD_HH:mm'));
     };
 
-    const onChange = (value: string) => setSn(value);
+    const onChange = (value: string) => {
+        setSn(value);
+        localStorage.setItem('sn', value);
+    };
 
     return (
         <PannelContainer>
@@ -79,15 +87,13 @@ function ReadyPannel() {
                     disable={false}
                     onClick={handleNextInspection}
                 />
-                {!filePath && (
-                    <Button
-                        size="mid"
-                        type="warning"
-                        label="저장 경로 설정"
-                        disable={false}
-                        onClick={selectDirectory}
-                    />
-                )}
+                <Button
+                    size="mid"
+                    type={filePath ? 'normal' : 'warning'}
+                    label={filePath ? '저장 경로 변경' : '저장 경로 설정'}
+                    disable={false}
+                    onClick={selectDirectory}
+                />
             </Horizontal>
         </PannelContainer>
     );

@@ -1,22 +1,28 @@
 import { useEffect, useState } from 'react';
-import { imgLoading, imgFailed } from '@/assets';
+import { imgFailed, imgLoading } from '@/assets';
 import {
     FailedIcons,
     LoadingIcons,
     LoadingPannelMessage,
-    PannelMessage,
     PannelContainer,
+    PannelMessage,
 } from './loadingPannel.styled';
 
-const TIME_OUT = 20000;
-
 interface Props {
+    loadingTimeout: number;
     loaded: boolean;
     message: string;
+    trigger?: number;
     timeOutCallback: () => void;
 }
 
-function LoadingPannel({ loaded, message, timeOutCallback }: Props) {
+function LoadingPannel({
+    loaded,
+    message,
+    trigger,
+    loadingTimeout,
+    timeOutCallback,
+}: Props) {
     const [timeout, setTimeOutState] = useState(false);
     const [timeinst, setTimeinst] = useState<NodeJS.Timeout>();
 
@@ -24,22 +30,30 @@ function LoadingPannel({ loaded, message, timeOutCallback }: Props) {
         const inst = setTimeout(() => {
             setTimeOutState(true);
             timeOutCallback();
-        }, TIME_OUT);
+        }, loadingTimeout);
 
         setTimeinst(inst);
-
         return inst;
     };
 
     useEffect(() => {
-        if (loaded) return () => clearTimeout(timeinst);
-        const inst = startTimeOutWork();
+        if (loaded) {
+            return () => clearTimeout(timeinst);
+        }
 
+        const inst = startTimeOutWork();
         return () => clearTimeout(inst);
     }, [loaded]);
 
-    // connection faied Pannel
-    if (timeout) {
+    useEffect(() => {
+        if (trigger) {
+            clearTimeout(timeinst);
+            const inst = startTimeOutWork();
+            return () => clearTimeout(inst);
+        }
+    }, [trigger]);
+
+    if (!trigger && timeout) {
         return (
             <PannelContainer>
                 <FailedIcons src={imgFailed} />

@@ -5,6 +5,7 @@ import { useRecoilValue } from 'recoil';
 
 type ReturnType = [
     boolean,
+    number,
     (
         | {
               key: string;
@@ -25,10 +26,16 @@ type ReturnType = [
 
 const useBottomLeftData = (): ReturnType => {
     const oruIp = useRecoilValue(statusAtom.oruIpAtom);
-    const { open, cameraData, heartBeatData, timeOver, timeOutCallback } =
-        useWebSocketClient({
-            oruIp,
-        });
+    const {
+        open,
+        trigger,
+        cameraData,
+        heartBeatData,
+        timeOver,
+        timeOutCallback,
+    } = useWebSocketClient({
+        oruIp,
+    });
 
     const heartPresentData = useMemo(() => {
         if (!heartBeatData) return undefined;
@@ -56,6 +63,7 @@ const useBottomLeftData = (): ReturnType => {
 
     return [
         open,
+        trigger,
         heartPresentData,
         cameraPresentData,
         timeOver,
