@@ -16,7 +16,6 @@ const destructWebsocket = () => {
 
 const createWebsocket = (mainWindow: BrowserWindow) => {
     let ip = '';
-
     destructWebsocket();
 
     const connect = () => {

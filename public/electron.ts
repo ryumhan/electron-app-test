@@ -4,8 +4,9 @@ import * as isDev from 'electron-is-dev';
 import ipcModule from './ipc.module';
 import childProcessModule from './childProcess.module';
 import udpServerModule from './udpServer.module';
-
+// import sqliteModule from './sqlite.module';
 import * as fs from 'fs';
+import sqliteModule from './sqlite.module';
 
 let mainWindow: BrowserWindow;
 
@@ -59,8 +60,10 @@ const createWindow = () => {
 app.on('ready', async () => {
     createWindow();
     // create Ipc Module
+
     ipcMain.on('create-module', () => {
         childProcessModule.createPythonProcess();
+        sqliteModule.loadDb(mainWindow);
         udpServerModule.createUdpServer(mainWindow);
         ipcModule.createWebsocket(mainWindow);
     });
