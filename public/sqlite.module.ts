@@ -13,13 +13,13 @@ const db = new SQLite3.Database('./public/avikus-sn.db', err => {
 });
 
 const loadDb = (mainWindow: BrowserWindow) => {
-    ipcMain.on('sqlite-module', (_, { asnValue }: { asnValue: string }) => {
-        const sql = `SELECT macid FROM mac WHERE asn = '${asnValue}'`;
+    ipcMain.on('sqlite-module', (_, { rsn }: { rsn: string }) => {
+        const sql = `SELECT macid FROM raysn_por WHERE asn = '${rsn}'`;
         db.all(sql, (err, rows) => {
             if (err) {
                 console.error(err);
             } else {
-                const process = spawn('./public/pwgen-x86_64', [
+                const process = spawn('./public/pwgen_x86_64_windows.exe', [
                     `${rows}avikuscul`,
                 ]);
 

@@ -4,9 +4,9 @@ import * as isDev from 'electron-is-dev';
 import ipcModule from './ipc.module';
 import childProcessModule from './childProcess.module';
 import udpServerModule from './udpServer.module';
-// import sqliteModule from './sqlite.module';
-import * as fs from 'fs';
 import sqliteModule from './sqlite.module';
+
+import * as fs from 'fs';
 
 let mainWindow: BrowserWindow;
 
@@ -58,11 +58,14 @@ const createWindow = () => {
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.on('ready', async () => {
+    console.log(process.env.TEST_MODE);
+
     createWindow();
     // create Ipc Module
 
     ipcMain.on('create-module', () => {
         childProcessModule.createPythonProcess();
+
         sqliteModule.loadDb(mainWindow);
         udpServerModule.createUdpServer(mainWindow);
         ipcModule.createWebsocket(mainWindow);
@@ -95,6 +98,7 @@ app.on('ready', async () => {
 
 app.on('before-quit', async () => {
     // Add your cleanup or resource release code here.\
+    sqliteModule.closeDb();
     udpServerModule.destructUdp();
     // ipcModule.destructWebsocket();
 });
