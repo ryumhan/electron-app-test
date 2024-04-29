@@ -58,11 +58,8 @@ const createWindow = () => {
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.on('ready', async () => {
-    console.log(process.env.TEST_MODE);
-
     createWindow();
     // create Ipc Module
-
     ipcMain.on('create-module', () => {
         childProcessModule.createPythonProcess();
 

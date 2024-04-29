@@ -60,7 +60,7 @@ function TopPannel(): React.ReactElement {
     useEffect(() => {
         const time = setTimeout(() => {
             setReadyIframe(true);
-        }, 5 * 1000);
+        }, 3 * 1000);
 
         return () => clearTimeout(time);
     }, []);

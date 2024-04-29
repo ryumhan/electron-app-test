@@ -1,11 +1,8 @@
 const BASE_URI = '/api';
 
-const TEST_MODE = process.env.REACT_APP_TEST_MODE === 'true';
-
+const TEST_MODE = process.env.REACT_APP_MODE === 'development';
 const API_PORT = 8000;
 const PAGE_PORT = 9005;
-
-const PASSWORD = 'NeuBoat23#DOCK!';
 
 const INIT_SVM = { event: 'initSVM-for-test', message: {} };
 
@@ -582,7 +579,7 @@ const SVM_INSPECTION_STEP = [
         name: 'Calibration 모드',
         key: 'Calibration',
 
-        checkList: ['Configuration 모드로 정상 진입여부 확인'],
+        checkList: ['Calibration 암호 검증 - 페이지 정상 진입여부 확인'],
     },
 ];
 
@@ -654,7 +651,6 @@ export default {
     BACKWARD_SVM_STATE_INSPECTION_LIST,
     API_PORT,
     PAGE_PORT,
-    PASSWORD,
     SVM_STATE_INSPECTION_LIST,
     RESET_SVM_STATE_INSPECTION_LIST,
     SVM_INSPECTION_STEP,

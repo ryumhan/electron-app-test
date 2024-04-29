@@ -6,7 +6,7 @@ import Inspection from './pages/inspection';
 
 import React from 'react';
 
-function Layout()  {
+function Layout() {
     return (
         <HashRouter>
             <Routes>

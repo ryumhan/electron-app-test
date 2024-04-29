@@ -2,7 +2,7 @@ import useHttpMessage from '@/hooks/useHttpMessage';
 import useSVMState from '@/hooks/useSVMState';
 import utils from '@/utils';
 import { RawAxiosRequestHeaders } from 'axios';
-import constants from '@/utils/constants';
+
 import { useState, useEffect } from 'react';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 import statusAtom from '@/atoms/status.atom';
@@ -24,6 +24,7 @@ type ReturnType = [
 
 const useTopPannelData = (): ReturnType => {
     const oruIp = useRecoilValue(statusAtom.oruIpAtom);
+    const password = useRecoilValue(statusAtom.passwordAtom);
     const setFailReport = useSetRecoilState(inspectionAtom.failReportAtom);
 
     const [fullScreen, setFullscreen] = useState(false);
@@ -55,7 +56,7 @@ const useTopPannelData = (): ReturnType => {
     }>({
         url: utils.getAPIUrl(oruIp, 'auth'),
         method: 'POST',
-        body: { password: constants.PASSWORD },
+        body: { password },
     });
 
     const { data, error } = useHttpMessage<{ result: { authtoken: string } }>(
