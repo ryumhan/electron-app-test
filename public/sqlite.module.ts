@@ -3,7 +3,7 @@ import { BrowserWindow, ipcMain } from 'electron';
 import * as sqlite3 from 'sqlite3';
 import * as isDev from 'electron-is-dev';
 
-const exePath = isDev ? './public/' : `${__dirname}/`;
+const exePath = isDev ? './public/lib/' : `${__dirname}/`;
 
 const SQLite3 = sqlite3.verbose();
 

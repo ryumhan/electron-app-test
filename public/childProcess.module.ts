@@ -4,8 +4,8 @@ import * as isDev from 'electron-is-dev';
 let pythonProcess: ChildProcessWithoutNullStreams | null;
 
 const exePath = isDev
-    ? './public/dist/oru_ip_find.exe'
-    : `${__dirname}/dist/oru_ip_find.exe`;
+    ? './public/lib/oru_ip_find.exe'
+    : `${__dirname}/lib/oru_ip_find.exe`;
 
 const exitPythonProcess = () => {
     if (pythonProcess?.pid) {
