@@ -55,7 +55,7 @@ const useHttpMessage = <T>({
 
         let timeInst: NodeJS.Timer;
         // interval request
-        if (interval) timeInst = setInterval(() => fetchData(), 2000);
+        if (interval) timeInst = setInterval(() => fetchData(), 4000);
         else fetchData();
 
         return () => clearInterval(timeInst);

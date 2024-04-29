@@ -25,6 +25,7 @@ type ReturnType = [
 const useTopPannelData = (): ReturnType => {
     const oruIp = useRecoilValue(statusAtom.oruIpAtom);
     const password = useRecoilValue(statusAtom.passwordAtom);
+
     const setFailReport = useSetRecoilState(inspectionAtom.failReportAtom);
 
     const [fullScreen, setFullscreen] = useState(false);
@@ -50,20 +51,26 @@ const useTopPannelData = (): ReturnType => {
 
     const [requestObj, setRequestObj] = useState<{
         url: string;
-        method: 'POST' | 'GET';
+        method?: 'POST' | 'GET';
         body?: { password: string };
         headers?: RawAxiosRequestHeaders;
-    }>({
-        url: utils.getAPIUrl(oruIp, 'auth'),
-        method: 'POST',
-        body: { password },
-    });
+    }>({ url: '' });
 
     const { data, error } = useHttpMessage<{ result: { authtoken: string } }>(
         requestObj,
     );
 
     const [token, setToken] = useState('');
+
+    useEffect(() => {
+        if (!password) return;
+
+        setRequestObj({
+            url: utils.getAPIUrl(oruIp, 'auth'),
+            method: 'POST',
+            body: { password },
+        });
+    }, [password]);
 
     useEffect(() => {
         if (data?.result?.authtoken) {

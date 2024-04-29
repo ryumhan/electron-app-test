@@ -27,6 +27,8 @@ const createWebsocket = (mainWindow: BrowserWindow) => {
             if (!ws) return;
             ws.onmessage = event => {
                 // Handle the incoming message here
+                if (mainWindow?.isDestroyed()) return;
+
                 const message = event.data;
                 mainWindow.webContents.send('websocket-module', {
                     type: 'data',

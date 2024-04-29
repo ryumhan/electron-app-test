@@ -71,18 +71,22 @@ const useBottomRightPannelData = (): ReturnType => {
             ipcRenderer.send('query-asn', { rsn: serial });
             ipcRenderer.on('found-asn', (_, got) => {
                 targetSerial = got.asn;
+                ipcRenderer.send('query-mac', { asn: targetSerial });
             });
+
+            return;
         }
 
         ipcRenderer.send('query-mac', { asn: targetSerial });
-        ipcRenderer.on('gen-password', (_, got) => {
-            setPassword(got.password);
-        });
     };
 
     useEffect(() => {
         if (!data?.oruInfo.serialNumber) return;
         startQuery(data?.oruInfo.serialNumber);
+
+        ipcRenderer.on('gen-password', (_, got) => {
+            setPassword(got.password);
+        });
     }, [data?.oruInfo.serialNumber]);
 
     return [loading || !oruData || !ccuData, oruData, ccuData, timeOutCallback];

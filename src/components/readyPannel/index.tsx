@@ -11,7 +11,6 @@ import { ipcRenderer } from 'electron';
 
 import dayjs from 'dayjs';
 import * as fs from 'fs';
-import { useEffect } from 'react';
 
 function ReadyPannel() {
     const navigate = useNavigate();
@@ -21,7 +20,6 @@ function ReadyPannel() {
     const resetSVMReport = useResetRecoilState(inspectionAtom.svmReportAtom);
     const resetComReport = useResetRecoilState(inspectionAtom.comReportAtom);
     const setStartDate = useSetRecoilState(statusAtom.startDateSelector);
-    const setPassword = useSetRecoilState(statusAtom.passwordAtom);
 
     const [filePath, setPath] = useRecoilState(statusAtom.filePathSelector);
 
