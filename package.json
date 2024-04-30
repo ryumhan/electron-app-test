@@ -62,6 +62,8 @@
     "start": "tsc ./public/electron.ts && concurrently \"cross-env BROWSER=none npm run react-start\" \"wait-on http://127.0.0.1:3000 && electron .\"",
     "build": "npm run react-build && electron-builder",
     "build-arc86": "npm run react-build && electron-builder --x86",
+    "rebuild": "electron-rebuild -f -w sqlite3",
+    "postinstall": "electron-builder install-app-deps",
     "release": "npm run react-build && electron-builder --publish=always",
     "package": "npm run react-build && electron-packager ./ MyApp --platform=win32 --arch=x64",
     "lint": "eslint './src**/*.{ts,tsx}'",
