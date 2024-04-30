@@ -1,71 +1,53 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
 import { ChildProcessWithoutNullStreams, spawn } from 'child_process';
 import { BrowserWindow, ipcMain } from 'electron';
-import * as sqlite3 from 'sqlite3';
 import * as isDev from 'electron-is-dev';
 
-const exePath = isDev ? './public/lib/' : `${__dirname}/`;
-const SQLite3 = sqlite3.verbose();
-let genPassProcess: ChildProcessWithoutNullStreams | null;
+const raysnData = require('./lib/raysn_por.json');
+const macData = require('./lib/mac.json');
 
-const db = new SQLite3.Database(`${exePath}avikus-sn.db`, err => {
-    if (err) {
-        console.error('[SQLITE-MODULE] Error opening database:', err.message);
-    } else {
-        console.log('[SQLITE-MODULE] Connected to the database');
-    }
-});
+const exePath = isDev ? './public/lib/' : `${__dirname}/`;
+let genPassProcess: ChildProcessWithoutNullStreams | null;
 
 const loadDb = (mainWindow: BrowserWindow) => {
     ipcMain.on('query-mac', (_, { asn }: { asn: string }) => {
-        const sql = `SELECT macid FROM mac WHERE asn = '${asn}'`;
-        db.all(sql, (err, rows: { macid: string }[]) => {
-            if (err) {
-                console.error(err);
-                return;
-            }
+        try {
+            const found = macData.find(elem => elem.asn === asn);
+            if (!found) return;
 
-            if (!rows.length) return;
+            const { macid } = found;
+            genPassProcess = spawn(`${exePath}pwgen_x86_64_windows.exe`, [
+                `${macid}avikuscul`,
+            ]);
 
-            try {
-                const { macid } = rows[0];
-                genPassProcess = spawn(`${exePath}pwgen_x86_64_windows.exe`, [
-                    `${macid}avikuscul`,
-                ]);
+            console.log(macid);
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            genPassProcess.stdout.on('data', (buffer: any) => {
+                const data = JSON.stringify(buffer);
+                const bufferOrigin = Buffer.from(JSON.parse(data).data);
 
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                genPassProcess.stdout.on('data', (buffer: any) => {
-                    const data = JSON.stringify(buffer);
-                    const bufferOrigin = Buffer.from(JSON.parse(data).data);
-
-                    const password = bufferOrigin.toString('utf8');
-                    mainWindow.webContents.send('gen-password', {
-                        password,
-                    });
+                const password = bufferOrigin.toString('utf8');
+                mainWindow.webContents.send('gen-password', {
+                    password,
                 });
-            } catch (error) {
-                console.log(
-                    '[SQLITE-MODULE] Error occured when process implementing',
-                );
-            }
-        });
+            });
+        } catch (error) {
+            console.log(
+                '[SQLITE-MODULE] Error occured when process implementing',
+            );
+        }
     });
 
     ipcMain.on('query-asn', (_, { rsn }: { rsn: string }) => {
-        const sql = `SELECT asn FROM raysn_por WHERE rsn = '${rsn}'`;
-        db.all(sql, (err, rows: { asn: string }[]) => {
-            if (err) {
-                console.error(err);
-                return;
-            }
+        const found = raysnData.find(elem => elem.rsn === rsn);
+        if (!found) return;
 
-            const { asn } = rows[0];
-            mainWindow.webContents.send('found-asn', {
-                asn,
-            });
+        const { asn } = found;
+        console.log(asn);
+        mainWindow.webContents.send('found-asn', {
+            asn,
         });
     });
 };
 
-const closeDb = () => db.close();
-
-export default { closeDb, loadDb };
+export default { loadDb };

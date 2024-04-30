@@ -95,7 +95,6 @@ app.on('ready', async () => {
 
 app.on('before-quit', async () => {
     // Add your cleanup or resource release code here.\
-    sqliteModule.closeDb();
     udpServerModule.destructUdp();
     // ipcModule.destructWebsocket();
 });
