@@ -1,4 +1,4 @@
-import { ChildProcessWithoutNullStreams, execSync, spawn } from 'child_process';
+import { ChildProcessWithoutNullStreams, spawn } from 'child_process';
 import { BrowserWindow, ipcMain } from 'electron';
 import * as sqlite3 from 'sqlite3';
 import * as isDev from 'electron-is-dev';
@@ -15,15 +15,6 @@ const db = new SQLite3.Database(`${exePath}avikus-sn.db`, err => {
     }
 });
 
-const checkAndkillProcess = () => {
-    if (genPassProcess?.pid) {
-        console.log('[SQLITE-MODULE] kill process', genPassProcess.pid);
-
-        execSync(`taskkill /pid ${process.pid} /T /F`);
-        genPassProcess = null;
-    }
-};
-
 const loadDb = (mainWindow: BrowserWindow) => {
     ipcMain.on('query-mac', (_, { asn }: { asn: string }) => {
         const sql = `SELECT macid FROM mac WHERE asn = '${asn}'`;
@@ -36,8 +27,6 @@ const loadDb = (mainWindow: BrowserWindow) => {
             if (!rows.length) return;
 
             try {
-                checkAndkillProcess();
-
                 const { macid } = rows[0];
                 genPassProcess = spawn(`${exePath}pwgen_x86_64_windows.exe`, [
                     `${macid}avikuscul`,
@@ -78,15 +67,5 @@ const loadDb = (mainWindow: BrowserWindow) => {
 };
 
 const closeDb = () => db.close();
-
-process.on('SIGINT', () => {
-    console.log('[SQLITE-MODULE] SIGINT');
-    checkAndkillProcess();
-});
-
-process.on('exit', async () => {
-    console.log('[SQLITE-MODULE] EXIT');
-    checkAndkillProcess();
-});
 
 export default { closeDb, loadDb };

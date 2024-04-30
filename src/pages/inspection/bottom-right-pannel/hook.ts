@@ -5,7 +5,7 @@ import { Diagnostics } from '@/model';
 import utils from '@/utils';
 import { ipcRenderer } from 'electron';
 import { useEffect, useMemo } from 'react';
-import { useRecoilValue, useSetRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 
 type ReturnType = [
     boolean,
@@ -25,7 +25,7 @@ type ReturnType = [
 
 const useBottomRightPannelData = (): ReturnType => {
     const oruIp = useRecoilValue(statusAtom.oruIpAtom);
-    const setSerial = useSetRecoilState(statusAtom.serialAtom);
+    const [serialState, setSerial] = useRecoilState(statusAtom.serialAtom);
     const setVersion = useSetRecoilState(statusAtom.swVersion);
     const setPassword = useSetRecoilState(statusAtom.passwordAtom);
 
@@ -81,13 +81,13 @@ const useBottomRightPannelData = (): ReturnType => {
     };
 
     useEffect(() => {
-        if (!data?.oruInfo.serialNumber) return;
-        startQuery(data?.oruInfo.serialNumber);
+        if (!serialState.customer) return;
+        startQuery(serialState.customer);
 
         ipcRenderer.on('gen-password', (_, got) => {
             setPassword(got.password);
         });
-    }, [data?.oruInfo.serialNumber]);
+    }, [serialState.customer]);
 
     return [loading || !oruData || !ccuData, oruData, ccuData, timeOutCallback];
 };
