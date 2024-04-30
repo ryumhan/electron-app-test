@@ -1,11 +1,11 @@
-import { spawn } from 'child_process';
+import { ChildProcessWithoutNullStreams, execSync, spawn } from 'child_process';
 import { BrowserWindow, ipcMain } from 'electron';
 import * as sqlite3 from 'sqlite3';
 import * as isDev from 'electron-is-dev';
 
 const exePath = isDev ? './public/lib/' : `${__dirname}/`;
-
 const SQLite3 = sqlite3.verbose();
+let genPassProcess: ChildProcessWithoutNullStreams | null;
 
 const db = new SQLite3.Database(`${exePath}avikus-sn.db`, err => {
     if (err) {
@@ -14,6 +14,15 @@ const db = new SQLite3.Database(`${exePath}avikus-sn.db`, err => {
         console.log('[SQLITE-MODULE] Connected to the database');
     }
 });
+
+const checkAndkillProcess = () => {
+    if (genPassProcess?.pid) {
+        console.log('[SQLITE-MODULE] kill process', genPassProcess.pid);
+
+        execSync(`taskkill /pid ${process.pid} /T /F`);
+        genPassProcess = null;
+    }
+};
 
 const loadDb = (mainWindow: BrowserWindow) => {
     ipcMain.on('query-mac', (_, { asn }: { asn: string }) => {
@@ -27,12 +36,15 @@ const loadDb = (mainWindow: BrowserWindow) => {
             if (!rows.length) return;
 
             try {
+                checkAndkillProcess();
+
                 const { macid } = rows[0];
-                const process = spawn(`${exePath}pwgen_x86_64_windows.exe`, [
+                genPassProcess = spawn(`${exePath}pwgen_x86_64_windows.exe`, [
                     `${macid}avikuscul`,
                 ]);
 
-                process.stdout.on('data', buffer => {
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                genPassProcess.stdout.on('data', (buffer: any) => {
                     const data = JSON.stringify(buffer);
                     const bufferOrigin = Buffer.from(JSON.parse(data).data);
 
@@ -66,5 +78,15 @@ const loadDb = (mainWindow: BrowserWindow) => {
 };
 
 const closeDb = () => db.close();
+
+process.on('SIGINT', () => {
+    console.log('[SQLITE-MODULE] SIGINT');
+    checkAndkillProcess();
+});
+
+process.on('exit', async () => {
+    console.log('[SQLITE-MODULE] EXIT');
+    checkAndkillProcess();
+});
 
 export default { closeDb, loadDb };

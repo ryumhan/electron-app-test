@@ -19,19 +19,10 @@ const exitPythonProcess = () => {
 };
 
 const createPythonProcess = async () => {
-    if (pythonProcess) exitPythonProcess();
+    exitPythonProcess();
 
     if (!pythonProcess) {
         pythonProcess = spawn(exePath);
-        pythonProcess.on('spawn', () => {
-            console.log('[PYTHON-PROCESS] process start -', pythonProcess?.pid);
-        });
-
-        pythonProcess.on('exit', exitCode => {
-            console.log(
-                `[PYTHON-PROCESS] Process, ${pythonProcess?.pid} ended with code (${exitCode})`,
-            );
-        });
     }
 };
 
