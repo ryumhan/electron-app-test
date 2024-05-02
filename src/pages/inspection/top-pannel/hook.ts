@@ -30,6 +30,7 @@ const useTopPannelData = (): ReturnType => {
 
     const [fullScreen, setFullscreen] = useState(false);
     const [pageSrc, setPageSrc] = useState(utils.getHttpPage(oruIp, 'v1'));
+    const [token, setToken] = useState('');
 
     const resetSVMPage = () => {
         setPageSrc(utils.getHttpPage(oruIp, 'v1'));
@@ -80,6 +81,8 @@ const useTopPannelData = (): ReturnType => {
                     'Content-Type': 'text/html; charset=utf-8',
                 },
             });
+
+            setToken(data.result.authtoken);
         }
     }, [data]);
 
@@ -87,7 +90,7 @@ const useTopPannelData = (): ReturnType => {
         const isCalibrationStep = inspectTitle === 'Calibration';
         if (!isCalibrationStep) return;
 
-        if (!error) {
+        if (!error && token) {
             setPageSrc(utils.getHttpPage(oruIp, 'calibration-for-tutorial'));
             return;
         }
@@ -96,7 +99,7 @@ const useTopPannelData = (): ReturnType => {
         setFailReport(current =>
             current.concat(current, `[Calibration Inspection] ${error}`),
         );
-    }, [error, inspectTitle]);
+    }, [error, inspectTitle, token]);
 
     return [
         loaded,
