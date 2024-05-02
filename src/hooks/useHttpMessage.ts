@@ -46,6 +46,7 @@ const useHttpMessage = <T>({
 
                 setData(response.data);
                 setLoading(false);
+                setError(null);
             } catch (err) {
                 const axiosError = err as AxiosError;
                 setError(axiosError.message);

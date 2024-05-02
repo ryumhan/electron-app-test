@@ -60,8 +60,6 @@ const useTopPannelData = (): ReturnType => {
         requestObj,
     );
 
-    const [token, setToken] = useState('');
-
     useEffect(() => {
         if (!password) return;
 
@@ -82,19 +80,23 @@ const useTopPannelData = (): ReturnType => {
                     'Content-Type': 'text/html; charset=utf-8',
                 },
             });
-
-            setToken(data?.result?.authtoken);
-        } else if (inspectTitle === 'Calibration' && !!token) {
-            setPageSrc(utils.getHttpPage(oruIp, 'calibration-for-tutorial'));
         }
-    }, [data, inspectTitle]);
+    }, [data]);
 
     useEffect(() => {
-        if (error)
-            setFailReport(current =>
-                current.concat(current, `[Calibration Inspection] ${error}`),
-            );
-    }, [error]);
+        const isCalibrationStep = inspectTitle === 'Calibration';
+        if (!isCalibrationStep) return;
+
+        if (!error) {
+            setPageSrc(utils.getHttpPage(oruIp, 'calibration-for-tutorial'));
+            return;
+        }
+
+        setPageSrc(utils.getHttpPage(oruIp, 'failed'));
+        setFailReport(current =>
+            current.concat(current, `[Calibration Inspection] ${error}`),
+        );
+    }, [error, inspectTitle]);
 
     return [
         loaded,
