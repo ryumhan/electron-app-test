@@ -12,7 +12,9 @@ let genPassProcess: ChildProcessWithoutNullStreams | null;
 const loadDb = (mainWindow: BrowserWindow) => {
     ipcMain.on('query-mac', (_, { asn }: { asn: string }) => {
         try {
-            const found = macData.find(elem => elem.asn === asn);
+            const found = macData.find(
+                (elem: { asn: string }) => elem.asn === asn,
+            );
             if (!found) return;
 
             const { macid } = found;
@@ -39,7 +41,9 @@ const loadDb = (mainWindow: BrowserWindow) => {
     });
 
     ipcMain.on('query-asn', (_, { rsn }: { rsn: string }) => {
-        const found = raysnData.find(elem => elem.rsn === rsn);
+        const found = raysnData.find(
+            (elem: { rsn: string }) => elem.rsn === rsn,
+        );
         if (!found) return;
 
         const { asn } = found;
