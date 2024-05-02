@@ -46,7 +46,6 @@ const loadDb = (mainWindow: BrowserWindow) => {
         if (!found) return;
 
         const { asn } = found;
-        console.log(asn);
         mainWindow.webContents.send('found-asn', {
             asn,
         });
