@@ -6,7 +6,7 @@ import * as isDev from 'electron-is-dev';
 const raysnData = require('./lib/raysn_por.json');
 const macData = require('./lib/mac.json');
 
-const exePath = isDev ? './public/lib/' : `${__dirname}/`;
+const exePath = isDev ? './public/lib/' : `${__dirname}/lib/`;
 let genPassProcess: ChildProcessWithoutNullStreams | null;
 
 const loadDb = (mainWindow: BrowserWindow) => {
