@@ -19,10 +19,9 @@ const loadDb = (mainWindow: BrowserWindow) => {
 
             const { macid } = found;
             genPassProcess = spawn(`${exePath}pwgen_x86_64_windows.exe`, [
-                `${macid}avikuscul`,
+                `${macid}avikuscal`,
             ]);
 
-            console.log(macid);
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             genPassProcess.stdout.on('data', (buffer: any) => {
                 const data = JSON.stringify(buffer);
