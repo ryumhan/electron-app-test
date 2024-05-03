@@ -46,8 +46,8 @@ const useWebSocketClient = ({ oruIp }: Props) => {
     };
 
     useEffect(() => {
-        if (!open) createWebsocket();
-    }, []);
+        createWebsocket();
+    }, [open, oruIp]);
 
     useEffect(() => {
         const time = setTimeout(() => {

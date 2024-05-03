@@ -137,10 +137,14 @@ function Inspection(): React.ReactElement {
                 {/* center pannel */}
 
                 {/* right pannel */}
+
                 <VerticalStepProgressBar
                     multiple={false}
                     steps={COM_INSPECTION_STEP.map(elem => {
-                        return { name: elem.name, checklist: elem.checkList };
+                        return {
+                            name: elem.name,
+                            checklist: elem.checkList,
+                        };
                     })}
                     reportList={comReport}
                     currentStep={0}

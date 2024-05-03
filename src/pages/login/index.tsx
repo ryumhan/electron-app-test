@@ -87,7 +87,9 @@ function Login() {
                     <TypoGraphy type="bold" style={{ fontSize: '25px' }}>
                         ORU INSPECTION SW
                     </TypoGraphy>
+
                     <br />
+
                     <TypoGraphy type="normal" style={{ fontSize: '10px' }}>
                         Ver 1.2
                     </TypoGraphy>

@@ -4,8 +4,8 @@ import * as isDev from 'electron-is-dev';
 let pythonProcess: ChildProcessWithoutNullStreams | null;
 
 const exePath = isDev
-    ? './public/dist/oru_ip_find.exe'
-    : `${__dirname}/dist/oru_ip_find.exe`;
+    ? './public/lib/oru_ip_find.exe'
+    : `${__dirname}/lib/oru_ip_find.exe`;
 
 const exitPythonProcess = () => {
     if (pythonProcess?.pid) {
@@ -19,19 +19,10 @@ const exitPythonProcess = () => {
 };
 
 const createPythonProcess = async () => {
-    if (pythonProcess) exitPythonProcess();
+    exitPythonProcess();
 
     if (!pythonProcess) {
         pythonProcess = spawn(exePath);
-        pythonProcess.on('spawn', () => {
-            console.log('[PYTHON-PROCESS] process start -', pythonProcess?.pid);
-        });
-
-        pythonProcess.on('exit', exitCode => {
-            console.log(
-                `[PYTHON-PROCESS] Process, ${pythonProcess?.pid} ended with code (${exitCode})`,
-            );
-        });
     }
 };
 

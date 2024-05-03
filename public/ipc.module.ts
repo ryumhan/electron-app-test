@@ -3,62 +3,75 @@ import { WebSocket } from 'ws';
 
 let ws: WebSocket | null = null;
 
-const destructWebsocket = () => {
-    if (ws && ws.readyState === ws.OPEN) {
-        try {
-            ws.close();
-            ws = null;
-        } catch (error) {
-            console.error('[IPC-MODULE] closing Error');
-        }
-    }
-};
-
 const createWebsocket = (mainWindow: BrowserWindow) => {
     let ip = '';
+    let timeOut: NodeJS.Timeout;
 
-    destructWebsocket();
+    const closeWebsocket = () => {
+        if (ws && ws.readyState === ws.OPEN) {
+            try {
+                ws.removeAllListeners();
+                ws.close();
+                ws = null;
+            } catch (error) {
+                console.error('[IPC-MODULE] closing Error');
+            }
+        }
+    };
 
     const connect = () => {
-        try {
-            console.log('[IPC-MODULE] WebSocket is connectig to ', ip);
+        const open = () => {
             const target = `ws://${ip}:8000/neuboatdock `;
             ws = new WebSocket(target);
+        };
 
+        const errMessageCallback = err => {
+            console.error(
+                '[IPC-MODULE] Socket encountered error: ',
+                err.message,
+                'Closing socket',
+            );
+
+            ws?.close();
+        };
+
+        const closeCallback = e => {
+            console.log(
+                `[IPC-MODULE] Socket is closed. Reconnect will be attempted in 1 second.${ip}`,
+                e.reason,
+            );
+
+            timeOut = setTimeout(() => {
+                connect();
+            }, 2000);
+        };
+
+        const openCallback = () => {
+            console.log('[IPC-MODULE] WebSocket is Opend');
+            clearTimeout(timeOut);
+        };
+
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const messageCallback = (event: { data: any }) => {
+            // Handle the incoming message here
+            if (mainWindow?.isDestroyed()) return;
+
+            const message = event.data;
+            mainWindow.webContents.send('websocket-module', {
+                type: 'data',
+                data: message,
+            });
+        };
+
+        try {
+            closeWebsocket();
+            open();
+            // bind callback
             if (!ws) return;
-            ws.onmessage = event => {
-                // Handle the incoming message here
-                const message = event.data;
-                mainWindow.webContents.send('websocket-module', {
-                    type: 'data',
-                    data: message,
-                });
-            };
-
-            ws.onopen = () => {
-                console.log('[IPC-MODULE] WebSocket is Opend');
-            };
-
-            ws.onclose = e => {
-                console.log(
-                    '[IPC-MODULE] Socket is closed. Reconnect will be attempted in 1 second.',
-                    e.reason,
-                );
-
-                setTimeout(() => {
-                    connect();
-                }, 1000);
-            };
-
-            ws.onerror = err => {
-                console.error(
-                    '[IPC-MODULE] Socket encountered error: ',
-                    err.message,
-                    'Closing socket',
-                );
-
-                ws?.close();
-            };
+            ws.onopen = openCallback;
+            ws.onclose = closeCallback;
+            ws.onerror = errMessageCallback;
+            ws.onmessage = messageCallback;
         } catch (error) {
             console.error('[IPC-MODULE] WebSocket is Connection Error', error);
         }
@@ -66,7 +79,7 @@ const createWebsocket = (mainWindow: BrowserWindow) => {
 
     ipcMain.on('websocket-module', (_, { type, data }) => {
         if (type === 'create') {
-            if (ws && ws.readyState === ws.CONNECTING) return;
+            if (!!data && data === ip) return;
             ip = data;
             connect();
         }
@@ -83,4 +96,4 @@ ipcMain.on('open-directory-dialog', event => {
         });
 });
 
-export default { createWebsocket, destructWebsocket };
+export default { createWebsocket };

@@ -2,7 +2,7 @@ import useHttpMessage from '@/hooks/useHttpMessage';
 import useSVMState from '@/hooks/useSVMState';
 import utils from '@/utils';
 import { RawAxiosRequestHeaders } from 'axios';
-import constants from '@/utils/constants';
+
 import { useState, useEffect } from 'react';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 import statusAtom from '@/atoms/status.atom';
@@ -24,10 +24,13 @@ type ReturnType = [
 
 const useTopPannelData = (): ReturnType => {
     const oruIp = useRecoilValue(statusAtom.oruIpAtom);
+    const password = useRecoilValue(statusAtom.passwordAtom);
+
     const setFailReport = useSetRecoilState(inspectionAtom.failReportAtom);
 
     const [fullScreen, setFullscreen] = useState(false);
     const [pageSrc, setPageSrc] = useState(utils.getHttpPage(oruIp, 'v1'));
+    const [token, setToken] = useState('');
 
     const resetSVMPage = () => {
         setPageSrc(utils.getHttpPage(oruIp, 'v1'));
@@ -49,20 +52,24 @@ const useTopPannelData = (): ReturnType => {
 
     const [requestObj, setRequestObj] = useState<{
         url: string;
-        method: 'POST' | 'GET';
+        method?: 'POST' | 'GET';
         body?: { password: string };
         headers?: RawAxiosRequestHeaders;
-    }>({
-        url: utils.getAPIUrl(oruIp, 'auth'),
-        method: 'POST',
-        body: { password: constants.PASSWORD },
-    });
+    }>({ url: '' });
 
     const { data, error } = useHttpMessage<{ result: { authtoken: string } }>(
         requestObj,
     );
 
-    const [token, setToken] = useState('');
+    useEffect(() => {
+        if (!password) return;
+
+        setRequestObj({
+            url: utils.getAPIUrl(oruIp, 'auth'),
+            method: 'POST',
+            body: { password },
+        });
+    }, [password]);
 
     useEffect(() => {
         if (data?.result?.authtoken) {
@@ -75,18 +82,24 @@ const useTopPannelData = (): ReturnType => {
                 },
             });
 
-            setToken(data?.result?.authtoken);
-        } else if (inspectTitle === 'Calibration' && !!token) {
-            setPageSrc(utils.getHttpPage(oruIp, 'calibration-for-tutorial'));
+            setToken(data.result.authtoken);
         }
-    }, [data, inspectTitle]);
+    }, [data]);
 
     useEffect(() => {
-        if (error)
-            setFailReport(current =>
-                current.concat(current, `[Calibration Inspection] ${error}`),
-            );
-    }, [error]);
+        const isCalibrationStep = inspectTitle === 'Calibration';
+        if (!isCalibrationStep) return;
+
+        if (!error && token) {
+            setPageSrc(utils.getHttpPage(oruIp, 'calibration-for-tutorial'));
+            return;
+        }
+
+        setPageSrc(utils.getHttpPage(oruIp, 'failed'));
+        setFailReport(current =>
+            current.concat(current, `[Calibration Inspection] ${error}`),
+        );
+    }, [error, inspectTitle, token]);
 
     return [
         loaded,

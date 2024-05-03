@@ -15,6 +15,11 @@ const swVersion = atom<string>({
     default: '',
 });
 
+const passwordAtom = atom<string>({
+    key: 'password',
+    default: '',
+});
+
 const dateAtom = atom<string>({
     key: 'date',
     default: '',
@@ -76,12 +81,13 @@ const startDateSelector = selector<string>({
 });
 
 export default {
-    serialAtom,
-    swVersion,
-    filePathSelector,
-    oruIpAtom,
-    snAtom,
     dateAtom,
+    filePathSelector,
     filePathAtom,
+    oruIpAtom,
+    passwordAtom,
+    swVersion,
+    snAtom,
+    serialAtom,
     startDateSelector,
 };
