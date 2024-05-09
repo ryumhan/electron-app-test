@@ -19,7 +19,7 @@
     "rules": {
       "no-nested-ternary":"off",
       "prettier/prettier": [
-        "error",
+        "off",
         {
             "endOfLine": "auto"
         }
