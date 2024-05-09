@@ -40,8 +40,7 @@
     "appId": "org.cpro95.inspection-app",
     "win": {
       "target": [
-        "nsis",
-        "zip"
+        "nsis"
       ],
       "icon": "public/avikus_logo.png"
     },
