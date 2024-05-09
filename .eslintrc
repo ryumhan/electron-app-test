@@ -35,6 +35,8 @@
         "tsx": "never"
       }
    ],
+   "no-alert":"off",
+   "no-console":"off",
    "react-hooks/exhaustive-deps":"off",
    "consistent-return":"off",
    "react/require-default-props" : "off",
